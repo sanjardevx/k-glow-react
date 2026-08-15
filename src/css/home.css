@@ -1,0 +1,133 @@
+.hero {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #fae9ed 0%, #f5d7db 55%, #ffffff 100%);
+  padding: 64px 32px 56px;
+}
+
+.hero-inner {
+  position: relative;
+  max-width: 1300px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 40px;
+  align-items: center;
+}
+
+.hero .blur {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0.35;
+  z-index: 0;
+}
+
+.hero .blur.b1 {
+  width: 220px;
+  height: 220px;
+  background: #e8a2b0;
+  top: -60px;
+  left: -40px;
+}
+
+.hero .blur.b2 {
+  width: 180px;
+  height: 180px;
+  background: #d687a1;
+  bottom: -50px;
+  left: 30%;
+}
+
+.hero .blur.b3 {
+  width: 260px;
+  height: 260px;
+  background: #b85c7a;
+  top: -80px;
+  right: -60px;
+  opacity: 0.22;
+}
+
+.hero .copy {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.hero h2 {
+  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-size: 38px;
+  line-height: 1.15;
+  margin: 0;
+  font-weight: 500;
+  color: #2d1b2e;
+}
+
+.hero h2 em {
+  font-style: normal;
+  color: #b85c7a;
+}
+
+.hero p {
+  margin: 0;
+  font-size: 15px;
+  color: #5c4650;
+  max-width: 46ch;
+}
+
+.hero .cta-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  background: #b85c7a;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 13.5px;
+  padding: 13px 26px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background: #a54f6b;
+}
+
+.btn-outline {
+  border: 1.5px solid #d687a1;
+  color: #b85c7a;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 13.5px;
+  padding: 12px 24px;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.hero-photo {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  aspect-ratio: 1 / 1;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid #f0dce1;
+  background: #fae9ed;
+}
+
+.hero-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
