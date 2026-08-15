@@ -1,7 +1,16 @@
-import { configureStore, type ThunkAction, type Action } from "@reduxjs/toolkit";
+import { configureStore, createSlice } from "@reduxjs/toolkit";
+import type { ThunkAction, Action } from "@reduxjs/toolkit";
+
+const placeholderSlice = createSlice({
+  name: "placeholder",
+  initialState: {},
+  reducers: {},
+});
 
 export const store = configureStore({
-  reducer: {},
+  reducer: {
+    placeholder: placeholderSlice.reducer,
+  },
 });
 
 export type AppDispatch = typeof store.dispatch;
