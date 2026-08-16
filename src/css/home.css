@@ -171,3 +171,175 @@
   object-fit: contain;
   display: block;
 }
+
+/** SECTION WRAPPER **/
+
+.section {
+  padding: 44px 32px;
+}
+
+.section-inner {
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.section-title {
+  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: #2d1b2e;
+}
+
+.section-title em {
+  font-style: normal;
+  color: #b85c7a;
+}
+
+.section-link {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #b85c7a;
+  cursor: pointer;
+}
+
+/** PRODUCT CARDS **/
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.p-card {
+  background: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid #f2e4e8;
+}
+
+.p-photo {
+  position: relative;
+  height: 220px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.p-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.p-badge {
+  position: absolute;
+  top: 9px;
+  left: 9px;
+  z-index: 1;
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 5px;
+}
+
+.p-badge.new {
+  background: #d687a1;
+  color: #2d1b2e;
+}
+
+.p-badge.best,
+.p-badge.top {
+  background: #e8a2b0;
+  color: #2d1b2e;
+}
+
+.p-badge.sale {
+  background: #ef4444;
+  color: #fff;
+}
+
+.p-body {
+  padding: 12px 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.p-brand {
+  font-size: 10.5px;
+  color: rgba(45, 27, 46, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.p-name {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #2d1b2e;
+}
+
+.p-name:hover {
+  color: #d687a1;
+}
+
+.p-stars {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  color: rgba(45, 27, 46, 0.6);
+}
+
+.star {
+  color: #fbbf24;
+}
+
+.star.empty {
+  color: #d1d5db;
+}
+
+.p-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.p-price {
+  font-weight: 700;
+  font-size: 14px;
+  color: #2d1b2e;
+}
+
+.p-price-old {
+  font-size: 12px;
+  color: #9ca3af;
+  text-decoration: line-through;
+}
+
+.p-quickadd {
+  margin-top: 8px;
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  background: #d687a1;
+  color: #2d1b2e;
+  text-align: center;
+  cursor: pointer;
+}
+
+.p-quickadd:hover {
+  background: #c97089;
+  color: #fff;
+}
