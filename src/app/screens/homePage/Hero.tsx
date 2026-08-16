@@ -1,5 +1,3 @@
-import "../../../css/home.css";
-
 export function Hero() {
   return (
     <section className="hero">

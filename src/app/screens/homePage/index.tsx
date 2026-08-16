@@ -5,6 +5,7 @@ import { Discounted } from "./Discounted";
 import { Reviews } from "./Reviews";
 import { Brands } from "./Brands";
 import { Events } from "./Events";
+import "../../../css/home.css";
 
 export function HomePage() {
   return (
