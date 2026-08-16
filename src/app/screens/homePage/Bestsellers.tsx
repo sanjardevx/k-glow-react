@@ -63,7 +63,9 @@ export function Bestsellers() {
               <Box className="p-card" key={index}>
                 <Box className="p-photo">
                   <span className="p-badge top">TOP</span>
-                  <img src={ele.imagePath} alt={ele.productName} />
+                  <Box className="p-photo-frame">
+                    <img src={ele.imagePath} alt={ele.productName} />
+                  </Box>
                 </Box>
                 <Box className="p-body">
                   <Box className="p-brand">{ele.productBrand}</Box>

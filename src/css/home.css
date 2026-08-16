@@ -209,6 +209,13 @@
   font-weight: 700;
   color: #b85c7a;
   cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 999px;
+  transition: background 0.2s ease;
+}
+
+.section-link:hover {
+  background: #fadadd;
 }
 
 /** PRODUCT CARDS **/
@@ -224,12 +231,31 @@
   border-radius: 14px;
   overflow: hidden;
   border: 1px solid #f2e4e8;
+  transition: transform 0.28s ease, box-shadow 0.28s ease;
+}
+
+.p-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 28px rgba(184, 92, 122, 0.18);
 }
 
 .p-photo {
   position: relative;
   height: 220px;
+  padding: 6px;
+  background: #fdf2f4;
+  border-bottom: 1px solid #f2e4e8;
+}
+
+.p-photo-frame {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: #ffffff;
+  border: 1px solid #f0dce1;
+  border-radius: 10px;
   overflow: hidden;
 }
 
@@ -238,6 +264,12 @@
   height: 100%;
   object-fit: contain;
   display: block;
+  transform: scale(1.25);
+  transition: transform 0.35s ease;
+}
+
+.p-card:hover .p-photo img {
+  transform: scale(1.35);
 }
 
 .p-badge {
@@ -285,6 +317,9 @@
   font-size: 13.5px;
   font-weight: 600;
   color: #2d1b2e;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .p-name:hover {
