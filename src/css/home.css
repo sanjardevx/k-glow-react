@@ -592,3 +592,138 @@
     display: none;
   }
 }
+
+/** EVENTS / CTA BANNER **/
+
+.events {
+  width: 100%;
+  padding: 0 32px 44px;
+}
+
+.cta-banner {
+  position: relative;
+  overflow: hidden;
+  max-width: 1300px;
+  margin: 0 auto;
+  border-radius: 20px;
+  background: linear-gradient(120deg, #b85c7a, #c97089, #d687a1);
+  padding: 46px 40px;
+  color: #fff;
+  text-align: center;
+}
+
+.cta-banner .deco {
+  position: absolute;
+  border-radius: 50%;
+  background: transparent;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+}
+
+.cta-banner .deco.d1 {
+  width: 150px;
+  height: 150px;
+  top: -40px;
+  left: 20px;
+}
+
+.cta-banner .deco.d2 {
+  width: 70px;
+  height: 70px;
+  bottom: -20px;
+  left: 160px;
+}
+
+.cta-banner .deco.d3 {
+  width: 100px;
+  height: 100px;
+  top: -30px;
+  right: -20px;
+}
+
+.cta-banner .sparkle {
+  position: absolute;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 15px;
+}
+
+.cta-banner .sparkle.s1 {
+  top: 18px;
+  left: 44%;
+}
+
+.cta-banner .sparkle.s2 {
+  bottom: 34px;
+  right: 18%;
+  font-size: 11px;
+}
+
+.cta-badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 8px 18px;
+  border-radius: 999px;
+  margin-bottom: 18px;
+}
+
+.cta-banner h3 {
+  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-weight: 700;
+  font-size: 34px;
+  margin: 0 0 12px;
+  position: relative;
+}
+
+.cta-banner p {
+  margin: 0 0 24px;
+  opacity: 0.92;
+  font-size: 14px;
+  position: relative;
+  max-width: 44ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta-signup-btn {
+  position: relative;
+  display: inline-block;
+  background: #fff;
+  color: #b85c7a;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 14px 34px;
+  border-radius: 999px;
+  white-space: nowrap;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.cta-signup-btn:hover {
+  background: #fff0f2;
+}
+
+.cta-perks {
+  position: relative;
+  display: flex;
+  gap: 26px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 24px;
+  font-size: 12.5px;
+  font-weight: 600;
+  opacity: 0.95;
+}
+
+.cta-fineprint {
+  position: relative;
+  font-size: 11px;
+  opacity: 0.68;
+  margin: 16px 0 0;
+}
