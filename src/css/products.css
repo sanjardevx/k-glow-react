@@ -1,0 +1,381 @@
+/** SHOP PAGE **/
+
+.shop-head {
+  max-width: 1300px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 34px 32px 0;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.shop-title {
+  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: #2d1b2e;
+}
+
+.shop-count {
+  font-size: 12.5px;
+  color: #6b5a5f;
+}
+
+.shop-head-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.shop-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border: 1.5px solid #f0dce1;
+  border-radius: 999px;
+  padding: 8px 16px;
+  transition: border-color 0.2s ease;
+}
+
+.shop-search:focus-within {
+  border-color: #d687a1;
+}
+
+.shop-search input {
+  border: none;
+  outline: none;
+  font-size: 13px;
+  font-family: inherit;
+  color: #2d1b2e;
+  width: 180px;
+  background: transparent;
+}
+
+.shop-search-icon {
+  font-size: 13px;
+  opacity: 0.6;
+  background: none;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.shop-search-icon:hover {
+  opacity: 0.9;
+}
+
+.shop-search input:not(:placeholder-shown) ~ .shop-search-icon {
+  transform: scale(1.2);
+  opacity: 1;
+}
+
+.chip-row {
+  max-width: 1300px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 20px 32px 0;
+}
+
+.chip {
+  font-size: 13px;
+  font-weight: 700;
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: #fae9ed;
+  color: #2d1b2e;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.chip:hover {
+  background: #e8b4b8;
+}
+
+.chip.active {
+  background: #b85c7a;
+  color: #fff;
+}
+
+.shop-grid-wrap {
+  max-width: 1300px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 26px 32px 44px;
+}
+
+.shop-grid-wrap .product-grid {
+  margin-bottom: 22px;
+}
+
+.shop-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: #6b5a5f;
+  font-size: 14px;
+}
+
+.load-more-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 6px;
+}
+
+.load-more-btn {
+  border: 1.5px solid #d687a1;
+  color: #b85c7a;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 13.5px;
+  padding: 12px 28px;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.load-more-btn:hover {
+  background: #b85c7a;
+  color: #fff;
+}
+
+@media (max-width: 860px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .shop-head,
+  .chip-row,
+  .shop-grid-wrap,
+  .breadcrumb {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .pdp {
+    grid-template-columns: 1fr;
+    padding: 22px 18px 8px;
+  }
+}
+
+/** PRODUCT DETAIL **/
+
+.breadcrumb {
+  max-width: 1300px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 20px 32px 0;
+  font-size: 12.5px;
+  color: #6b5a5f;
+}
+
+.breadcrumb a {
+  color: #b85c7a;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.breadcrumb .sep {
+  margin: 0 6px;
+  opacity: 0.5;
+}
+
+.pdp {
+  max-width: 1300px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 44px;
+  padding: 26px 32px 8px;
+}
+
+.pdp-photo {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 18px;
+  background: #fae9ed;
+  border: 1px solid #f0dce1;
+  overflow: hidden;
+}
+
+.pdp-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.pdp-photo .p-badge {
+  top: 14px;
+  left: 14px;
+  font-size: 11px;
+  padding: 5px 11px;
+}
+
+.pdp-info {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.pdp-brand {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #d687a1;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.pdp-title {
+  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.2;
+  margin: 0;
+  color: #2d1b2e;
+}
+
+.pdp-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #6b5a5f;
+}
+
+.pdp-rating a {
+  color: #b85c7a;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.pdp-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.pdp-price {
+  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: #2d1b2e;
+}
+
+.pdp-price-old {
+  font-size: 15px;
+  color: #9ca3af;
+  text-decoration: line-through;
+}
+
+.pdp-save {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+  padding: 3px 9px;
+  border-radius: 6px;
+}
+
+.pdp-desc {
+  font-size: 14px;
+  color: #5c4650;
+  line-height: 1.65;
+  margin: 4px 0 0;
+}
+
+.qty-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.qty-stepper {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid #f0dce1;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.qty-stepper button {
+  width: 38px;
+  height: 38px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #2d1b2e;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.qty-stepper span {
+  width: 34px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 14px;
+  display: inline-block;
+}
+
+.pdp-addbag {
+  flex: 1;
+  background: #b85c7a;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 14px 0;
+  border-radius: 999px;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+}
+
+.pdp-addbag:hover {
+  background: #a54f6b;
+}
+
+.pdp-trust {
+  display: flex;
+  gap: 22px;
+  margin-top: 10px;
+  padding-top: 18px;
+  border-top: 1px solid #f2e4e8;
+  flex-wrap: wrap;
+}
+
+.pdp-trust-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #6b5a5f;
+}
+
+.pdp-trust-item .ic {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #fae9ed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: #b85c7a;
+  flex-shrink: 0;
+}
