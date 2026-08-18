@@ -12,10 +12,19 @@ export function Footer() {
               Authentic Korean skincare and makeup, sourced directly and
               delivered across Uzbekistan.
             </p>
-            <div className="trust-row">
-              <div className="trust-icon">🚚</div>
-              <div className="trust-icon">🛡</div>
-              <div className="trust-icon">🎧</div>
+            <div className="footer-trust">
+              <div className="footer-trust-item">
+                <span className="ic">🚚</span>Shipped from Korea
+              </div>
+              <div className="footer-trust-item">
+                <span className="ic">🛡</span>100% authentic
+              </div>
+              <div className="footer-trust-item">
+                <span className="ic">📦</span>Usually in stock
+              </div>
+              <div className="footer-trust-item">
+                <span className="ic">⚡</span>Same-day dispatch via BTS post
+              </div>
             </div>
           </div>
           <div className="footer-col">

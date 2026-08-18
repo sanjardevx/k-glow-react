@@ -1,4 +1,4 @@
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { Basket } from "./Basket";
 import "../../../css/navbar.css";
 
@@ -16,14 +16,16 @@ export function OtherNavbar() {
           <NavLink to="/products" activeClassName="active">
             Shop
           </NavLink>
-          <Link to="/products">Bestsellers</Link>
+          <NavLink to="/products" activeClassName="active">
+            Bestsellers
+          </NavLink>
           <NavLink to="/help" activeClassName="active">
             Help
           </NavLink>
         </div>
         <div className="right">
           <Basket />
-          <button className="btn-signin">Login</button>
+          <button className="btn-signin">Sign Up</button>
         </div>
       </div>
     </nav>
