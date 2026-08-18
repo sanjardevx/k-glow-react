@@ -6,11 +6,54 @@
 /** STATISTICS **/
 
 .stats {
-  padding: 40px 32px;
-  background: #ffffff;
+  position: relative;
+  overflow: hidden;
+  padding: 44px 32px;
+  background: linear-gradient(
+    180deg,
+    #fff0f2 0%,
+    #fae9ed 45%,
+    #fff0f2 100%
+  );
+}
+
+.stats-blur {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  z-index: 0;
+}
+
+.stats-blur.sb1 {
+  width: 180px;
+  height: 180px;
+  background: #e8a2b0;
+  opacity: 0.3;
+  top: -70px;
+  left: 6%;
+}
+
+.stats-blur.sb2 {
+  width: 140px;
+  height: 140px;
+  background: #ffb6c1;
+  opacity: 0.25;
+  bottom: -50px;
+  left: 42%;
+}
+
+.stats-blur.sb3 {
+  width: 200px;
+  height: 200px;
+  background: #d687a1;
+  opacity: 0.2;
+  top: -60px;
+  right: 8%;
 }
 
 .stats-grid {
+  position: relative;
+  z-index: 1;
   max-width: 1300px;
   margin: 0 auto;
   display: grid;
@@ -21,6 +64,16 @@
 .stat-tile {
   text-align: center;
   padding: 18px 12px;
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.55s ease-out,
+    transform 0.55s ease-out;
+}
+
+.stat-tile.in-view {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .stat-num {
@@ -28,6 +81,7 @@
   font-size: 32px;
   font-weight: 600;
   color: #b85c7a;
+  font-variant-numeric: tabular-nums;
 }
 
 .stat-label {
@@ -36,12 +90,18 @@
   margin-top: 4px;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .stat-tile {
+    transition: none;
+  }
+}
+
 /** HERO **/
 
 .hero {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(180deg, #fae9ed 0%, #f5d7db 55%, #ffffff 100%);
+  background: linear-gradient(180deg, #fae9ed 0%, #f5d7db 55%, #fff0f2 100%);
   padding: 64px 32px 56px;
 }
 
@@ -224,6 +284,23 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
+}
+
+.p-card-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border-radius: 14px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.p-card-link:focus {
+  outline: none;
+}
+
+.p-card-link:focus-visible .p-card {
+  outline: 2px solid #b85c7a;
+  outline-offset: 2px;
 }
 
 .p-card {
