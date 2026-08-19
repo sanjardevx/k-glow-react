@@ -1,24 +1,32 @@
 import { useState } from "react";
 import { Box } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
-import { products } from "./productsData";
+import {
+  finalPrice,
+  formatPrice,
+  getProductById,
+  isBestseller,
+  isSoldOut,
+  products,
+} from "./productsData";
+import { getReviewsForProduct } from "./reviewsData";
 
 export function ChosenProduct() {
   const { productId } = useParams<{ productId: string }>();
   const [qty, setQty] = useState(1);
 
-  const index = Number(productId);
-  const product =
-    Number.isInteger(index) && products[index] ? products[index] : products[1];
+  const product = getProductById(productId ?? "") ?? products[1];
   const resolvedId = products.indexOf(product);
 
   const sameCategory = products.filter(
-    (p, i) => i !== resolvedId && p.category === product.category,
+    (p, i) => i !== resolvedId && p.productCategory === product.productCategory,
   );
   const otherCategory = products.filter(
-    (p, i) => i !== resolvedId && p.category !== product.category,
+    (p, i) => i !== resolvedId && p.productCategory !== product.productCategory,
   );
   const related = [...sameCategory, ...otherCategory].slice(0, 4);
+
+  const productReviews = getReviewsForProduct(String(resolvedId));
 
   return (
     <div className="chosen-product-page">
@@ -32,12 +40,14 @@ export function ChosenProduct() {
 
       <Box className="pdp">
         <Box className="pdp-photo">
-          {product.isBestseller ? (
+          {isSoldOut(product) ? (
+            <span className="p-badge soldout">SOLD OUT</span>
+          ) : isBestseller(product) ? (
             <span className="p-badge best">BEST</span>
           ) : product.productDiscount ? (
             <span className="p-badge sale">−{product.productDiscount}%</span>
           ) : null}
-          <img src={product.imagePath} alt={product.productName} />
+          <img src={product.productImages[0]} alt={product.productName} />
         </Box>
         <Box className="pdp-info">
           <Box className="pdp-brand">{product.productBrand}</Box>
@@ -54,30 +64,46 @@ export function ChosenProduct() {
             <a href="#pdp-reviews">See {product.reviews} reviews</a>
           </Box>
           <Box className="pdp-price-row">
-            <span className="pdp-price">{product.productPrice}</span>
-            {product.productOldPrice ? (
-              <span className="pdp-price-old">{product.productOldPrice}</span>
+            <span className="pdp-price">{formatPrice(finalPrice(product))}</span>
+            {product.productDiscount ? (
+              <span className="pdp-price-old">
+                {formatPrice(product.productPrice)}
+              </span>
             ) : null}
             {product.productDiscount ? (
               <span className="pdp-save">Save {product.productDiscount}%</span>
             ) : null}
           </Box>
-          <p className="pdp-desc">{product.description}</p>
+          <p className="pdp-desc">{product.productDesc}</p>
           <Box className="qty-row">
             <Box className="qty-stepper">
               <button
                 type="button"
+                disabled={isSoldOut(product)}
                 onClick={() => setQty((q) => Math.max(1, q - 1))}
               >
                 −
               </button>
               <span>{qty}</span>
-              <button type="button" onClick={() => setQty((q) => q + 1)}>
+              <button
+                type="button"
+                disabled={isSoldOut(product)}
+                onClick={() => setQty((q) => q + 1)}
+              >
                 +
               </button>
             </Box>
-            <span className="pdp-addbag">Add to Bag</span>
+            <span
+              className={`pdp-addbag${isSoldOut(product) ? " disabled" : ""}`}
+            >
+              {isSoldOut(product) ? "Sold Out" : "Add to Bag"}
+            </span>
           </Box>
+          {isSoldOut(product) ? (
+            <p className="pdp-soldout-note">
+              This product is temporarily out of stock — check back soon.
+            </p>
+          ) : null}
           <Box className="pdp-trust">
             <Box className="pdp-trust-item">
               <span className="ic">🚚</span>Shipped from Korea
@@ -107,18 +133,19 @@ export function ChosenProduct() {
               const id = products.indexOf(ele);
               return (
                 <Link to={`/products/${id}`} className="p-card-link" key={id}>
-                  <Box className="p-card">
+                  <Box className={`p-card${isSoldOut(ele) ? " soldout" : ""}`}>
                     <Box className="p-photo">
-                      {ele.isBestseller ? (
+                      {isSoldOut(ele) ? (
+                        <span className="p-badge soldout">SOLD OUT</span>
+                      ) : isBestseller(ele) ? (
                         <span className="p-badge best">BEST</span>
-                      ) : null}
-                      {ele.productDiscount ? (
+                      ) : ele.productDiscount ? (
                         <span className="p-badge sale">
                           −{ele.productDiscount}%
                         </span>
                       ) : null}
                       <Box className="p-photo-frame">
-                        <img src={ele.imagePath} alt={ele.productName} />
+                        <img src={ele.productImages[0]} alt={ele.productName} />
                       </Box>
                     </Box>
                     <Box className="p-body">
@@ -136,21 +163,23 @@ export function ChosenProduct() {
                         <span>({ele.reviews})</span>
                       </Box>
                       <Box className="p-price-row">
-                        <span className="p-price">{ele.productPrice}</span>
-                        {ele.productOldPrice ? (
+                        <span className="p-price">
+                          {formatPrice(finalPrice(ele))}
+                        </span>
+                        {ele.productDiscount ? (
                           <span className="p-price-old">
-                            {ele.productOldPrice}
+                            {formatPrice(ele.productPrice)}
                           </span>
                         ) : null}
                       </Box>
                       <Box
-                        className="p-quickadd"
+                        className={`p-quickadd${isSoldOut(ele) ? " disabled" : ""}`}
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
                         }}
                       >
-                        Quick Add
+                        {isSoldOut(ele) ? "Sold Out" : "Quick Add"}
                       </Box>
                     </Box>
                   </Box>
@@ -169,31 +198,41 @@ export function ChosenProduct() {
             </Box>
             <span className="section-link">See all {product.reviews} →</span>
           </Box>
-          <Box
-            className="review-grid"
-            style={{
-              gridTemplateColumns: "repeat(2, 1fr)",
-              maxWidth: "640px",
-            }}
-          >
-            {["/img/reviews/review-1.jpeg", "/img/reviews/review-2.jpeg"].map(
-              (img, i) => (
+          {productReviews.length !== 0 ? (
+            <Box
+              className="review-grid"
+              style={{
+                gridTemplateColumns: "repeat(2, 1fr)",
+                maxWidth: "820px",
+              }}
+            >
+              {productReviews.map((review, i) => (
                 <Box className="review-card" key={i}>
                   <Box className="review-stars">
-                    <span className="star">★★★★★</span>
+                    <span className="star">{"★".repeat(review.reviewStars)}</span>
+                    {review.reviewStars < 5 ? (
+                      <span className="star empty">
+                        {"★".repeat(5 - review.reviewStars)}
+                      </span>
+                    ) : null}
                   </Box>
-                  <Box className="review-shot">
-                    <img src={img} alt={`${product.productName} review`} />
+                  <p className="review-text">{review.reviewText}</p>
+                  <Box className="review-meta">
+                    <Box className="review-name">{review.reviewerName}</Box>
+                    <Box className="review-product">{product.productName}</Box>
                   </Box>
-                  <Box className="review-product">{product.productName}</Box>
                   <Box className="verified">
                     <span className="verified-dot">✓</span>
                     Verified purchase
                   </Box>
                 </Box>
-              ),
-            )}
-          </Box>
+              ))}
+            </Box>
+          ) : (
+            <Box className="review-empty">
+              No reviews for this product yet — yours could be the first.
+            </Box>
+          )}
         </Box>
       </section>
     </div>

@@ -1,7 +1,14 @@
 import { useMemo, useState } from "react";
 import { Box } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
-import { products, type Category } from "./productsData";
+import {
+  finalPrice,
+  formatPrice,
+  getBestsellers,
+  isSoldOut,
+  products,
+  type ProductCategory,
+} from "./productsData";
 
 const chips = ["All", "Bestseller", "Sale", "Skincare", "Makeup", "Sets"] as const;
 type Chip = (typeof chips)[number];
@@ -20,13 +27,16 @@ export function Products() {
   );
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
+  const bestsellers = useMemo(() => new Set(getBestsellers()), []);
+
   const filtered = useMemo(() => {
     if (activeChip === "All") return products;
-    if (activeChip === "Bestseller") return products.filter((p) => p.isBestseller);
+    if (activeChip === "Bestseller")
+      return products.filter((p) => bestsellers.has(p));
     if (activeChip === "Sale") return products.filter((p) => p.productDiscount);
-    const category = activeChip.toUpperCase() as Category;
-    return products.filter((p) => p.category === category);
-  }, [activeChip]);
+    const category = activeChip.toUpperCase() as ProductCategory;
+    return products.filter((p) => p.productCategory === category);
+  }, [activeChip, bestsellers]);
 
   const visibleItems = filtered.slice(0, visibleCount);
   const hasMore = visibleCount < filtered.length;
@@ -78,18 +88,19 @@ export function Products() {
                   className="p-card-link"
                   key={id}
                 >
-                  <Box className="p-card">
+                  <Box className={`p-card${isSoldOut(ele) ? " soldout" : ""}`}>
                     <Box className="p-photo">
-                      {ele.isBestseller ? (
+                      {isSoldOut(ele) ? (
+                        <span className="p-badge soldout">SOLD OUT</span>
+                      ) : bestsellers.has(ele) ? (
                         <span className="p-badge best">BEST</span>
-                      ) : null}
-                      {ele.productDiscount ? (
+                      ) : ele.productDiscount ? (
                         <span className="p-badge sale">
                           −{ele.productDiscount}%
                         </span>
                       ) : null}
                       <Box className="p-photo-frame">
-                        <img src={ele.imagePath} alt={ele.productName} />
+                        <img src={ele.productImages[0]} alt={ele.productName} />
                       </Box>
                     </Box>
                     <Box className="p-body">
@@ -107,21 +118,23 @@ export function Products() {
                         <span>({ele.reviews})</span>
                       </Box>
                       <Box className="p-price-row">
-                        <span className="p-price">{ele.productPrice}</span>
-                        {ele.productOldPrice ? (
+                        <span className="p-price">
+                          {formatPrice(finalPrice(ele))}
+                        </span>
+                        {ele.productDiscount ? (
                           <span className="p-price-old">
-                            {ele.productOldPrice}
+                            {formatPrice(ele.productPrice)}
                           </span>
                         ) : null}
                       </Box>
                       <Box
-                        className="p-quickadd"
+                        className={`p-quickadd${isSoldOut(ele) ? " disabled" : ""}`}
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
                         }}
                       >
-                        Quick Add
+                        {isSoldOut(ele) ? "Sold Out" : "Quick Add"}
                       </Box>
                     </Box>
                   </Box>

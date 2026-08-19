@@ -1,6 +1,11 @@
 import { Box } from "@mui/material";
 import { Link } from "react-router-dom";
-import { products } from "../productsPage/productsData";
+import {
+  finalPrice,
+  formatPrice,
+  isSoldOut,
+  products,
+} from "../productsPage/productsData";
 
 export function Discounted() {
   const discounted = products.filter((p) => p.productDiscount);
@@ -24,13 +29,17 @@ export function Discounted() {
             const id = products.indexOf(ele);
             return (
               <Link to={`/products/${id}`} className="p-card-link" key={id}>
-                <Box className="p-card">
+                <Box className={`p-card${isSoldOut(ele) ? " soldout" : ""}`}>
                   <Box className="p-photo">
-                    <span className="p-badge sale">
-                      −{ele.productDiscount}%
-                    </span>
+                    {isSoldOut(ele) ? (
+                      <span className="p-badge soldout">SOLD OUT</span>
+                    ) : (
+                      <span className="p-badge sale">
+                        −{ele.productDiscount}%
+                      </span>
+                    )}
                     <Box className="p-photo-frame">
-                      <img src={ele.imagePath} alt={ele.productName} />
+                      <img src={ele.productImages[0]} alt={ele.productName} />
                     </Box>
                   </Box>
                   <Box className="p-body">
@@ -46,19 +55,21 @@ export function Discounted() {
                       <span>({ele.reviews})</span>
                     </Box>
                     <Box className="p-price-row">
-                      <span className="p-price">{ele.productPrice}</span>
+                      <span className="p-price">
+                        {formatPrice(finalPrice(ele))}
+                      </span>
                       <span className="p-price-old">
-                        {ele.productOldPrice}
+                        {formatPrice(ele.productPrice)}
                       </span>
                     </Box>
                     <Box
-                      className="p-quickadd"
+                      className={`p-quickadd${isSoldOut(ele) ? " disabled" : ""}`}
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
                       }}
                     >
-                      Quick Add
+                      {isSoldOut(ele) ? "Sold Out" : "Quick Add"}
                     </Box>
                   </Box>
                 </Box>
