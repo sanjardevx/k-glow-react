@@ -1,0 +1,255 @@
+.orders-page {
+  background: #fff;
+  min-height: 60vh;
+}
+
+.orders-layout {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 34px 32px 60px;
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+.orders-left {
+  min-width: 0;
+}
+
+.orders-tabs-frame {
+  border-bottom: 1px solid #f2e4e8;
+  margin-bottom: 20px;
+}
+
+.orders-tabs .MuiTab-root {
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 12.5px;
+  text-transform: none;
+  color: #6b5a5f;
+}
+
+.orders-tabs .Mui-selected {
+  color: #b85c7a !important;
+}
+
+.orders-tabs .MuiTabs-indicator {
+  background-color: #b85c7a;
+}
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.order-card {
+  background: #fff;
+  border: 1px solid #f2e4e8;
+  border-radius: 14px;
+  padding: 18px;
+}
+
+.order-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.status-pill.wait {
+  background: #f3e7d3;
+  color: #a9772f;
+}
+
+.status-pill.confirmed {
+  background: rgba(22, 163, 74, 0.12);
+  color: #16a34a;
+}
+
+.status-pill.rejected {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+}
+
+.order-date {
+  font-size: 12px;
+  color: #9c8489;
+}
+
+.order-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.order-line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.order-line-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  object-fit: contain;
+  background: #fdf2f4;
+  border: 1px solid #f0dce1;
+  flex-shrink: 0;
+}
+
+.order-line-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.order-line-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2d1b2e;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.order-line-qty {
+  font-size: 11.5px;
+  color: #6b5a5f;
+}
+
+.order-line-price {
+  font-size: 13px;
+  font-weight: 700;
+  color: #2d1b2e;
+  flex-shrink: 0;
+}
+
+.order-total-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12.5px;
+  color: #6b5a5f;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #f2e4e8;
+}
+
+.order-total-row.total {
+  font-weight: 700;
+  color: #2d1b2e;
+  font-size: 14px;
+}
+
+.order-note {
+  font-size: 12px;
+  color: #6b5a5f;
+  margin: 10px 0 0;
+}
+
+.order-note.reject-reason {
+  color: #ef4444;
+}
+
+.orders-empty {
+  text-align: center;
+  padding: 50px 20px;
+  color: #6b5a5f;
+  font-size: 13.5px;
+}
+
+.orders-info-card {
+  background: #fff;
+  border: 1px solid #f2e4e8;
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 16px;
+}
+
+.orders-info-title {
+  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2d1b2e;
+  margin-bottom: 12px;
+}
+
+.orders-member {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.orders-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #fae9ed;
+  color: #b85c7a;
+  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-weight: 600;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.orders-member-name {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #2d1b2e;
+}
+
+.orders-member-sub {
+  font-size: 11.5px;
+  color: #9c8489;
+}
+
+.bank-card {
+  background: #fae9ed;
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.bank-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  padding: 5px 0;
+  color: #5c4650;
+}
+
+.bank-row strong {
+  color: #2d1b2e;
+  font-weight: 700;
+}
+
+.orders-info-note {
+  font-size: 11.5px;
+  color: #9c8489;
+  margin: 12px 0 0;
+  line-height: 1.5;
+}
+
+@media (max-width: 860px) {
+  .orders-layout {
+    grid-template-columns: 1fr;
+    padding: 26px 18px 44px;
+  }
+}
