@@ -1,15 +1,10 @@
-import { configureStore, createSlice } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
 import type { ThunkAction, Action } from "@reduxjs/toolkit";
-
-const placeholderSlice = createSlice({
-  name: "placeholder",
-  initialState: {},
-  reducers: {},
-});
+import cartReducer from "./screens/cartPage/cartSlice";
 
 export const store = configureStore({
   reducer: {
-    placeholder: placeholderSlice.reducer,
+    cart: cartReducer,
   },
 });
 
