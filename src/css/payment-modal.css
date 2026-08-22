@@ -1,0 +1,173 @@
+.bank-amount {
+  text-align: center;
+  padding-top: 10px;
+  margin-top: 8px;
+  border-top: 1px dashed #e8b4b8;
+}
+
+.bank-amount .lbl {
+  display: block;
+  font-size: 10.5px;
+  color: #6b5a5f;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.bank-amount .amt {
+  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #b85c7a;
+  font-variant-numeric: tabular-nums;
+}
+
+.modal-btn:disabled {
+  background: #e5e5e5;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.modal-back {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  color: #6b5a5f;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 10px 0 0;
+  cursor: pointer;
+  text-align: center;
+  font-family: inherit;
+}
+
+.modal-back:hover {
+  color: #b85c7a;
+}
+
+.upload-box {
+  display: block;
+  border: 1.5px dashed #e8b4b8;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  color: #d687a1;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 14px;
+  background: #fae9ed;
+  cursor: pointer;
+}
+
+.upload-box .ic {
+  font-size: 18px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+/* thanks step, reusing .modal-card for the white rounded shell */
+.confirm-wrap {
+  text-align: center;
+  max-width: 420px;
+}
+
+.confirm-wrap h3 {
+  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-size: 21px;
+  font-weight: 600;
+  margin: 0 0 8px;
+  color: #2d1b2e;
+}
+
+.confirm-wrap p {
+  font-size: 13px;
+  color: #6b5a5f;
+  margin: 0 0 14px;
+}
+
+.confirm-check {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(22, 163, 74, 0.12);
+  color: #16a34a;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.confirm-summary {
+  background: #fdf2f4;
+  border: 1px solid #f2e4e8;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin: 18px 0;
+  text-align: left;
+}
+
+.confirm-summary .row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12.5px;
+  color: #6b5a5f;
+  padding: 4px 0;
+}
+
+.confirm-summary .row.total {
+  font-weight: 700;
+  color: #2d1b2e;
+  padding-top: 8px;
+  margin-top: 4px;
+  border-top: 1px solid #f2e4e8;
+  font-variant-numeric: tabular-nums;
+}
+
+.next-steps {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 12.5px;
+  color: #6b5a5f;
+  margin-bottom: 20px;
+}
+
+.next-steps .step {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.next-steps .step .n {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fae9ed;
+  color: #b85c7a;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+}
+
+.confirm-cta {
+  display: inline-block;
+  border: 1.5px solid #d687a1;
+  color: #b85c7a;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 11px 26px;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.confirm-cta:hover {
+  background: #fae9ed;
+}

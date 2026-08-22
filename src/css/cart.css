@@ -1,0 +1,207 @@
+.cart-body {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 26px 32px 60px;
+  background: #fff;
+}
+
+.cart-title {
+  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-size: 26px;
+  font-weight: 600;
+  margin: 0 0 20px;
+  color: #2d1b2e;
+}
+
+.cart-empty {
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 14px;
+  color: #6b5a5f;
+}
+
+.cart-empty-link {
+  color: #b85c7a;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.cart-layout {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 26px;
+  align-items: start;
+}
+
+.cart-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #fff;
+  border: 1px solid #f2e4e8;
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.cart-item .thumb {
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  background: #fae9ed;
+  border: 1px solid #f0dce1;
+  object-fit: contain;
+  padding: 4px;
+  flex-shrink: 0;
+}
+
+.cart-item .info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cart-item .brand {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgba(45, 27, 46, 0.6);
+}
+
+.cart-item .name {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #2d1b2e;
+}
+
+.cart-item .unit {
+  font-size: 12px;
+  color: #6b5a5f;
+  margin-top: 2px;
+}
+
+.cart-item .qty-stepper {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid #f0dce1;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.cart-item .qty-stepper button {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: transparent;
+  font-size: 15px;
+  font-weight: 700;
+  color: #2d1b2e;
+  cursor: pointer;
+}
+
+.cart-item .qty-stepper span {
+  width: 26px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 13px;
+  display: inline-block;
+}
+
+.cart-item .line-total {
+  font-weight: 700;
+  font-size: 14px;
+  min-width: 92px;
+  text-align: right;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.cart-item .remove {
+  color: #9c8489;
+  font-size: 17px;
+  cursor: pointer;
+  flex-shrink: 0;
+  background: none;
+  border: none;
+}
+
+.cart-item .remove:hover {
+  color: #ef4444;
+}
+
+.summary-card {
+  background: #fff;
+  border: 1px solid #f2e4e8;
+  border-radius: 16px;
+  padding: 22px;
+}
+
+.summary-card h4 {
+  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-size: 18px;
+  margin: 0 0 16px;
+  font-weight: 600;
+  color: #2d1b2e;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13.5px;
+  color: #6b5a5f;
+  margin-bottom: 10px;
+}
+
+.summary-row.total {
+  font-weight: 700;
+  color: #2d1b2e;
+  font-size: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #f2e4e8;
+  margin-top: 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.pay-btn {
+  display: block;
+  width: 100%;
+  background: #b85c7a;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 14px 0;
+  border-radius: 999px;
+  text-align: center;
+  margin-top: 16px;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.pay-btn:hover {
+  background: #a54f6b;
+}
+
+.cart-note {
+  font-size: 11.5px;
+  color: #9c8489;
+  text-align: center;
+  margin: 10px 0 0;
+  line-height: 1.5;
+}
+
+@media (max-width: 860px) {
+  .cart-layout {
+    grid-template-columns: 1fr;
+  }
+  .cart-body {
+    padding: 22px 18px 44px;
+  }
+}

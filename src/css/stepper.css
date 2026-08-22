@@ -1,0 +1,134 @@
+.stepper-wrap {
+  background: #fae9ed;
+  padding: 22px 32px 20px;
+}
+
+.stepper-wrap.in-modal {
+  border-radius: 14px;
+  padding: 16px 10px 14px;
+  margin-bottom: 18px;
+}
+
+.stepper-wrap.in-modal .stepper {
+  max-width: 100%;
+}
+
+.stepper-wrap.in-modal .step-line {
+  width: 26px;
+}
+
+.stepper-wrap.in-modal .step-label {
+  font-size: 9px;
+  max-width: 56px;
+}
+
+.stepper {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.step-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.step-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12.5px;
+  font-weight: 700;
+  border: 2px solid #e8b4b8;
+  background: #fff;
+  color: #9c8489;
+  transition:
+    border-color 0.3s ease,
+    background 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.step-node.done .step-circle {
+  background: #b85c7a;
+  border-color: #b85c7a;
+  color: #fff;
+  animation: step-pop 0.4s ease;
+}
+
+.step-node.current .step-circle {
+  border-color: #b85c7a;
+  color: #b85c7a;
+  box-shadow: 0 0 0 5px rgba(184, 92, 122, 0.16);
+  animation: step-pulse 2.2s ease-in-out infinite;
+}
+
+.step-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #9c8489;
+  text-align: center;
+  max-width: 76px;
+}
+
+.step-node.done .step-label,
+.step-node.current .step-label {
+  color: #2d1b2e;
+}
+
+.step-line {
+  width: 64px;
+  height: 2px;
+  background: #e8b4b8;
+  margin: 15px -2px 0;
+  transition: background 1.1s ease 0.15s;
+}
+
+.step-line.filled {
+  background: #b85c7a;
+}
+
+@keyframes step-pop {
+  from {
+    transform: scale(0.6);
+    opacity: 0.3;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes step-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 5px rgba(184, 92, 122, 0.16);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(184, 92, 122, 0.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .step-node.done .step-circle,
+  .step-node.current .step-circle {
+    animation: none;
+  }
+}
+
+@media (max-width: 860px) {
+  .stepper {
+    max-width: 100%;
+  }
+  .step-line {
+    width: 34px;
+  }
+}
