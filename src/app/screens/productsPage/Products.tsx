@@ -9,6 +9,8 @@ import {
   products,
   type ProductCategory,
 } from "./productsData";
+import { useAppDispatch } from "../../hooks";
+import { addItem } from "../cartPage/cartSlice";
 
 const chips = ["All", "Bestseller", "Sale", "Skincare", "Makeup", "Sets"] as const;
 type Chip = (typeof chips)[number];
@@ -21,6 +23,7 @@ function chipFromQuery(search: string): Chip {
 }
 
 export function Products() {
+  const dispatch = useAppDispatch();
   const location = useLocation();
   const [activeChip, setActiveChip] = useState<Chip>(() =>
     chipFromQuery(location.search),
@@ -132,6 +135,7 @@ export function Products() {
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
+                          if (!isSoldOut(ele)) dispatch(addItem({ productId: id }));
                         }}
                       >
                         {isSoldOut(ele) ? "Sold Out" : "Quick Add"}

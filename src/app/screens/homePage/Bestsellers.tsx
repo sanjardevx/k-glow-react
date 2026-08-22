@@ -7,8 +7,11 @@ import {
   isSoldOut,
   products,
 } from "../productsPage/productsData";
+import { useAppDispatch } from "../../hooks";
+import { addItem } from "../cartPage/cartSlice";
 
 export function Bestsellers() {
+  const dispatch = useAppDispatch();
   const bestsellers = getBestsellers();
 
   return (
@@ -68,6 +71,7 @@ export function Bestsellers() {
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
+                        if (!isSoldOut(ele)) dispatch(addItem({ productId: id }));
                       }}
                     >
                       {isSoldOut(ele) ? "Sold Out" : "Quick Add"}

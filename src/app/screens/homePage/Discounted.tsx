@@ -6,8 +6,11 @@ import {
   isSoldOut,
   products,
 } from "../productsPage/productsData";
+import { useAppDispatch } from "../../hooks";
+import { addItem } from "../cartPage/cartSlice";
 
 export function Discounted() {
+  const dispatch = useAppDispatch();
   const discounted = products.filter((p) => p.productDiscount);
 
   return (
@@ -67,6 +70,7 @@ export function Discounted() {
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
+                        if (!isSoldOut(ele)) dispatch(addItem({ productId: id }));
                       }}
                     >
                       {isSoldOut(ele) ? "Sold Out" : "Quick Add"}

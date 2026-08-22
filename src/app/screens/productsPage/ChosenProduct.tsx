@@ -10,10 +10,14 @@ import {
   products,
 } from "./productsData";
 import { getReviewsForProduct } from "./reviewsData";
+import { useAppDispatch } from "../../hooks";
+import { addItem } from "../cartPage/cartSlice";
 
 export function ChosenProduct() {
+  const dispatch = useAppDispatch();
   const { productId } = useParams<{ productId: string }>();
   const [qty, setQty] = useState(1);
+  const [justAdded, setJustAdded] = useState(false);
 
   const product = getProductById(productId ?? "") ?? products[1];
   const resolvedId = products.indexOf(product);
@@ -95,8 +99,14 @@ export function ChosenProduct() {
             </Box>
             <span
               className={`pdp-addbag${isSoldOut(product) ? " disabled" : ""}`}
+              onClick={() => {
+                if (isSoldOut(product)) return;
+                dispatch(addItem({ productId: resolvedId, quantity: qty }));
+                setJustAdded(true);
+                setTimeout(() => setJustAdded(false), 1200);
+              }}
             >
-              {isSoldOut(product) ? "Sold Out" : "Add to Bag"}
+              {isSoldOut(product) ? "Sold Out" : justAdded ? "Added ✓" : "Add to Bag"}
             </span>
           </Box>
           {isSoldOut(product) ? (
@@ -177,6 +187,7 @@ export function ChosenProduct() {
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
+                          if (!isSoldOut(ele)) dispatch(addItem({ productId: id }));
                         }}
                       >
                         {isSoldOut(ele) ? "Sold Out" : "Quick Add"}
