@@ -83,17 +83,82 @@
   justify-content: center;
 }
 
-.btn-signin {
-  background: #ffb6c1;
+.nav-account {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  text-decoration: none;
   color: #2d1b2e;
+  padding: 4px 10px 4px 4px;
+  border-radius: 999px;
+  transition: background 0.2s ease;
+  cursor: pointer;
+}
+
+.nav-account:hover,
+.nav-account.active {
+  background: #ffb6c1;
+}
+
+.nav-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #b85c7a;
+  color: #fff;
+  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.nav-account-name {
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+/* ACCOUNT DROPDOWN */
+
+.account-menu-frame {
+  width: 180px;
+  border-radius: 16px;
+  overflow: hidden;
+  padding: 8px;
+  animation: basket-pop-in 0.18s ease-out;
+}
+
+.account-menu-item {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: left;
   font-family: inherit;
   font-size: 13px;
-  font-weight: 700;
-  padding: 8px 18px;
-  border-radius: 999px;
-  border: none;
-  cursor: pointer;
+  font-weight: 600;
+  color: #2d1b2e;
   text-decoration: none;
+  background: none;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+.account-menu-item:hover {
+  background: #fae9ed;
+}
+
+.account-menu-logout {
+  color: #b85c7a;
+}
+
+.account-menu-divider {
+  height: 1px;
+  background: #f2e4e8;
+  margin: 4px 4px;
 }
 
 /* BASKET DROPDOWN */
@@ -183,6 +248,160 @@
 
 .basket-empty-cta:hover {
   background: #a54f6b;
+}
+
+.basket-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid #f2e4e8;
+}
+
+.basket-header-title {
+  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2d1b2e;
+}
+
+.basket-clear-all {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  border: none;
+  background: none;
+  color: #9c8489;
+  cursor: pointer;
+}
+
+.basket-clear-all svg {
+  width: 15px;
+  height: 15px;
+}
+
+.basket-clear-all:hover {
+  background: #fae9ed;
+  color: #b85c7a;
+}
+
+.basket-filled {
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.basket-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.basket-line-thumb {
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  background: #fdf2f4;
+  border: 1px solid #f0dce1;
+  object-fit: contain;
+  padding: 3px;
+  flex-shrink: 0;
+}
+
+.basket-line-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.basket-line-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.basket-line-name {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #2d1b2e;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.basket-line-remove {
+  flex-shrink: 0;
+  border: none;
+  background: none;
+  color: #9c8489;
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+
+.basket-line-remove:hover {
+  color: #ef4444;
+}
+
+.basket-line-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.basket-qty-stepper {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid #f0dce1;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.basket-qty-stepper button {
+  width: 22px;
+  height: 22px;
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 700;
+  color: #2d1b2e;
+  cursor: pointer;
+}
+
+.basket-qty-stepper span {
+  width: 18px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 11px;
+  display: inline-block;
+}
+
+.basket-line-price {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #2d1b2e;
+  flex-shrink: 0;
+}
+
+.basket-subtotal-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 700;
+  color: #2d1b2e;
+  padding-top: 10px;
+  border-top: 1px solid #f2e4e8;
 }
 
 /* AUTH MODAL */

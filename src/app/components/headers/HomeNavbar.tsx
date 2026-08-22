@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { Basket } from "./Basket";
+import { AccountMenu } from "./AccountMenu";
 import "../../../css/navbar.css";
 
 export function HomeNavbar() {
@@ -16,8 +17,8 @@ export function HomeNavbar() {
           <NavLink to="/products" activeClassName="active">
             Shop
           </NavLink>
-          <NavLink to="/products" activeClassName="active">
-            Bestsellers
+          <NavLink to="/cart" activeClassName="active">
+            Cart
           </NavLink>
           <NavLink to="/help" activeClassName="active">
             Help
@@ -25,7 +26,7 @@ export function HomeNavbar() {
         </div>
         <div className="right">
           <Basket />
-          <button className="btn-signin">Sign Up</button>
+          <AccountMenu />
         </div>
       </div>
     </nav>
