@@ -1,0 +1,14 @@
+/** Mirrors the backend enum (k-glow/src/libs/enums/member.enum.ts). */
+
+// MemberType — defines what kind of account a member has
+export enum MemberType {
+  USER = "USER", // regular customer
+  ADVISOR = "ADVISOR", // shop advisor (admin)
+}
+
+// MemberStatus — defines the current state of a member's account
+export enum MemberStatus {
+  ACTIVE = "ACTIVE", // normal, can use the app
+  BLOCK = "BLOCK", // blocked by admin, can't login
+  DELETE = "DELETE", // soft-deleted (not removed from DB, just marked as deleted)
+}

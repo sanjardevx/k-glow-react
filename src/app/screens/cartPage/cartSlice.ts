@@ -5,7 +5,7 @@ export interface CartLine {
   quantity: number;
 }
 
-interface CartState {
+export interface CartState {
   lines: CartLine[];
 }
 
