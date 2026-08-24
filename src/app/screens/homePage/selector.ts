@@ -3,12 +3,12 @@ import type { AppRootStore } from "../../../lib/types/screen";
 
 const selectHomePage = (state: AppRootStore) => state.homePage;
 
-export const selectBestsellers = createSelector(
+export const retrieveBestsellers = createSelector(
   selectHomePage,
   (homePage) => homePage.bestsellers,
 );
 
-export const selectDiscounted = createSelector(
+export const retrieveDiscounted = createSelector(
   selectHomePage,
   (homePage) => homePage.discounted,
 );
