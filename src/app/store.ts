@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import type { ThunkAction, Action } from "@reduxjs/toolkit";
 import cartReducer from "./screens/cartPage/cartSlice";
+import homePageReducer from "./screens/homePage/slice";
 
 export const store = configureStore({
   reducer: {
     cart: cartReducer,
+    homePage: homePageReducer,
   },
 });
 

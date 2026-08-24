@@ -1,13 +1,18 @@
 import type { CartState } from "../../app/screens/cartPage/cartSlice";
+import type { Product } from "./product";
 
 /** REACT APP STATE **/
 export interface AppRootStore {
   cart: CartState;
+  homePage: HomePageState;
 }
 
 /**
- * Note: unlike Burak (which fetches homepage data via Redux thunks), K-Glow's
- * homepage sections read straight from the static `products` catalog — so
- * there's no HomePageState slice to type here yet. This will grow alongside
- * whichever screen next gets its own real Redux state.
+ * HOMEPAGE — mirrors Burak's popularDishes/newDishes split, renamed to match
+ * K-Glow's actual sections. No topUsers/activeUsers here: K-Glow replaced
+ * that section with customer Reviews instead, so there's nothing to mirror.
  */
+export interface HomePageState {
+  bestsellers: Product[];
+  discounted: Product[];
+}
