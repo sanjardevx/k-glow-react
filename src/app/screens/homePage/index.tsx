@@ -24,9 +24,9 @@ const bestsellersRetriever = createSelector(
 );
 
 export function HomePage() {
+  // Selector: Store => Data
   const { setBestsellers: _setBestsellers } = actionDispatch(useAppDispatch());
   const { bestsellers: _bestsellers } = useAppSelector(bestsellersRetriever);
-  // Selector: Store => Data
 
   useEffect(() => {
     // Backend Server data request => Data
