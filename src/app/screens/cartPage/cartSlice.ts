@@ -1,7 +1,13 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
+/**
+ * productId is `number` for the old local mock catalog (array index) and
+ * `string` for real backend products (Mongo `_id`) — both live side by side
+ * until every product-listing screen is migrated off the mock data. Cart
+ * resolution for the `string` case lands in a later step.
+ */
 export interface CartLine {
-  productId: number;
+  productId: number | string;
   quantity: number;
 }
 
@@ -15,7 +21,10 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    addItem(state, action: PayloadAction<{ productId: number; quantity?: number }>) {
+    addItem(
+      state,
+      action: PayloadAction<{ productId: number | string; quantity?: number }>,
+    ) {
       const { productId, quantity = 1 } = action.payload;
       const existing = state.lines.find((l) => l.productId === productId);
       if (existing) {
@@ -24,12 +33,12 @@ const cartSlice = createSlice({
         state.lines.push({ productId, quantity });
       }
     },
-    removeItem(state, action: PayloadAction<number>) {
+    removeItem(state, action: PayloadAction<number | string>) {
       state.lines = state.lines.filter((l) => l.productId !== action.payload);
     },
     setQuantity(
       state,
-      action: PayloadAction<{ productId: number; quantity: number }>,
+      action: PayloadAction<{ productId: number | string; quantity: number }>,
     ) {
       const { productId, quantity } = action.payload;
       if (quantity <= 0) {
