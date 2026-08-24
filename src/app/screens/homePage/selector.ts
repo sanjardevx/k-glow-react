@@ -8,7 +8,7 @@ export const retrieveBestsellers = createSelector(
   (homePage) => homePage.bestsellers,
 );
 
-export const retrieveDiscounted = createSelector(
+export const retrieveNewArrivals = createSelector(
   selectHomePage,
-  (homePage) => homePage.discounted,
+  (homePage) => homePage.newArrivals,
 );

@@ -4,7 +4,7 @@ import type { Product } from "../../../lib/types/product";
 
 const initialState: HomePageState = {
   bestsellers: [],
-  discounted: [],
+  newArrivals: [],
 };
 
 const homePageSlice = createSlice({
@@ -14,13 +14,13 @@ const homePageSlice = createSlice({
     setBestsellers: (state, action: PayloadAction<Product[]>) => {
       state.bestsellers = action.payload;
     },
-    setDiscounted: (state, action: PayloadAction<Product[]>) => {
-      state.discounted = action.payload;
+    setNewArrivals: (state, action: PayloadAction<Product[]>) => {
+      state.newArrivals = action.payload;
     },
   },
 });
 
-export const { setBestsellers, setDiscounted } = homePageSlice.actions;
+export const { setBestsellers, setNewArrivals } = homePageSlice.actions;
 
 const HomePageReducer = homePageSlice.reducer;
 export default HomePageReducer;

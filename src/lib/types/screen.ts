@@ -14,5 +14,5 @@ export interface AppRootStore {
  */
 export interface HomePageState {
   bestsellers: Product[];
-  discounted: Product[];
+  newArrivals: Product[];
 }
