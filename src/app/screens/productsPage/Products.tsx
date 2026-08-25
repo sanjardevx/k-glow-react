@@ -10,7 +10,7 @@ import { retrieveProducts } from "./selector";
 import ProductService from "../../services/ProductService";
 import { serverApi } from "../../../lib/config";
 import type { AppDispatch } from "../../store";
-import type { Product } from "../../../lib/types/product";
+import type { Product, ProductInquiry } from "../../../lib/types/product";
 import {
   ProductCategory,
   ProductStatus,
@@ -29,10 +29,12 @@ type Chip = (typeof chips)[number];
 const PAGE_SIZE = 8;
 
 /**
- * The whole catalog is fetched once and filtered in the browser: two of the
- * chips can't be expressed as a backend query — "Bestseller" is a top-N slice
- * of the view counts, and "Sale" needs a discount field the API doesn't have.
- * Fine at this catalog size; revisit if it ever outgrows one page.
+ * Search runs on the server (`productSearch.search`), the chips filter what
+ * comes back in the browser. The chips stay client-side because two of them
+ * can't be expressed as a backend query — "Bestseller" is a top-N slice of the
+ * view counts, and "Sale" needs a discount field the API doesn't have — and a
+ * split where some chips refetch and others don't would be worse than either.
+ * Since every fetch asks for the whole matching set, the two stay consistent.
  */
 const FETCH_LIMIT = 100;
 const BESTSELLER_COUNT = 4;
@@ -50,6 +52,13 @@ export function Products() {
     chipFromQuery(location.search),
   );
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [productSearch, setProductSearch] = useState<ProductInquiry>({
+    page: 1,
+    limit: FETCH_LIMIT,
+    order: "createdAt",
+    search: "",
+  });
+  const [searchText, setSearchText] = useState("");
 
   /** Slice: Data => Store **/
   const { setProducts } = actionDispatch(dispatch);
@@ -58,10 +67,26 @@ export function Products() {
   useEffect(() => {
     const productService = new ProductService();
     productService
-      .getProducts({ page: 1, limit: FETCH_LIMIT, order: "createdAt" })
+      .getProducts(productSearch)
       .then((data) => setProducts(data))
       .catch((err) => console.log(err));
-  }, []);
+  }, [productSearch]);
+
+  // Emptying the box restores the full catalog without needing a second Enter.
+  useEffect(() => {
+    if (searchText !== "") return;
+    setProductSearch((prev) =>
+      prev.search === "" ? prev : { ...prev, page: 1, search: "" },
+    );
+  }, [searchText]);
+
+  /** HANDLERS **/
+  function searchProductHandler() {
+    setVisibleCount(PAGE_SIZE);
+    setProductSearch((prev) =>
+      prev.search === searchText ? prev : { ...prev, page: 1, search: searchText },
+    );
+  }
 
   const bestsellers = useMemo(() => {
     const top = [...products]
@@ -96,9 +121,17 @@ export function Products() {
           <Box
             component="form"
             className="shop-search"
-            onSubmit={(e) => e.preventDefault()}
+            onSubmit={(e) => {
+              e.preventDefault();
+              searchProductHandler();
+            }}
           >
-            <input type="search" placeholder="Search products..." />
+            <input
+              type="search"
+              placeholder="Search products..."
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+            />
             <button type="submit" className="shop-search-icon" aria-label="Search">
               🔍
             </button>
@@ -178,7 +211,9 @@ export function Products() {
           </Box>
         ) : (
           <Box className="shop-empty">
-            No products in this category yet — check back soon.
+            {productSearch.search
+              ? `No products match "${productSearch.search}".`
+              : "No products in this category yet — check back soon."}
           </Box>
         )}
 
