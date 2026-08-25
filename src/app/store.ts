@@ -3,11 +3,13 @@ import type { ThunkAction, Action } from "@reduxjs/toolkit";
 import { logger as reduxLogger } from "redux-logger";
 import cartReducer from "./screens/cartPage/cartSlice";
 import homePageReducer from "./screens/homePage/slice";
+import productsPageReducer from "./screens/productsPage/slice";
 
 export const store = configureStore({
   reducer: {
     cart: cartReducer,
     homePage: homePageReducer,
+    productsPage: productsPageReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(reduxLogger),

@@ -5,6 +5,7 @@ import type { Product } from "./product";
 export interface AppRootStore {
   cart: CartState;
   homePage: HomePageState;
+  productsPage: ProductsPageState;
 }
 
 /**
@@ -15,4 +16,14 @@ export interface AppRootStore {
 export interface HomePageState {
   bestsellers: Product[];
   newArrivals: Product[];
+}
+
+/**
+ * PRODUCTS PAGE — `products` backs the Shop grid, `chosenProduct` the detail
+ * page. No `restaurant` field: Burak renders the restaurant owner's Member
+ * card on its products page, K-Glow's Shop page has no such block.
+ */
+export interface ProductsPageState {
+  products: Product[];
+  chosenProduct: Product | null;
 }

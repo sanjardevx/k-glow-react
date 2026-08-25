@@ -10,8 +10,22 @@ import {
   products,
 } from "./productsData";
 import { getReviewsForProduct } from "./reviewsData";
+import { createSelector } from "@reduxjs/toolkit";
 import { useAppDispatch } from "../../hooks";
 import { addItem } from "../cartPage/cartSlice";
+import { setChosenProduct } from "./slice";
+import { retrieveChosenProduct } from "./selector";
+import type { AppDispatch } from "../../store";
+import type { Product } from "../../../lib/types/product";
+
+/** REDUX SLICE & SELECTOR **/
+const actionDispatch = (dispatch: AppDispatch) => ({
+  setChosenProduct: (data: Product | null) => dispatch(setChosenProduct(data)),
+});
+const chosenProductRetriever = createSelector(
+  retrieveChosenProduct,
+  (chosenProduct) => ({ chosenProduct }),
+);
 
 export function ChosenProduct() {
   const dispatch = useAppDispatch();

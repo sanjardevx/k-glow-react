@@ -9,8 +9,21 @@ import {
   products,
   type ProductCategory,
 } from "./productsData";
+import { createSelector } from "@reduxjs/toolkit";
 import { useAppDispatch } from "../../hooks";
 import { addItem } from "../cartPage/cartSlice";
+import { setProducts } from "./slice";
+import { retrieveProducts } from "./selector";
+import type { AppDispatch } from "../../store";
+import type { Product } from "../../../lib/types/product";
+
+/** REDUX SLICE & SELECTOR **/
+const actionDispatch = (dispatch: AppDispatch) => ({
+  setProducts: (data: Product[]) => dispatch(setProducts(data)),
+});
+const productsRetriever = createSelector(retrieveProducts, (products) => ({
+  products,
+}));
 
 const chips = ["All", "Bestseller", "Sale", "Skincare", "Makeup", "Sets"] as const;
 type Chip = (typeof chips)[number];
