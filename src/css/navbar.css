@@ -185,7 +185,7 @@
 }
 
 .basket-frame {
-  width: 300px;
+  width: 368px;
   border-radius: 16px;
   overflow: hidden;
   animation: basket-pop-in 0.18s ease-out;
@@ -239,8 +239,8 @@
   color: #fff;
   font-family: inherit;
   font-weight: 700;
-  font-size: 13px;
-  padding: 12px 20px;
+  font-size: 13.5px;
+  padding: 13px 20px;
   border-radius: 999px;
   border: none;
   cursor: pointer;
@@ -254,13 +254,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 18px;
+  padding: 16px 20px;
   border-bottom: 1px solid #f2e4e8;
 }
 
 .basket-header-title {
   font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  font-size: 14px;
+  font-size: 15.5px;
   font-weight: 600;
   color: #2d1b2e;
 }
@@ -289,11 +289,14 @@
 }
 
 .basket-filled {
-  padding: 14px 18px;
+  padding: 16px 20px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  max-height: 360px;
+  gap: 16px;
+  /* Only the list scrolls — the header, subtotal and CTA stay put. The vh
+     term keeps the whole popover on screen on short windows; the reserved
+     220px covers the navbar above it plus those fixed rows below. */
+  max-height: min(400px, calc(100vh - 220px));
   overflow-y: auto;
 }
 
@@ -304,8 +307,8 @@
 }
 
 .basket-line-thumb {
-  width: 42px;
-  height: 42px;
+  width: 52px;
+  height: 52px;
   border-radius: 8px;
   background: #fdf2f4;
   border: 1px solid #f0dce1;
@@ -330,7 +333,7 @@
 }
 
 .basket-line-name {
-  font-size: 12.5px;
+  font-size: 13.5px;
   font-weight: 600;
   color: #2d1b2e;
   overflow: hidden;
@@ -369,26 +372,26 @@
 }
 
 .basket-qty-stepper button {
-  width: 22px;
-  height: 22px;
+  width: 27px;
+  height: 27px;
   border: none;
   background: transparent;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   color: #2d1b2e;
   cursor: pointer;
 }
 
 .basket-qty-stepper span {
-  width: 18px;
+  width: 22px;
   text-align: center;
   font-weight: 700;
-  font-size: 11px;
+  font-size: 12.5px;
   display: inline-block;
 }
 
 .basket-line-price {
-  font-size: 12.5px;
+  font-size: 13.5px;
   font-weight: 700;
   color: #2d1b2e;
   flex-shrink: 0;
@@ -397,7 +400,7 @@
 .basket-subtotal-row {
   display: flex;
   justify-content: space-between;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   color: #2d1b2e;
   padding-top: 10px;
