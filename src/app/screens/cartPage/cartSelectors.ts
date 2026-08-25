@@ -1,43 +1,22 @@
 import { useAppSelector } from "../../hooks";
-import { finalPrice, products, type Product } from "../productsPage/productsData";
+import type { CartItem } from "../../../lib/types/cart";
 
-export function useCartLines() {
-  return useAppSelector((state) => state.cart.lines);
+/**
+ * No resolution step: each line already carries its own name, price and image,
+ * so the basket renders straight from state whatever page the shopper is on.
+ */
+export function useCartItems(): CartItem[] {
+  return useAppSelector((state) => state.cart.items);
 }
 
 export function useCartCount(): number {
-  const lines = useCartLines();
-  return lines.reduce((sum, l) => sum + l.quantity, 0);
-}
-
-export interface ResolvedCartLine {
-  productId: number | string;
-  quantity: number;
-  product: Product;
-  lineTotal: number;
-}
-
-export function useResolvedCart(): ResolvedCartLine[] {
-  const lines = useCartLines();
-  const resolved: ResolvedCartLine[] = [];
-  for (const l of lines) {
-    // Real backend products (string `_id`) aren't resolvable against this
-    // mock catalog yet — they're silently skipped until the cart itself
-    // reads from the backend too.
-    const product = typeof l.productId === "number" ? products[l.productId] : undefined;
-    if (!product) continue;
-    resolved.push({
-      productId: l.productId,
-      quantity: l.quantity,
-      product,
-      lineTotal: finalPrice(product) * l.quantity,
-    });
-  }
-  return resolved;
+  const items = useCartItems();
+  return items.reduce((sum, i) => sum + i.quantity, 0);
 }
 
 export function useCartSubtotal(): number {
-  return useResolvedCart().reduce((sum, l) => sum + l.lineTotal, 0);
+  const items = useCartItems();
+  return items.reduce((sum, i) => sum + i.price * i.quantity, 0);
 }
 
 /** Free at/above this subtotal; below it, delivery is paid to the courier
