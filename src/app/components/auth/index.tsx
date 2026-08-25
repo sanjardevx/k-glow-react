@@ -1,5 +1,11 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Box } from "@mui/material";
+import MemberService from "../../services/MemberService";
+import { Messages } from "../../../lib/config";
+import {
+  sweetErrorHandling,
+  sweetTopSmallSuccessAlert,
+} from "../../../lib/sweetAlert";
 import "../../../css/navbar.css";
 
 export type AuthMode = "login" | "signup";
@@ -17,6 +23,7 @@ export function AuthenticationModal(props: AuthenticationModalProps) {
   const [memberPhone, setMemberPhone] = useState("");
   const [memberPassword, setMemberPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   // Never carry a half-typed password over into the next time it opens.
   useEffect(() => {
@@ -25,15 +32,48 @@ export function AuthenticationModal(props: AuthenticationModalProps) {
     setMemberPhone("");
     setMemberPassword("");
     setShowPassword(false);
+    setSubmitting(false);
   }, [open]);
 
   const isSignup = mode === "signup";
 
   /** HANDLERS **/
+  async function handleSignupRequest() {
+    try {
+      // Phone is optional on the server, but its unique index is sparse — two
+      // members saved with an empty string would collide, so the form asks for
+      // all three rather than sending a blank.
+      const isFullfill =
+        memberNick !== "" && memberPhone !== "" && memberPassword !== "";
+      if (!isFullfill) throw new Error(Messages.error3);
+
+      const signupInput = { memberNick, memberPhone, memberPassword };
+
+      setSubmitting(true);
+      const member = new MemberService();
+      await member.signup(signupInput);
+
+      onClose();
+      await sweetTopSmallSuccessAlert(`Welcome, ${signupInput.memberNick}!`);
+    } catch (err) {
+      // Deliberately left open: a missing field or a taken nickname is
+      // something the shopper fixes right here, and closing would throw away
+      // everything they just typed.
+      console.log("Error, handleSignupRequest:", err);
+      sweetErrorHandling(err).then();
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    // The request itself lands in the next step — this commit publishes the
-    // component, the signup/login processes wire it to MemberService.
+    if (submitting) return;
+    if (isSignup) {
+      handleSignupRequest().then();
+      return;
+    }
+    // Login lands in the next step.
   }
 
   if (!open) return null;
@@ -109,8 +149,8 @@ export function AuthenticationModal(props: AuthenticationModalProps) {
 
           {!isSignup ? <span className="forgot-link">Forgot password?</span> : null}
 
-          <button type="submit" className="modal-btn">
-            {isSignup ? "Sign up" : "Log in"}
+          <button type="submit" className="modal-btn" disabled={submitting}>
+            {submitting ? "Please wait…" : isSignup ? "Sign up" : "Log in"}
           </button>
         </form>
 
