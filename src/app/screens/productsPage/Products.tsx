@@ -1,21 +1,20 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Box } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
-import {
-  finalPrice,
-  formatPrice,
-  getBestsellers,
-  isSoldOut,
-  products,
-  type ProductCategory,
-} from "./productsData";
 import { createSelector } from "@reduxjs/toolkit";
-import { useAppDispatch } from "../../hooks";
+import { finalPrice, formatPrice } from "./productsData";
+import { useAppDispatch, useAppSelector } from "../../hooks";
 import { addItem } from "../cartPage/cartSlice";
 import { setProducts } from "./slice";
 import { retrieveProducts } from "./selector";
+import ProductService from "../../services/ProductService";
+import { serverApi } from "../../../lib/config";
 import type { AppDispatch } from "../../store";
 import type { Product } from "../../../lib/types/product";
+import {
+  ProductCategory,
+  ProductStatus,
+} from "../../../lib/enums/product.enum";
 
 /** REDUX SLICE & SELECTOR **/
 const actionDispatch = (dispatch: AppDispatch) => ({
@@ -28,6 +27,15 @@ const productsRetriever = createSelector(retrieveProducts, (products) => ({
 const chips = ["All", "Bestseller", "Sale", "Skincare", "Makeup", "Sets"] as const;
 type Chip = (typeof chips)[number];
 const PAGE_SIZE = 8;
+
+/**
+ * The whole catalog is fetched once and filtered in the browser: two of the
+ * chips can't be expressed as a backend query — "Bestseller" is a top-N slice
+ * of the view counts, and "Sale" needs a discount field the API doesn't have.
+ * Fine at this catalog size; revisit if it ever outgrows one page.
+ */
+const FETCH_LIMIT = 100;
+const BESTSELLER_COUNT = 4;
 
 function chipFromQuery(search: string): Chip {
   const category = new URLSearchParams(search).get("category")?.toLowerCase();
@@ -43,16 +51,33 @@ export function Products() {
   );
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
-  const bestsellers = useMemo(() => new Set(getBestsellers()), []);
+  /** Slice: Data => Store **/
+  const { setProducts } = actionDispatch(dispatch);
+  const { products } = useAppSelector(productsRetriever);
+
+  useEffect(() => {
+    const productService = new ProductService();
+    productService
+      .getProducts({ page: 1, limit: FETCH_LIMIT, order: "createdAt" })
+      .then((data) => setProducts(data))
+      .catch((err) => console.log(err));
+  }, []);
+
+  const bestsellers = useMemo(() => {
+    const top = [...products]
+      .sort((a, b) => b.productViews - a.productViews)
+      .slice(0, BESTSELLER_COUNT);
+    return new Set(top.map((p) => p._id));
+  }, [products]);
 
   const filtered = useMemo(() => {
     if (activeChip === "All") return products;
     if (activeChip === "Bestseller")
-      return products.filter((p) => bestsellers.has(p));
+      return products.filter((p) => bestsellers.has(p._id));
     if (activeChip === "Sale") return products.filter((p) => p.productDiscount);
     const category = activeChip.toUpperCase() as ProductCategory;
     return products.filter((p) => p.productCategory === category);
-  }, [activeChip, bestsellers]);
+  }, [activeChip, products, bestsellers]);
 
   const visibleItems = filtered.slice(0, visibleCount);
   const hasMore = visibleCount < filtered.length;
@@ -97,18 +122,18 @@ export function Products() {
         {visibleItems.length !== 0 ? (
           <Box className="product-grid">
             {visibleItems.map((ele) => {
-              const id = products.indexOf(ele);
+              const soldOut = ele.productStatus === ProductStatus.PAUSE;
               return (
                 <Link
-                  to={`/products/${id}`}
+                  to={`/products/${ele._id}`}
                   className="p-card-link"
-                  key={id}
+                  key={ele._id}
                 >
-                  <Box className={`p-card${isSoldOut(ele) ? " soldout" : ""}`}>
+                  <Box className={`p-card${soldOut ? " soldout" : ""}`}>
                     <Box className="p-photo">
-                      {isSoldOut(ele) ? (
+                      {soldOut ? (
                         <span className="p-badge soldout">SOLD OUT</span>
-                      ) : bestsellers.has(ele) ? (
+                      ) : bestsellers.has(ele._id) ? (
                         <span className="p-badge best">BEST</span>
                       ) : ele.productDiscount ? (
                         <span className="p-badge sale">
@@ -116,23 +141,15 @@ export function Products() {
                         </span>
                       ) : null}
                       <Box className="p-photo-frame">
-                        <img src={ele.productImages[0]} alt={ele.productName} />
+                        <img
+                          src={`${serverApi}/${ele.productImages[0]}`}
+                          alt={ele.productName}
+                        />
                       </Box>
                     </Box>
                     <Box className="p-body">
                       <Box className="p-brand">{ele.productBrand}</Box>
                       <Box className="p-name">{ele.productName}</Box>
-                      <Box className="p-stars">
-                        <span className="star">
-                          {"★".repeat(ele.stars)}
-                        </span>
-                        {ele.stars < 5 ? (
-                          <span className="star empty">
-                            {"★".repeat(5 - ele.stars)}
-                          </span>
-                        ) : null}
-                        <span>({ele.reviews})</span>
-                      </Box>
                       <Box className="p-price-row">
                         <span className="p-price">
                           {formatPrice(finalPrice(ele))}
@@ -144,14 +161,14 @@ export function Products() {
                         ) : null}
                       </Box>
                       <Box
-                        className={`p-quickadd${isSoldOut(ele) ? " disabled" : ""}`}
+                        className={`p-quickadd${soldOut ? " disabled" : ""}`}
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
-                          if (!isSoldOut(ele)) dispatch(addItem({ productId: id }));
+                          if (!soldOut) dispatch(addItem({ productId: ele._id }));
                         }}
                       >
-                        {isSoldOut(ele) ? "Sold Out" : "Quick Add"}
+                        {soldOut ? "Sold Out" : "Quick Add"}
                       </Box>
                     </Box>
                   </Box>
