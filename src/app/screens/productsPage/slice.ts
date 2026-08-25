@@ -11,8 +11,10 @@ const productsPageSlice = createSlice({
   name: "productsPage",
   initialState,
   reducers: {
+    // See the note in homePage/slice.ts — the payload type describes the call
+    // site, so the array still has to be verified at runtime.
     setProducts: (state, action: PayloadAction<Product[]>) => {
-      state.products = action.payload;
+      state.products = Array.isArray(action.payload) ? action.payload : [];
     },
     setChosenProduct: (state, action: PayloadAction<Product | null>) => {
       state.chosenProduct = action.payload;
