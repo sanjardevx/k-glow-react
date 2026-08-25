@@ -22,6 +22,19 @@ class ProductService {
       throw err;
     }
   }
+
+  public async getProduct(productId: string): Promise<Product> {
+    try {
+      const url = `${this.path}/product/${productId}`;
+      // withCredentials so the session cookie rides along — the backend only
+      // counts a view (and de-duplicates it) for an identified member.
+      const result = await axios.get(url, { withCredentials: true });
+      return result.data;
+    } catch (err) {
+      console.log("Error, getProduct:", err);
+      throw err;
+    }
+  }
 }
 
 export default ProductService;

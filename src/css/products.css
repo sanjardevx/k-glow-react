@@ -203,6 +203,12 @@
   padding: 26px 32px 8px;
 }
 
+.pdp-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 .pdp-photo {
   position: relative;
   aspect-ratio: 1 / 1;
@@ -212,11 +218,21 @@
   overflow: hidden;
 }
 
+/* All views are stacked; only the active one is painted, so switching is a
+   GPU-composited fade with nothing to re-download. */
 .pdp-photo img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: contain;
   display: block;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.pdp-photo img.active {
+  opacity: 1;
 }
 
 .pdp-photo .p-badge {
@@ -224,6 +240,58 @@
   left: 14px;
   font-size: 11px;
   padding: 5px 11px;
+  z-index: 2; /* sits above the stacked images */
+}
+
+.pdp-thumbs {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pdp-thumb {
+  width: 66px;
+  height: 66px;
+  padding: 4px;
+  border-radius: 12px;
+  border: 1.5px solid #f0dce1;
+  background: #fff;
+  cursor: pointer;
+  overflow: hidden;
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.pdp-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.pdp-thumb:hover {
+  border-color: #e8b4b8;
+  transform: translateY(-2px);
+}
+
+.pdp-thumb.active {
+  border-color: #b85c7a;
+}
+
+.pdp-thumb:focus-visible {
+  outline: 2px solid #b85c7a;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pdp-photo img,
+  .pdp-thumb {
+    transition: none;
+  }
+  .pdp-thumb:hover {
+    transform: none;
+  }
 }
 
 .pdp-info {
@@ -261,6 +329,10 @@
   color: #b85c7a;
   font-weight: 600;
   text-decoration: none;
+}
+
+.pdp-views {
+  font-variant-numeric: tabular-nums;
 }
 
 .pdp-price-row {

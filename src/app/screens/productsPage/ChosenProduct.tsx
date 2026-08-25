@@ -1,50 +1,91 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Box } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
-import {
-  finalPrice,
-  formatPrice,
-  getProductById,
-  isBestseller,
-  isSoldOut,
-  products,
-} from "./productsData";
+import { finalPrice, formatPrice } from "./productsData";
 import { getReviewsForProduct } from "./reviewsData";
 import { createSelector } from "@reduxjs/toolkit";
-import { useAppDispatch } from "../../hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks";
 import { addItem } from "../cartPage/cartSlice";
-import { setChosenProduct } from "./slice";
-import { retrieveChosenProduct } from "./selector";
+import { setChosenProduct, setProducts } from "./slice";
+import { retrieveChosenProduct, retrieveProducts } from "./selector";
+import ProductService from "../../services/ProductService";
+import { serverApi } from "../../../lib/config";
 import type { AppDispatch } from "../../store";
 import type { Product } from "../../../lib/types/product";
+import { ProductStatus } from "../../../lib/enums/product.enum";
 
 /** REDUX SLICE & SELECTOR **/
 const actionDispatch = (dispatch: AppDispatch) => ({
   setChosenProduct: (data: Product | null) => dispatch(setChosenProduct(data)),
+  setProducts: (data: Product[]) => dispatch(setProducts(data)),
 });
 const chosenProductRetriever = createSelector(
   retrieveChosenProduct,
   (chosenProduct) => ({ chosenProduct }),
 );
 
+const CATALOG_LIMIT = 100;
+const RELATED_COUNT = 4;
+const BESTSELLER_COUNT = 4;
+
+function isSoldOut(product: Product): boolean {
+  return product.productStatus === ProductStatus.PAUSE;
+}
+
 export function ChosenProduct() {
   const dispatch = useAppDispatch();
   const { productId } = useParams<{ productId: string }>();
   const [qty, setQty] = useState(1);
   const [justAdded, setJustAdded] = useState(false);
+  const [activeImage, setActiveImage] = useState(0);
 
-  const product = getProductById(productId ?? "") ?? products[1];
-  const resolvedId = products.indexOf(product);
+  /** Slice: Data => Store **/
+  const { setChosenProduct, setProducts } = actionDispatch(dispatch);
+  const { chosenProduct } = useAppSelector(chosenProductRetriever);
+  const catalog = useAppSelector(retrieveProducts);
 
-  const sameCategory = products.filter(
-    (p, i) => i !== resolvedId && p.productCategory === product.productCategory,
-  );
-  const otherCategory = products.filter(
-    (p, i) => i !== resolvedId && p.productCategory !== product.productCategory,
-  );
-  const related = [...sameCategory, ...otherCategory].slice(0, 4);
+  useEffect(() => {
+    const productService = new ProductService();
+    setActiveImage(0);
 
-  const productReviews = getReviewsForProduct(String(resolvedId));
+    productService
+      .getProduct(productId)
+      .then((data) => setChosenProduct(data))
+      .catch((err) => console.log(err));
+
+    // The catalog backs both the "You may also like" row and the BEST badge,
+    // and it has to be fetched here too — landing straight on this URL means
+    // the Shop page never ran.
+    productService
+      .getProducts({ page: 1, limit: CATALOG_LIMIT, order: "createdAt" })
+      .then((data) => setProducts(data))
+      .catch((err) => console.log(err));
+  }, [productId]);
+
+  const bestsellers = useMemo(() => {
+    const top = [...catalog]
+      .sort((a, b) => b.productViews - a.productViews)
+      .slice(0, BESTSELLER_COUNT);
+    return new Set(top.map((p) => p._id));
+  }, [catalog]);
+
+  const related = useMemo(() => {
+    if (!chosenProduct) return [];
+    const others = catalog.filter((p) => p._id !== chosenProduct._id);
+    const sameCategory = others.filter(
+      (p) => p.productCategory === chosenProduct.productCategory,
+    );
+    const otherCategory = others.filter(
+      (p) => p.productCategory !== chosenProduct.productCategory,
+    );
+    return [...sameCategory, ...otherCategory].slice(0, RELATED_COUNT);
+  }, [catalog, chosenProduct]);
+
+  if (!chosenProduct) return null;
+
+  const product = chosenProduct;
+  const soldOut = isSoldOut(product);
+  const productReviews = getReviewsForProduct(product._id);
 
   return (
     <div className="chosen-product-page">
@@ -57,15 +98,44 @@ export function ChosenProduct() {
       </Box>
 
       <Box className="pdp">
-        <Box className="pdp-photo">
-          {isSoldOut(product) ? (
-            <span className="p-badge soldout">SOLD OUT</span>
-          ) : isBestseller(product) ? (
-            <span className="p-badge best">BEST</span>
-          ) : product.productDiscount ? (
-            <span className="p-badge sale">−{product.productDiscount}%</span>
+        <Box className="pdp-gallery">
+          <Box className="pdp-photo">
+            {soldOut ? (
+              <span className="p-badge soldout">SOLD OUT</span>
+            ) : bestsellers.has(product._id) ? (
+              <span className="p-badge best">BEST</span>
+            ) : product.productDiscount ? (
+              <span className="p-badge sale">−{product.productDiscount}%</span>
+            ) : null}
+            {/* Every shot is in the DOM from the start, so switching is a
+                crossfade between decoded images rather than a fresh load. */}
+            {product.productImages.map((image, index) => (
+              <img
+                key={image}
+                className={index === activeImage ? "active" : undefined}
+                src={`${serverApi}/${image}`}
+                alt={`${product.productName} — view ${index + 1}`}
+                aria-hidden={index !== activeImage}
+              />
+            ))}
+          </Box>
+
+          {product.productImages.length > 1 ? (
+            <Box className="pdp-thumbs">
+              {product.productImages.map((image, index) => (
+                <button
+                  type="button"
+                  key={image}
+                  className={`pdp-thumb${index === activeImage ? " active" : ""}`}
+                  aria-label={`Show view ${index + 1}`}
+                  aria-current={index === activeImage}
+                  onClick={() => setActiveImage(index)}
+                >
+                  <img src={`${serverApi}/${image}`} alt="" />
+                </button>
+              ))}
+            </Box>
           ) : null}
-          <img src={product.productImages[0]} alt={product.productName} />
         </Box>
         <Box className="pdp-info">
           <Box className="pdp-brand">{product.productBrand}</Box>
@@ -73,13 +143,11 @@ export function ChosenProduct() {
             {product.productName}
           </Box>
           <Box className="pdp-rating">
-            <span className="star">{"★".repeat(product.stars)}</span>
-            {product.stars < 5 ? (
-              <span className="star empty">
-                {"★".repeat(5 - product.stars)}
-              </span>
-            ) : null}
-            <a href="#pdp-reviews">See {product.reviews} reviews</a>
+            <span className="pdp-views">👁 {product.productViews} views</span>
+            <a href="#pdp-reviews">
+              See {productReviews.length}{" "}
+              {productReviews.length === 1 ? "review" : "reviews"}
+            </a>
           </Box>
           <Box className="pdp-price-row">
             <span className="pdp-price">{formatPrice(finalPrice(product))}</span>
@@ -97,7 +165,7 @@ export function ChosenProduct() {
             <Box className="qty-stepper">
               <button
                 type="button"
-                disabled={isSoldOut(product)}
+                disabled={soldOut}
                 onClick={() => setQty((q) => Math.max(1, q - 1))}
               >
                 −
@@ -105,25 +173,25 @@ export function ChosenProduct() {
               <span>{qty}</span>
               <button
                 type="button"
-                disabled={isSoldOut(product)}
+                disabled={soldOut}
                 onClick={() => setQty((q) => q + 1)}
               >
                 +
               </button>
             </Box>
             <span
-              className={`pdp-addbag${isSoldOut(product) ? " disabled" : ""}`}
+              className={`pdp-addbag${soldOut ? " disabled" : ""}`}
               onClick={() => {
-                if (isSoldOut(product)) return;
-                dispatch(addItem({ productId: resolvedId, quantity: qty }));
+                if (soldOut) return;
+                dispatch(addItem({ productId: product._id, quantity: qty }));
                 setJustAdded(true);
                 setTimeout(() => setJustAdded(false), 1200);
               }}
             >
-              {isSoldOut(product) ? "Sold Out" : justAdded ? "Added ✓" : "Add to Bag"}
+              {soldOut ? "Sold Out" : justAdded ? "Added ✓" : "Add to Bag"}
             </span>
           </Box>
-          {isSoldOut(product) ? (
+          {soldOut ? (
             <p className="pdp-soldout-note">
               This product is temporarily out of stock — check back soon.
             </p>
@@ -154,14 +222,18 @@ export function ChosenProduct() {
           </Box>
           <Box className="product-grid">
             {related.map((ele) => {
-              const id = products.indexOf(ele);
+              const eleSoldOut = isSoldOut(ele);
               return (
-                <Link to={`/products/${id}`} className="p-card-link" key={id}>
-                  <Box className={`p-card${isSoldOut(ele) ? " soldout" : ""}`}>
+                <Link
+                  to={`/products/${ele._id}`}
+                  className="p-card-link"
+                  key={ele._id}
+                >
+                  <Box className={`p-card${eleSoldOut ? " soldout" : ""}`}>
                     <Box className="p-photo">
-                      {isSoldOut(ele) ? (
+                      {eleSoldOut ? (
                         <span className="p-badge soldout">SOLD OUT</span>
-                      ) : isBestseller(ele) ? (
+                      ) : bestsellers.has(ele._id) ? (
                         <span className="p-badge best">BEST</span>
                       ) : ele.productDiscount ? (
                         <span className="p-badge sale">
@@ -169,23 +241,15 @@ export function ChosenProduct() {
                         </span>
                       ) : null}
                       <Box className="p-photo-frame">
-                        <img src={ele.productImages[0]} alt={ele.productName} />
+                        <img
+                          src={`${serverApi}/${ele.productImages[0]}`}
+                          alt={ele.productName}
+                        />
                       </Box>
                     </Box>
                     <Box className="p-body">
                       <Box className="p-brand">{ele.productBrand}</Box>
                       <Box className="p-name">{ele.productName}</Box>
-                      <Box className="p-stars">
-                        <span className="star">
-                          {"★".repeat(ele.stars)}
-                        </span>
-                        {ele.stars < 5 ? (
-                          <span className="star empty">
-                            {"★".repeat(5 - ele.stars)}
-                          </span>
-                        ) : null}
-                        <span>({ele.reviews})</span>
-                      </Box>
                       <Box className="p-price-row">
                         <span className="p-price">
                           {formatPrice(finalPrice(ele))}
@@ -197,14 +261,15 @@ export function ChosenProduct() {
                         ) : null}
                       </Box>
                       <Box
-                        className={`p-quickadd${isSoldOut(ele) ? " disabled" : ""}`}
+                        className={`p-quickadd${eleSoldOut ? " disabled" : ""}`}
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
-                          if (!isSoldOut(ele)) dispatch(addItem({ productId: id }));
+                          if (!eleSoldOut)
+                            dispatch(addItem({ productId: ele._id }));
                         }}
                       >
-                        {isSoldOut(ele) ? "Sold Out" : "Quick Add"}
+                        {eleSoldOut ? "Sold Out" : "Quick Add"}
                       </Box>
                     </Box>
                   </Box>
@@ -221,7 +286,6 @@ export function ChosenProduct() {
             <Box className="section-title">
               Reviews for this <em>product</em>
             </Box>
-            <span className="section-link">See all {product.reviews} →</span>
           </Box>
           {productReviews.length !== 0 ? (
             <Box
