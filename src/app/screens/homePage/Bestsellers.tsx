@@ -1,13 +1,13 @@
 import { Box } from "@mui/material";
 import { Link } from "react-router-dom";
 import { finalPrice, formatPrice } from "../productsPage/productsData";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { addItem } from "../cartPage/cartSlice";
+import { useAppSelector } from "../../hooks";
+import { useBasket } from "../cartPage/useBasket";
 import { retrieveBestsellers } from "./selector";
 import { serverApi } from "../../../lib/config";
 
 export function Bestsellers() {
-  const dispatch = useAppDispatch();
+  const { onAdd } = useBasket();
   const bestsellers = useAppSelector(retrieveBestsellers);
 
   return (
@@ -65,7 +65,7 @@ export function Bestsellers() {
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        if (!soldOut) dispatch(addItem({ productId: ele._id }));
+                        if (!soldOut) onAdd(ele);
                       }}
                     >
                       {soldOut ? "Sold Out" : "Quick Add"}

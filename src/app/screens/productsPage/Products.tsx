@@ -4,7 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import { createSelector } from "@reduxjs/toolkit";
 import { finalPrice, formatPrice } from "./productsData";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { addItem } from "../cartPage/cartSlice";
+import { useBasket } from "../cartPage/useBasket";
 import { setProducts } from "./slice";
 import { retrieveProducts } from "./selector";
 import ProductService from "../../services/ProductService";
@@ -47,6 +47,7 @@ function chipFromQuery(search: string): Chip {
 
 export function Products() {
   const dispatch = useAppDispatch();
+  const { onAdd } = useBasket();
   const location = useLocation();
   const [activeChip, setActiveChip] = useState<Chip>(() =>
     chipFromQuery(location.search),
@@ -198,7 +199,7 @@ export function Products() {
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
-                          if (!soldOut) dispatch(addItem({ productId: ele._id }));
+                          if (!soldOut) onAdd(ele);
                         }}
                       >
                         {soldOut ? "Sold Out" : "Quick Add"}

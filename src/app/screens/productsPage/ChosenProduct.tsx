@@ -5,7 +5,7 @@ import { finalPrice, formatPrice } from "./productsData";
 import { getReviewsForProduct } from "./reviewsData";
 import { createSelector } from "@reduxjs/toolkit";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { addItem } from "../cartPage/cartSlice";
+import { useBasket } from "../cartPage/useBasket";
 import { setChosenProduct, setProducts } from "./slice";
 import { retrieveChosenProduct, retrieveProducts } from "./selector";
 import ProductService from "../../services/ProductService";
@@ -34,6 +34,7 @@ function isSoldOut(product: Product): boolean {
 
 export function ChosenProduct() {
   const dispatch = useAppDispatch();
+  const { onAdd } = useBasket();
   const { productId } = useParams<{ productId: string }>();
   const [qty, setQty] = useState(1);
   const [justAdded, setJustAdded] = useState(false);
@@ -183,7 +184,7 @@ export function ChosenProduct() {
               className={`pdp-addbag${soldOut ? " disabled" : ""}`}
               onClick={() => {
                 if (soldOut) return;
-                dispatch(addItem({ productId: product._id, quantity: qty }));
+                onAdd(product, qty);
                 setJustAdded(true);
                 setTimeout(() => setJustAdded(false), 1200);
               }}
@@ -266,7 +267,7 @@ export function ChosenProduct() {
                           e.preventDefault();
                           e.stopPropagation();
                           if (!eleSoldOut)
-                            dispatch(addItem({ productId: ele._id }));
+                            onAdd(ele);
                         }}
                       >
                         {eleSoldOut ? "Sold Out" : "Quick Add"}

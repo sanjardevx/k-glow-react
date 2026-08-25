@@ -4,23 +4,16 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import { useHistory } from "react-router-dom";
 import { formatPrice } from "../../screens/productsPage/productsData";
-import {
-  useCartCount,
-  useCartSubtotal,
-  useResolvedCart,
-} from "../../screens/cartPage/cartSelectors";
-import { useAppDispatch } from "../../hooks";
-import { clearCart, removeItem, setQuantity } from "../../screens/cartPage/cartSlice";
+import { useBasket } from "../../screens/cartPage/useBasket";
+import { serverApi } from "../../../lib/config";
 
 export function Basket() {
   const history = useHistory();
-  const dispatch = useAppDispatch();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
-  const lines = useResolvedCart();
-  const count = useCartCount();
-  const subtotal = useCartSubtotal();
+  const { items, count, subtotal, onIncrease, onDecrease, onDelete, onDeleteAll } =
+    useBasket();
 
   /** HANDLERS **/
   const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
@@ -93,7 +86,7 @@ export function Basket() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        {lines.length === 0 ? (
+        {items.length === 0 ? (
           <Box className={"basket-frame"}>
             <Box className={"basket-empty"}>
               <Box className={"basket-empty-icon"}>
@@ -128,7 +121,7 @@ export function Basket() {
                 type="button"
                 className={"basket-clear-all"}
                 aria-label="Clear all products"
-                onClick={() => dispatch(clearCart())}
+                onClick={onDeleteAll}
               >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M3 6h18"></path>
@@ -138,59 +131,39 @@ export function Basket() {
               </button>
             </Box>
             <Box className={"basket-filled"}>
-              {lines.map((line) => (
-                <Box className={"basket-line"} key={line.productId}>
+              {items.map((item) => (
+                <Box className={"basket-line"} key={item._id}>
                   <img
-                    src={line.product.productImages[0]}
+                    src={`${serverApi}/${item.productImage}`}
                     className={"basket-line-thumb"}
-                    alt={line.product.productName}
+                    alt={item.productName}
                   />
                   <Box className={"basket-line-info"}>
                     <Box className={"basket-line-top"}>
                       <span className={"basket-line-name"}>
-                        {line.product.productName}
+                        {item.productName}
                       </span>
                       <button
                         type="button"
                         className={"basket-line-remove"}
-                        aria-label={`Remove ${line.product.productName}`}
-                        onClick={() => dispatch(removeItem(line.productId))}
+                        aria-label={`Remove ${item.productName}`}
+                        onClick={() => onDelete(item)}
                       >
                         ×
                       </button>
                     </Box>
                     <Box className={"basket-line-bottom"}>
                       <Box className={"basket-qty-stepper"}>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            dispatch(
-                              setQuantity({
-                                productId: line.productId,
-                                quantity: line.quantity - 1,
-                              }),
-                            )
-                          }
-                        >
+                        <button type="button" onClick={() => onDecrease(item)}>
                           −
                         </button>
-                        <span>{line.quantity}</span>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            dispatch(
-                              setQuantity({
-                                productId: line.productId,
-                                quantity: line.quantity + 1,
-                              }),
-                            )
-                          }
-                        >
+                        <span>{item.quantity}</span>
+                        <button type="button" onClick={() => onIncrease(item)}>
                           +
                         </button>
                       </Box>
                       <span className={"basket-line-price"}>
-                        {formatPrice(line.lineTotal)}
+                        {formatPrice(item.price * item.quantity)}
                       </span>
                     </Box>
                   </Box>

@@ -3,22 +3,15 @@ import { Box } from "@mui/material";
 import { Link } from "react-router-dom";
 import { CheckoutStepper } from "../../components/CheckoutStepper";
 import { PaymentModal } from "../../components/PaymentModal";
-import {
-  isFreeDelivery,
-  useCartCount,
-  useCartSubtotal,
-  useResolvedCart,
-} from "./cartSelectors";
-import { useAppDispatch } from "../../hooks";
-import { removeItem, setQuantity } from "./cartSlice";
-import { finalPrice, formatPrice } from "../productsPage/productsData";
+import { isFreeDelivery } from "./cartSelectors";
+import { useBasket } from "./useBasket";
+import { formatPrice } from "../productsPage/productsData";
+import { serverApi } from "../../../lib/config";
 import "../../../css/cart.css";
 
 export function CartPage() {
-  const dispatch = useAppDispatch();
-  const lines = useResolvedCart();
-  const count = useCartCount();
-  const subtotal = useCartSubtotal();
+  const { items, count, subtotal, onIncrease, onDecrease, onDelete } =
+    useBasket();
   const freeDelivery = isFreeDelivery(subtotal);
   const [paymentOpen, setPaymentOpen] = useState(false);
 
@@ -28,7 +21,7 @@ export function CartPage() {
       <Box className="cart-body">
         <h2 className="cart-title">Your Bag</h2>
 
-        {lines.length === 0 ? (
+        {items.length === 0 ? (
           <Box className="cart-empty">
             Your bag is empty.{" "}
             <Link to="/products" className="cart-empty-link">
@@ -38,57 +31,35 @@ export function CartPage() {
         ) : (
           <Box className="cart-layout">
             <Box className="cart-items">
-              {lines.map((line) => (
-                <Box className="cart-item" key={line.productId}>
+              {items.map((item) => (
+                <Box className="cart-item" key={item._id}>
                   <img
                     className="thumb"
-                    src={line.product.productImages[0]}
-                    alt={line.product.productName}
+                    src={`${serverApi}/${item.productImage}`}
+                    alt={item.productName}
                   />
                   <Box className="info">
-                    <span className="brand">{line.product.productBrand}</span>
-                    <span className="name">{line.product.productName}</span>
-                    <span className="unit">
-                      {formatPrice(finalPrice(line.product))} each
-                    </span>
+                    <span className="brand">{item.productBrand}</span>
+                    <span className="name">{item.productName}</span>
+                    <span className="unit">{formatPrice(item.price)} each</span>
                   </Box>
                   <Box className="qty-stepper">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        dispatch(
-                          setQuantity({
-                            productId: line.productId,
-                            quantity: line.quantity - 1,
-                          }),
-                        )
-                      }
-                    >
+                    <button type="button" onClick={() => onDecrease(item)}>
                       −
                     </button>
-                    <span>{line.quantity}</span>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        dispatch(
-                          setQuantity({
-                            productId: line.productId,
-                            quantity: line.quantity + 1,
-                          }),
-                        )
-                      }
-                    >
+                    <span>{item.quantity}</span>
+                    <button type="button" onClick={() => onIncrease(item)}>
                       +
                     </button>
                   </Box>
                   <span className="line-total">
-                    {formatPrice(line.lineTotal)}
+                    {formatPrice(item.price * item.quantity)}
                   </span>
                   <button
                     type="button"
                     className="remove"
-                    aria-label={`Remove ${line.product.productName}`}
-                    onClick={() => dispatch(removeItem(line.productId))}
+                    aria-label={`Remove ${item.productName}`}
+                    onClick={() => onDelete(item)}
                   >
                     ×
                   </button>
@@ -133,7 +104,7 @@ export function CartPage() {
       <PaymentModal
         open={paymentOpen}
         onClose={() => setPaymentOpen(false)}
-        lines={lines}
+        items={items}
         subtotal={subtotal}
       />
     </div>

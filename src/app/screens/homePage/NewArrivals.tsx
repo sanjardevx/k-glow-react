@@ -1,13 +1,13 @@
 import { Box } from "@mui/material";
 import { Link } from "react-router-dom";
 import { finalPrice, formatPrice } from "../productsPage/productsData";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { addItem } from "../cartPage/cartSlice";
+import { useAppSelector } from "../../hooks";
+import { useBasket } from "../cartPage/useBasket";
 import { retrieveNewArrivals } from "./selector";
 import { serverApi } from "../../../lib/config";
 
 export function NewArrivals() {
-  const dispatch = useAppDispatch();
+  const { onAdd } = useBasket();
   const newArrivals = useAppSelector(retrieveNewArrivals);
 
   return (
@@ -62,7 +62,7 @@ export function NewArrivals() {
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        if (!soldOut) dispatch(addItem({ productId: ele._id }));
+                        if (!soldOut) onAdd(ele);
                       }}
                     >
                       {soldOut ? "Sold Out" : "Quick Add"}

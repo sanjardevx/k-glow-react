@@ -3,9 +3,8 @@ import { Box } from "@mui/material";
 import { useHistory } from "react-router-dom";
 import { CheckoutStepper } from "./CheckoutStepper";
 import { formatPrice } from "../screens/productsPage/productsData";
-import { type ResolvedCartLine } from "../screens/cartPage/cartSelectors";
-import { useAppDispatch } from "../hooks";
-import { clearCart } from "../screens/cartPage/cartSlice";
+import type { CartItem } from "../../lib/types/cart";
+import { useBasket } from "../screens/cartPage/useBasket";
 import "../../css/orders.css";
 import "../../css/payment-modal.css";
 
@@ -14,12 +13,12 @@ type Step = "bank" | "confirm" | "thanks";
 interface PaymentModalProps {
   open: boolean;
   onClose: () => void;
-  lines: ResolvedCartLine[];
+  items: CartItem[];
   subtotal: number;
 }
 
-export function PaymentModal({ open, onClose, lines, subtotal }: PaymentModalProps) {
-  const dispatch = useAppDispatch();
+export function PaymentModal({ open, onClose, items, subtotal }: PaymentModalProps) {
+  const { onDeleteAll } = useBasket();
   const history = useHistory();
   const [step, setStep] = useState<Step>("bank");
   const [screenshotName, setScreenshotName] = useState<string | null>(null);
@@ -27,11 +26,11 @@ export function PaymentModal({ open, onClose, lines, subtotal }: PaymentModalPro
 
   // Snapshot the order at open time so the Thanks step still shows correct
   // totals after the cart is cleared on submit.
-  const snapshotRef = useRef({ lines, subtotal, orderNo: "" });
+  const snapshotRef = useRef({ items, subtotal, orderNo: "" });
   useEffect(() => {
     if (open) {
       snapshotRef.current = {
-        lines,
+        items,
         subtotal,
         orderNo: `KG-${Math.floor(10000 + Math.random() * 89999)}`,
       };
@@ -51,7 +50,7 @@ export function PaymentModal({ open, onClose, lines, subtotal }: PaymentModalPro
   }
 
   function handleSubmitProof() {
-    dispatch(clearCart());
+    onDeleteAll();
     setStep("thanks");
   }
 
@@ -63,7 +62,7 @@ export function PaymentModal({ open, onClose, lines, subtotal }: PaymentModalPro
   if (!open) return null;
 
   const snap = snapshotRef.current;
-  const itemCount = snap.lines.reduce((sum, l) => sum + l.quantity, 0);
+  const itemCount = snap.items.reduce((sum, i) => sum + i.quantity, 0);
   const currentStepNum = step === "bank" ? 2 : step === "confirm" ? 3 : 4;
 
   return (
