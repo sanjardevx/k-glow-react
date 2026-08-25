@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Route, Switch, useLocation } from "react-router-dom";
 import { HomePage } from "./screens/homePage";
 import { ProductsPage } from "./screens/productsPage";
@@ -8,14 +9,28 @@ import { HelpPage } from "./screens/helpPage";
 import { Footer } from "./components/footer";
 import { HomeNavbar } from "./components/headers/HomeNavbar";
 import { OtherNavbar } from "./components/headers/OtherNavbar";
+import { AuthenticationModal, type AuthMode } from "./components/auth";
 import "../css/app.css";
 
 function App() {
   const location = useLocation();
+  const [authOpen, setAuthOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<AuthMode>("login");
+
+  /** HANDLERS **/
+  const handleAuthOpen = (mode: AuthMode) => {
+    setAuthMode(mode);
+    setAuthOpen(true);
+  };
+  const handleAuthClose = () => setAuthOpen(false);
 
   return (
     <>
-      {location.pathname === "/" ? <HomeNavbar /> : <OtherNavbar />}
+      {location.pathname === "/" ? (
+        <HomeNavbar onAuthOpen={handleAuthOpen} />
+      ) : (
+        <OtherNavbar onAuthOpen={handleAuthOpen} />
+      )}
       <Switch>
         <Route path="/products" component={ProductsPage} />
         <Route path="/cart" component={CartPage} />
@@ -25,6 +40,13 @@ function App() {
         <Route exact path="/" component={HomePage} />
       </Switch>
       <Footer />
+
+      <AuthenticationModal
+        open={authOpen}
+        mode={authMode}
+        onClose={handleAuthClose}
+        onSwitchMode={setAuthMode}
+      />
     </>
   );
 }

@@ -1,9 +1,19 @@
 import { NavLink } from "react-router-dom";
 import { Basket } from "./Basket";
 import { AccountMenu } from "./AccountMenu";
+import type { AuthMode } from "../auth";
+import type { Member } from "../../../lib/types/member";
 import "../../../css/navbar.css";
 
-export function HomeNavbar() {
+interface HomeNavbarProps {
+  onAuthOpen: (mode: AuthMode) => void;
+}
+
+export function HomeNavbar({ onAuthOpen }: HomeNavbarProps) {
+  // Stays null until the login process lands — the logged-in branch below is
+  // the account menu that's already built, waiting on a real session.
+  const authMember: Member | null = null;
+
   return (
     <nav className="nav">
       <div className="nav-inner">
@@ -26,7 +36,17 @@ export function HomeNavbar() {
         </div>
         <div className="right">
           <Basket />
-          <AccountMenu />
+          {authMember ? (
+            <AccountMenu />
+          ) : (
+            <button
+              type="button"
+              className="nav-login-btn"
+              onClick={() => onAuthOpen("login")}
+            >
+              Login
+            </button>
+          )}
         </div>
       </div>
     </nav>

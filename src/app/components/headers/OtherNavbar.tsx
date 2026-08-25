@@ -1,9 +1,18 @@
 import { NavLink } from "react-router-dom";
 import { Basket } from "./Basket";
 import { AccountMenu } from "./AccountMenu";
+import type { AuthMode } from "../auth";
+import type { Member } from "../../../lib/types/member";
 import "../../../css/navbar.css";
 
-export function OtherNavbar() {
+interface OtherNavbarProps {
+  onAuthOpen: (mode: AuthMode) => void;
+}
+
+export function OtherNavbar({ onAuthOpen }: OtherNavbarProps) {
+  // See HomeNavbar — null until the login process lands.
+  const authMember: Member | null = null;
+
   return (
     <nav className="nav">
       <div className="nav-inner">
@@ -26,7 +35,17 @@ export function OtherNavbar() {
         </div>
         <div className="right">
           <Basket />
-          <AccountMenu />
+          {authMember ? (
+            <AccountMenu />
+          ) : (
+            <button
+              type="button"
+              className="nav-login-btn"
+              onClick={() => onAuthOpen("login")}
+            >
+              Login
+            </button>
+          )}
         </div>
       </div>
     </nav>
