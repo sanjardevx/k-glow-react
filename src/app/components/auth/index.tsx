@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { Box } from "@mui/material";
 import MemberService from "../../services/MemberService";
 import { Messages } from "../../../lib/config";
+import { useGlobals } from "../../context/useGlobals";
 import {
   sweetErrorHandling,
   sweetTopSmallSuccessAlert,
@@ -22,8 +23,11 @@ export function AuthenticationModal(props: AuthenticationModalProps) {
   const [memberNick, setMemberNick] = useState("");
   const [memberPhone, setMemberPhone] = useState("");
   const [memberPassword, setMemberPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const { setAuthMember } = useGlobals();
 
   // Never carry a half-typed password over into the next time it opens.
   useEffect(() => {
@@ -31,7 +35,9 @@ export function AuthenticationModal(props: AuthenticationModalProps) {
     setMemberNick("");
     setMemberPhone("");
     setMemberPassword("");
+    setConfirmPassword("");
     setShowPassword(false);
+    setShowConfirm(false);
     setSubmitting(false);
   }, [open]);
 
@@ -44,15 +50,20 @@ export function AuthenticationModal(props: AuthenticationModalProps) {
       // members saved with an empty string would collide, so the form asks for
       // all three rather than sending a blank.
       const isFullfill =
-        memberNick !== "" && memberPhone !== "" && memberPassword !== "";
+        memberNick !== "" &&
+        memberPhone !== "" &&
+        memberPassword !== "" &&
+        confirmPassword !== "";
       if (!isFullfill) throw new Error(Messages.error3);
+      if (memberPassword !== confirmPassword) throw new Error(Messages.error6);
 
       const signupInput = { memberNick, memberPhone, memberPassword };
 
       setSubmitting(true);
       const member = new MemberService();
-      await member.signup(signupInput);
+      const authMember = await member.signup(signupInput);
 
+      setAuthMember(authMember);
       onClose();
       await sweetTopSmallSuccessAlert(`Welcome, ${signupInput.memberNick}!`);
     } catch (err) {
@@ -66,14 +77,34 @@ export function AuthenticationModal(props: AuthenticationModalProps) {
     }
   }
 
+  async function handleLoginRequest() {
+    try {
+      const isFullfill = memberNick !== "" && memberPassword !== "";
+      if (!isFullfill) throw new Error(Messages.error3);
+
+      const loginInput = { memberNick, memberPassword };
+
+      setSubmitting(true);
+      const member = new MemberService();
+      const authMember = await member.login(loginInput);
+
+      setAuthMember(authMember);
+      onClose();
+      await sweetTopSmallSuccessAlert(`Welcome back, ${loginInput.memberNick}!`);
+    } catch (err) {
+      // Same reasoning as signup: a wrong password is fixed in place.
+      console.log("Error, handleLoginRequest:", err);
+      sweetErrorHandling(err).then();
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (submitting) return;
-    if (isSignup) {
-      handleSignupRequest().then();
-      return;
-    }
-    // Login lands in the next step.
+    if (isSignup) handleSignupRequest().then();
+    else handleLoginRequest().then();
   }
 
   if (!open) return null;
@@ -89,7 +120,7 @@ export function AuthenticationModal(props: AuthenticationModalProps) {
         </Box>
         <p className="modal-subtext">
           {isSignup
-            ? "One account keeps your bag and your orders in one place."
+            ? "Create an account to start shopping and place your orders."
             : "Log in to place your order and follow it through."}
         </p>
 
@@ -101,7 +132,7 @@ export function AuthenticationModal(props: AuthenticationModalProps) {
                 id="auth-nick"
                 type="text"
                 autoComplete="nickname"
-                placeholder="What should we call you?"
+                placeholder="Enter your name"
                 value={memberNick}
                 onChange={(e) => setMemberNick(e.target.value)}
               />
@@ -109,14 +140,16 @@ export function AuthenticationModal(props: AuthenticationModalProps) {
           ) : null}
 
           <Box className="modal-field">
+            {/* Login matches on the nickname only — the server never looks a
+                member up by phone, so don't offer it as an option here. */}
             <label htmlFor="auth-phone">
-              {isSignup ? "Phone number" : "Name or phone number"}
+              {isSignup ? "Phone number" : "Name"}
             </label>
             <input
               id="auth-phone"
               type="text"
               autoComplete={isSignup ? "tel" : "username"}
-              placeholder={isSignup ? "+998 90 123 45 67" : "Your name or phone"}
+              placeholder={isSignup ? "+998 90 123 45 67" : "Enter your name"}
               value={isSignup ? memberPhone : memberNick}
               onChange={(e) =>
                 isSignup
@@ -133,7 +166,7 @@ export function AuthenticationModal(props: AuthenticationModalProps) {
                 id="auth-password"
                 type={showPassword ? "text" : "password"}
                 autoComplete={isSignup ? "new-password" : "current-password"}
-                placeholder="••••••••"
+                placeholder={isSignup ? "Create a password" : "Enter your password"}
                 value={memberPassword}
                 onChange={(e) => setMemberPassword(e.target.value)}
               />
@@ -146,6 +179,29 @@ export function AuthenticationModal(props: AuthenticationModalProps) {
               </span>
             </Box>
           </Box>
+
+          {isSignup ? (
+            <Box className="modal-field">
+              <label htmlFor="auth-password-confirm">Confirm password</label>
+              <Box className="pw-wrap">
+                <input
+                  id="auth-password-confirm"
+                  type={showConfirm ? "text" : "password"}
+                  autoComplete="new-password"
+                  placeholder="Re-enter your password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+                <span
+                  className="pw-toggle"
+                  role="button"
+                  onClick={() => setShowConfirm((v) => !v)}
+                >
+                  {showConfirm ? "HIDE" : "SHOW"}
+                </span>
+              </Box>
+            </Box>
+          ) : null}
 
           {!isSignup ? <span className="forgot-link">Forgot password?</span> : null}
 
