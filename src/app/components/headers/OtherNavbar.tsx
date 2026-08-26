@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import { Basket } from "./Basket";
 import { AccountMenu } from "./AccountMenu";
 import type { AuthMode } from "../auth";
-import type { Member } from "../../../lib/types/member";
+import { useGlobals } from "../../context/useGlobals";
 import "../../../css/navbar.css";
 
 interface OtherNavbarProps {
@@ -10,8 +10,7 @@ interface OtherNavbarProps {
 }
 
 export function OtherNavbar({ onAuthOpen }: OtherNavbarProps) {
-  // See HomeNavbar — null until the login process lands.
-  const authMember: Member | null = null;
+  const { authMember } = useGlobals();
 
   return (
     <nav className="nav">
@@ -40,10 +39,10 @@ export function OtherNavbar({ onAuthOpen }: OtherNavbarProps) {
           ) : (
             <button
               type="button"
-              className="nav-login-btn"
-              onClick={() => onAuthOpen("login")}
+              className="nav-auth-btn"
+              onClick={() => onAuthOpen("signup")}
             >
-              Login
+              Sign Up
             </button>
           )}
         </div>

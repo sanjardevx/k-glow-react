@@ -1,20 +1,25 @@
 import { useState } from "react";
 import { Box } from "@mui/material";
+import { useGlobals } from "../../context/useGlobals";
 import "../../../css/myPage.css";
 
-const INITIAL_PROFILE = {
-  nick: "nodira.k",
-  phone: "+998 90 123 45 67",
-  address: "Chilonzor, Tashkent",
-  desc: "K-beauty skincare lover, mostly Skincare + a few Makeup picks.",
-};
-
 export function UserPage() {
-  const [nick, setNick] = useState(INITIAL_PROFILE.nick);
-  const [phone, setPhone] = useState(INITIAL_PROFILE.phone);
-  const [address, setAddress] = useState(INITIAL_PROFILE.address);
-  const [desc, setDesc] = useState(INITIAL_PROFILE.desc);
-  const [profile, setProfile] = useState(INITIAL_PROFILE);
+  const { authMember } = useGlobals();
+
+  // Name and phone come from the account; address and description are only
+  // ever set here, so they start empty rather than pretending to hold data.
+  const initialProfile = {
+    nick: authMember?.memberNick ?? "",
+    phone: authMember?.memberPhone ?? "",
+    address: authMember?.memberAddress ?? "",
+    desc: authMember?.memberDesc ?? "",
+  };
+
+  const [nick, setNick] = useState(initialProfile.nick);
+  const [phone, setPhone] = useState(initialProfile.phone);
+  const [address, setAddress] = useState(initialProfile.address);
+  const [desc, setDesc] = useState(initialProfile.desc);
+  const [profile, setProfile] = useState(initialProfile);
   const [saved, setSaved] = useState(false);
 
   function handleSave() {
@@ -32,12 +37,26 @@ export function UserPage() {
             <h4>Edit your details</h4>
             <Box className="avatar-upload-row">
               <Box className="avatar-edit-wrap">
-                <Box className="avatar-edit">{nick.charAt(0).toUpperCase()}</Box>
+                <Box className="avatar-edit">
+                  {/* No uploads yet — a plain figure reads as "no photo set"
+                      more honestly than an initial pretending to be one. */}
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                  </svg>
+                </Box>
                 <Box className="avatar-edit-badge">✎</Box>
               </Box>
               <Box className="avatar-upload-copy">
                 <strong>Profile photo</strong>
-                Optional — a letter avatar works fine too.
+                Optional — you can add one later.
               </Box>
             </Box>
 
@@ -73,13 +92,31 @@ export function UserPage() {
           <Box className="mypage-stagger-2">
             <Box className="profile-card">
               <Box className="profile-avatar">
-                {profile.nick.charAt(0).toUpperCase()}
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
               </Box>
               <Box className="profile-name">{profile.nick}</Box>
               <Box className="profile-type">User</Box>
-              <Box className="profile-address">📍 {profile.address}</Box>
-              <Box className="profile-divider" />
-              <Box className="profile-desc">"{profile.desc}"</Box>
+              {/* Address and description are blank until the shopper fills them
+                  in — a lone pin or empty quotes would just look broken. */}
+              {profile.address ? (
+                <Box className="profile-address">📍 {profile.address}</Box>
+              ) : null}
+              {profile.desc ? (
+                <>
+                  <Box className="profile-divider" />
+                  <Box className="profile-desc">"{profile.desc}"</Box>
+                </>
+              ) : null}
             </Box>
           </Box>
         </Box>

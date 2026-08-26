@@ -120,7 +120,7 @@
   font-weight: 700;
 }
 
-.nav-login-btn {
+.nav-auth-btn {
   background: #b85c7a;
   color: #fff;
   font-family: inherit;
@@ -133,7 +133,7 @@
   transition: background 0.2s ease;
 }
 
-.nav-login-btn:hover {
+.nav-auth-btn:hover {
   background: #a54f6b;
 }
 
@@ -170,6 +170,15 @@
 
 .account-menu-logout {
   color: #b85c7a;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.account-menu-logout svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
 }
 
 .account-menu-divider {

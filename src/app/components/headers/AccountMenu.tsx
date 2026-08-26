@@ -1,11 +1,19 @@
 import { useState, type MouseEvent } from "react";
 import { Box } from "@mui/material";
 import Menu from "@mui/material/Menu";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
+import { useGlobals } from "../../context/useGlobals";
+import MemberService from "../../services/MemberService";
+import {
+  sweetErrorHandling,
+  sweetTopSmallSuccessAlert,
+} from "../../../lib/sweetAlert";
 
 export function AccountMenu() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const { authMember, setAuthMember } = useGlobals();
+  const history = useHistory();
 
   const handleClick = (e: MouseEvent<HTMLElement>) => {
     setAnchorEl(e.currentTarget);
@@ -13,10 +21,23 @@ export function AccountMenu() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const handleLogout = () => {
-    // hardcoded for now — real logout wiring comes later
+  const handleLogout = async () => {
     handleClose();
+    try {
+      const member = new MemberService();
+      await member.logout();
+      setAuthMember(null);
+      // My Page is the one route that means nothing signed out.
+      if (history.location.pathname === "/member-page") history.push("/");
+      await sweetTopSmallSuccessAlert("You're signed out.");
+    } catch (err) {
+      console.log("Error, handleLogout:", err);
+      sweetErrorHandling(err).then();
+    }
   };
+
+  const memberNick = authMember?.memberNick ?? "";
+  const initial = memberNick.charAt(0).toUpperCase();
 
   return (
     <>
@@ -29,8 +50,8 @@ export function AccountMenu() {
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
       >
-        <span className="nav-avatar">N</span>
-        <span className="nav-account-name">Nodira</span>
+        <span className="nav-avatar">{initial}</span>
+        <span className="nav-account-name">{memberNick}</span>
       </Box>
       <Menu
         anchorEl={anchorEl}
@@ -76,6 +97,20 @@ export function AccountMenu() {
             className="account-menu-item account-menu-logout"
             onClick={handleLogout}
           >
+            {/* Same mark the admin panel uses for logout, so the two halves of
+                the product read as one system. */}
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
             Log out
           </button>
         </Box>
