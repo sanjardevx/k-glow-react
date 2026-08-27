@@ -184,7 +184,7 @@ export function ChosenProduct() {
               className={`pdp-addbag${soldOut ? " disabled" : ""}`}
               onClick={() => {
                 if (soldOut) return;
-                onAdd(product, qty);
+                if (!onAdd(product, qty)) return;
                 setJustAdded(true);
                 setTimeout(() => setJustAdded(false), 1200);
               }}
