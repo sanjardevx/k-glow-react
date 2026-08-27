@@ -4,12 +4,14 @@ import { logger as reduxLogger } from "redux-logger";
 import cartReducer, { CART_STORAGE_KEY } from "./screens/cartPage/cartSlice";
 import homePageReducer from "./screens/homePage/slice";
 import productsPageReducer from "./screens/productsPage/slice";
+import ordersPageReducer from "./screens/ordersPage/slice";
 
 export const store = configureStore({
   reducer: {
     cart: cartReducer,
     homePage: homePageReducer,
     productsPage: productsPageReducer,
+    ordersPage: ordersPageReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(reduxLogger),

@@ -1,11 +1,13 @@
 import type { CartState } from "../../app/screens/cartPage/cartSlice";
 import type { Product } from "./product";
+import type { Order } from "./order";
 
 /** REACT APP STATE **/
 export interface AppRootStore {
   cart: CartState;
   homePage: HomePageState;
   productsPage: ProductsPageState;
+  ordersPage: OrdersPageState;
 }
 
 /**
@@ -26,4 +28,15 @@ export interface HomePageState {
 export interface ProductsPageState {
   products: Product[];
   chosenProduct: Product | null;
+}
+
+/**
+ * ORDERS PAGE — one list per tab, named after K-Glow's own order statuses
+ * (Burak's paused/process/finished became waiting/confirmed/rejected when the
+ * checkout moved to bank transfer plus manual confirmation).
+ */
+export interface OrdersPageState {
+  waitingOrders: Order[];
+  confirmedOrders: Order[];
+  rejectedOrders: Order[];
 }
