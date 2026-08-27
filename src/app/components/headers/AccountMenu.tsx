@@ -3,6 +3,8 @@ import { Box } from "@mui/material";
 import Menu from "@mui/material/Menu";
 import { NavLink, useHistory } from "react-router-dom";
 import { useGlobals } from "../../context/useGlobals";
+import { useAppDispatch } from "../../hooks";
+import { clearCart } from "../../screens/cartPage/cartSlice";
 import MemberService from "../../services/MemberService";
 import {
   sweetErrorHandling,
@@ -13,6 +15,7 @@ export function AccountMenu() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const { authMember, setAuthMember } = useGlobals();
+  const dispatch = useAppDispatch();
   const history = useHistory();
 
   const handleClick = (e: MouseEvent<HTMLElement>) => {
@@ -27,8 +30,17 @@ export function AccountMenu() {
       const member = new MemberService();
       await member.logout();
       setAuthMember(null);
-      // My Page is the one route that means nothing signed out.
-      if (history.location.pathname === "/member-page") history.push("/");
+      // The bag belongs to whoever is signed in — a signed-out visitor isn't
+      // allowed to have one (see useBasket.onAdd), so it can't survive logout
+      // either. Without this, the old items and the "Pay" flow both stayed
+      // reachable after signing out.
+      dispatch(clearCart());
+      // My Page and Cart are the two routes that mean nothing once signed out.
+      if (
+        history.location.pathname === "/member-page" ||
+        history.location.pathname === "/cart"
+      )
+        history.push("/");
       await sweetTopSmallSuccessAlert("You're signed out.");
     } catch (err) {
       console.log("Error, handleLogout:", err);

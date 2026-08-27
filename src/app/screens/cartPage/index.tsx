@@ -5,11 +5,13 @@ import { CheckoutStepper } from "../../components/CheckoutStepper";
 import { PaymentModal } from "../../components/PaymentModal";
 import { isFreeDelivery } from "./cartSelectors";
 import { useBasket } from "./useBasket";
+import { useGlobals } from "../../context/useGlobals";
 import { formatPrice } from "../productsPage/productsData";
 import { serverApi } from "../../../lib/config";
 import "../../../css/cart.css";
 
 export function CartPage() {
+  const { authMember } = useGlobals();
   const { items, count, subtotal, onIncrease, onDecrease, onDelete } =
     useBasket();
   const freeDelivery = isFreeDelivery(subtotal);
@@ -21,7 +23,14 @@ export function CartPage() {
       <Box className="cart-body">
         <h2 className="cart-title">Your Bag</h2>
 
-        {items.length === 0 ? (
+        {!authMember ? (
+          // Logging out clears the bag (see AccountMenu.handleLogout), so the
+          // only way to land here signed out is a stale/expired session — the
+          // bag and the Pay button must never be reachable without one.
+          <Box className="cart-empty">
+            Please log in to view your bag and check out.
+          </Box>
+        ) : items.length === 0 ? (
           <Box className="cart-empty">
             Your bag is empty.{" "}
             <Link to="/products" className="cart-empty-link">
