@@ -1,0 +1,14 @@
+/**
+ * Sticky footer: the shell fills the window and the routed page takes whatever
+ * height is left over, so on a short page — an empty bag, the Help tabs — the
+ * footer sits on the bottom edge instead of leaving a white band beneath it.
+ */
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-main {
+  flex: 1;
+}

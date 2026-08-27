@@ -1,6 +1,11 @@
 import { Box } from "@mui/material";
+import type { AuthMode } from "../../components/auth";
 
-export function Events() {
+interface EventsProps {
+  onAuthOpen: (mode: AuthMode) => void;
+}
+
+export function Events({ onAuthOpen }: EventsProps) {
   return (
     <section className="events">
       <Box className="cta-banner">
@@ -15,7 +20,11 @@ export function Events() {
           Create your free K-Glow Secrets account and get 10% off your first
           order — no email lists, just a discount waiting for you.
         </p>
-        <button type="button" className="cta-signup-btn">
+        <button
+          type="button"
+          className="cta-signup-btn"
+          onClick={() => onAuthOpen("signup")}
+        >
           Sign Up ✨
         </button>
         <Box className="cta-perks">

@@ -11,6 +11,7 @@ import { setBestsellers, setNewArrivals } from "./slice";
 import type { AppDispatch } from "../../store";
 import type { Product } from "../../../lib/types/product";
 import ProductService from "../../services/ProductService";
+import type { AuthMode } from "../../components/auth";
 import "../../../css/home.css";
 
 /** REDUX SLICE & SELECTOR **/
@@ -19,7 +20,11 @@ const actionDispatch = (dispatch: AppDispatch) => ({
   setNewArrivals: (data: Product[]) => dispatch(setNewArrivals(data)),
 });
 
-export function HomePage() {
+interface HomePageProps {
+  onAuthOpen: (mode: AuthMode) => void;
+}
+
+export function HomePage({ onAuthOpen }: HomePageProps) {
   // Selector: Store => Data
   const { setBestsellers, setNewArrivals } = actionDispatch(useAppDispatch());
 
@@ -46,7 +51,7 @@ export function HomePage() {
       <NewArrivals />
       <Reviews />
       <Brands />
-      <Events />
+      <Events onAuthOpen={onAuthOpen} />
     </div>
   );
 }

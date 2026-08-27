@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Route, Switch, useLocation } from "react-router-dom";
 import { HomePage } from "./screens/homePage";
 import { ProductsPage } from "./screens/productsPage";
@@ -17,6 +17,16 @@ function App() {
   const [authOpen, setAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState<AuthMode>("login");
 
+  /**
+   * A new route keeps the previous page's scroll position, so tapping a
+   * product from halfway down the Shop grid would open its detail page already
+   * scrolled past the photo. Keyed on the pathname only — the in-page "See
+   * reviews" anchor changes the hash, and that jump should be left alone.
+   */
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
   /** HANDLERS **/
   const handleAuthOpen = (mode: AuthMode) => {
     setAuthMode(mode);
@@ -25,20 +35,26 @@ function App() {
   const handleAuthClose = () => setAuthOpen(false);
 
   return (
-    <>
+    <div className="app-shell">
       {location.pathname === "/" ? (
         <HomeNavbar onAuthOpen={handleAuthOpen} />
       ) : (
         <OtherNavbar onAuthOpen={handleAuthOpen} />
       )}
-      <Switch>
-        <Route path="/products" component={ProductsPage} />
-        <Route path="/cart" component={CartPage} />
-        <Route path="/orders" component={OrdersPage} />
-        <Route path="/member-page" component={UserPage} />
-        <Route path="/help" component={HelpPage} />
-        <Route exact path="/" component={HomePage} />
-      </Switch>
+      <main className="app-main">
+        <Switch>
+          <Route path="/products" component={ProductsPage} />
+          <Route path="/cart" component={CartPage} />
+          <Route path="/orders" component={OrdersPage} />
+          <Route path="/member-page" component={UserPage} />
+          <Route path="/help" component={HelpPage} />
+          <Route
+            exact
+            path="/"
+            render={() => <HomePage onAuthOpen={handleAuthOpen} />}
+          />
+        </Switch>
+      </main>
       <Footer />
 
       <AuthenticationModal
@@ -47,7 +63,7 @@ function App() {
         onClose={handleAuthClose}
         onSwitchMode={setAuthMode}
       />
-    </>
+    </div>
   );
 }
 
