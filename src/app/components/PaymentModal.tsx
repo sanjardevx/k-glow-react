@@ -5,6 +5,9 @@ import { CheckoutStepper } from "./CheckoutStepper";
 import { formatPrice } from "../screens/productsPage/productsData";
 import type { CartItem } from "../../lib/types/cart";
 import { useBasket } from "../screens/cartPage/useBasket";
+import { useGlobals } from "../context/useGlobals";
+import OrderService from "../services/OrderService";
+import { sweetErrorHandling } from "../../lib/sweetAlert";
 import "../../css/orders.css";
 import "../../css/payment-modal.css";
 
@@ -19,10 +22,12 @@ interface PaymentModalProps {
 
 export function PaymentModal({ open, onClose, items, subtotal }: PaymentModalProps) {
   const { onDeleteAll } = useBasket();
+  const { authMember } = useGlobals();
   const history = useHistory();
   const [step, setStep] = useState<Step>("bank");
-  const [screenshotName, setScreenshotName] = useState<string | null>(null);
+  const [screenshot, setScreenshot] = useState<File | null>(null);
   const [transferNote, setTransferNote] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   // Snapshot the order at open time so the Thanks step still shows correct
   // totals after the cart is cleared on submit.
@@ -40,18 +45,37 @@ export function PaymentModal({ open, onClose, items, subtotal }: PaymentModalPro
 
   function handleClose() {
     setStep("bank");
-    setScreenshotName(null);
+    setScreenshot(null);
     setTransferNote("");
+    setSubmitting(false);
     onClose();
   }
 
   function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
-    setScreenshotName(e.target.files?.[0]?.name ?? null);
+    setScreenshot(e.target.files?.[0] ?? null);
   }
 
-  function handleSubmitProof() {
-    onDeleteAll();
-    setStep("thanks");
+  async function handleSubmitProof() {
+    if (!screenshot || submitting) return;
+    try {
+      setSubmitting(true);
+      const orderService = new OrderService();
+      await orderService.createOrder(items, {
+        paymentProof: [screenshot],
+        transferNote,
+        deliveryAddress: authMember?.memberAddress,
+      });
+
+      // Only once the order is really on the server — otherwise the bag would
+      // be thrown away for an order that never got created.
+      onDeleteAll();
+      setStep("thanks");
+    } catch (err) {
+      console.log("Error, handleSubmitProof:", err);
+      sweetErrorHandling(err).then();
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   function handleContinueShopping() {
@@ -59,7 +83,9 @@ export function PaymentModal({ open, onClose, items, subtotal }: PaymentModalPro
     history.push("/products");
   }
 
-  if (!open) return null;
+  // CartPage already keeps this closed for a signed-out visitor — this is
+  // just the last line of defense (e.g. a session expiring mid-checkout).
+  if (!open || !authMember) return null;
 
   const snap = snapshotRef.current;
   const itemCount = snap.items.reduce((sum, i) => sum + i.quantity, 0);
@@ -118,8 +144,8 @@ export function PaymentModal({ open, onClose, items, subtotal }: PaymentModalPro
               </Box>
               <label className="upload-box">
                 <span className="ic">⬆</span>
-                {screenshotName
-                  ? `Selected: ${screenshotName}`
+                {screenshot
+                  ? `Selected: ${screenshot.name}`
                   : "Upload your transfer screenshot"}
                 <input
                   type="file"
@@ -139,7 +165,7 @@ export function PaymentModal({ open, onClose, items, subtotal }: PaymentModalPro
               <button
                 type="button"
                 className="modal-btn"
-                disabled={!screenshotName}
+                disabled={!screenshot || submitting}
                 onClick={handleSubmitProof}
               >
                 Submit for confirmation

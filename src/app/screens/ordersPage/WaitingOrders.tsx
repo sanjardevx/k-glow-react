@@ -1,41 +1,47 @@
 import { Box, Stack } from "@mui/material";
 import TabPanel from "@mui/lab/TabPanel";
-import { finalPrice, formatPrice, products } from "../productsPage/productsData";
-import { ordersByStatus, orderTotal } from "./ordersData";
+import { formatPrice } from "../productsPage/productsData";
+import { useAppSelector } from "../../hooks";
+import { retrieveWaitingOrders } from "./selector";
+import { findOrderProduct } from "./orderHelpers";
+import { serverApi } from "../../../lib/config";
 
 export function WaitingOrders() {
-  const list = ordersByStatus("WAITING_CONFIRMATION");
+  const orders = useAppSelector(retrieveWaitingOrders);
 
   return (
     <TabPanel value="1">
       <Stack className="orders-list">
-        {list.length !== 0 ? (
-          list.map((order, index) => (
-            <Box className="order-card" key={index}>
+        {orders.length !== 0 ? (
+          orders.map((order) => (
+            <Box className="order-card" key={order._id}>
               <Box className="order-card-head">
                 <span className="status-pill wait">Waiting Confirmation</span>
-                <span className="order-date">{order.createdAt}</span>
+                <span className="order-date">
+                  {new Date(order.createdAt).toLocaleDateString()}
+                </span>
               </Box>
               <Box className="order-items">
-                {order.items.map((line, i) => {
-                  const product = products[line.productId];
+                {order.orderItems?.map((item) => {
+                  const product = findOrderProduct(order, item);
                   return (
-                    <Box className="order-line" key={i}>
+                    <Box className="order-line" key={item._id}>
                       <img
-                        src={product.productImages[0]}
+                        src={`${serverApi}/${product?.productImages?.[0] ?? ""}`}
                         className="order-line-thumb"
-                        alt={product.productName}
+                        alt={product?.productName ?? ""}
                       />
                       <Box className="order-line-info">
                         <span className="order-line-name">
-                          {product.productName}
+                          {product?.productName ?? "Product unavailable"}
                         </span>
                         <span className="order-line-qty">
-                          × {line.itemQuantity}
+                          × {item.itemQuantity}
                         </span>
                       </Box>
                       <span className="order-line-price">
-                        {formatPrice(finalPrice(product) * line.itemQuantity)}
+                        {/* The price the order was placed at, not today's. */}
+                        {formatPrice(item.itemPrice * item.itemQuantity)}
                       </span>
                     </Box>
                   );
@@ -51,7 +57,7 @@ export function WaitingOrders() {
               </Box>
               <Box className="order-total-row total">
                 <span>Total</span>
-                <span>{formatPrice(orderTotal(order))}</span>
+                <span>{formatPrice(order.orderTotal)}</span>
               </Box>
               <p className="order-note">
                 We're reviewing your payment screenshot — this usually takes
