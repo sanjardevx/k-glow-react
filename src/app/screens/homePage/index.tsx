@@ -7,10 +7,12 @@ import { Reviews } from "./Reviews";
 import { Brands } from "./Brands";
 import { Events } from "./Events";
 import { useAppDispatch } from "../../hooks";
-import { setBestsellers, setNewArrivals } from "./slice";
+import { setBestsellers, setNewArrivals, setReviews } from "./slice";
 import type { AppDispatch } from "../../store";
 import type { Product } from "../../../lib/types/product";
+import type { Review } from "../../../lib/types/review";
 import ProductService from "../../services/ProductService";
+import ReviewService from "../../services/ReviewService";
 import type { AuthMode } from "../../components/auth";
 import "../../../css/home.css";
 
@@ -18,6 +20,7 @@ import "../../../css/home.css";
 const actionDispatch = (dispatch: AppDispatch) => ({
   setBestsellers: (data: Product[]) => dispatch(setBestsellers(data)),
   setNewArrivals: (data: Product[]) => dispatch(setNewArrivals(data)),
+  setReviews: (data: Review[]) => dispatch(setReviews(data)),
 });
 
 interface HomePageProps {
@@ -26,11 +29,14 @@ interface HomePageProps {
 
 export function HomePage({ onAuthOpen }: HomePageProps) {
   // Selector: Store => Data
-  const { setBestsellers, setNewArrivals } = actionDispatch(useAppDispatch());
+  const { setBestsellers, setNewArrivals, setReviews } = actionDispatch(
+    useAppDispatch(),
+  );
 
   // Slice: Data => Store
   useEffect(() => {
     const productService = new ProductService();
+    const reviewService = new ReviewService();
 
     productService
       .getProducts({ page: 1, limit: 4, order: "productViews" })
@@ -40,6 +46,11 @@ export function HomePage({ onAuthOpen }: HomePageProps) {
     productService
       .getProducts({ page: 1, limit: 4, order: "createdAt" })
       .then((data) => setNewArrivals(data))
+      .catch((err) => console.log(err));
+
+    reviewService
+      .getReviews(6)
+      .then((data) => setReviews(data))
       .catch((err) => console.log(err));
   }, []);
 

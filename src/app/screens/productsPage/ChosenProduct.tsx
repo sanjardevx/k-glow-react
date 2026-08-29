@@ -2,16 +2,17 @@ import { useEffect, useMemo, useState } from "react";
 import { Box } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import { finalPrice, formatPrice } from "./productsData";
-import { getReviewsForProduct } from "./reviewsData";
 import { createSelector } from "@reduxjs/toolkit";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { useBasket } from "../cartPage/useBasket";
 import { setChosenProduct, setProducts } from "./slice";
 import { retrieveChosenProduct, retrieveProducts } from "./selector";
 import ProductService from "../../services/ProductService";
+import ReviewService from "../../services/ReviewService";
 import { serverApi } from "../../../lib/config";
 import type { AppDispatch } from "../../store";
 import type { Product } from "../../../lib/types/product";
+import type { Review } from "../../../lib/types/review";
 import { ProductStatus } from "../../../lib/enums/product.enum";
 
 /** REDUX SLICE & SELECTOR **/
@@ -39,6 +40,7 @@ export function ChosenProduct() {
   const [qty, setQty] = useState(1);
   const [justAdded, setJustAdded] = useState(false);
   const [activeImage, setActiveImage] = useState(0);
+  const [productReviews, setProductReviews] = useState<Review[]>([]);
 
   /** Slice: Data => Store **/
   const { setChosenProduct, setProducts } = actionDispatch(dispatch);
@@ -47,6 +49,7 @@ export function ChosenProduct() {
 
   useEffect(() => {
     const productService = new ProductService();
+    const reviewService = new ReviewService();
     setActiveImage(0);
 
     productService
@@ -60,6 +63,11 @@ export function ChosenProduct() {
     productService
       .getProducts({ page: 1, limit: CATALOG_LIMIT, order: "createdAt" })
       .then((data) => setProducts(data))
+      .catch((err) => console.log(err));
+
+    reviewService
+      .getProductReviews(productId)
+      .then((data) => setProductReviews(data))
       .catch((err) => console.log(err));
   }, [productId]);
 
@@ -86,7 +94,6 @@ export function ChosenProduct() {
 
   const product = chosenProduct;
   const soldOut = isSoldOut(product);
-  const productReviews = getReviewsForProduct(product._id);
 
   return (
     <div className="chosen-product-page">
@@ -296,8 +303,8 @@ export function ChosenProduct() {
                 maxWidth: "820px",
               }}
             >
-              {productReviews.map((review, i) => (
-                <Box className="review-card" key={i}>
+              {productReviews.map((review) => (
+                <Box className="review-card" key={review._id}>
                   <Box className="review-stars">
                     <span className="star">{"★".repeat(review.reviewStars)}</span>
                     {review.reviewStars < 5 ? (

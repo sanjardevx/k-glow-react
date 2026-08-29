@@ -12,3 +12,8 @@ export const retrieveNewArrivals = createSelector(
   selectHomePage,
   (homePage) => homePage.newArrivals,
 );
+
+export const retrieveReviews = createSelector(
+  selectHomePage,
+  (homePage) => homePage.reviews,
+);

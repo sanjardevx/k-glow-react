@@ -1,6 +1,7 @@
 import type { CartState } from "../../app/screens/cartPage/cartSlice";
 import type { Product } from "./product";
 import type { Order } from "./order";
+import type { Review } from "./review";
 
 /** REACT APP STATE **/
 export interface AppRootStore {
@@ -18,6 +19,7 @@ export interface AppRootStore {
 export interface HomePageState {
   bestsellers: Product[];
   newArrivals: Product[];
+  reviews: Review[];
 }
 
 /**

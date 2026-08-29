@@ -1,10 +1,12 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { HomePageState } from "../../../lib/types/screen";
 import type { Product } from "../../../lib/types/product";
+import type { Review } from "../../../lib/types/review";
 
 const initialState: HomePageState = {
   bestsellers: [],
   newArrivals: [],
+  reviews: [],
 };
 
 /**
@@ -23,10 +25,13 @@ const homePageSlice = createSlice({
     setNewArrivals: (state, action: PayloadAction<Product[]>) => {
       state.newArrivals = Array.isArray(action.payload) ? action.payload : [];
     },
+    setReviews: (state, action: PayloadAction<Review[]>) => {
+      state.reviews = Array.isArray(action.payload) ? action.payload : [];
+    },
   },
 });
 
-export const { setBestsellers, setNewArrivals } = homePageSlice.actions;
+export const { setBestsellers, setNewArrivals, setReviews } = homePageSlice.actions;
 
 const HomePageReducer = homePageSlice.reducer;
 export default HomePageReducer;
