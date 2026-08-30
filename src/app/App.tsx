@@ -10,6 +10,7 @@ import { Footer } from "./components/footer";
 import { HomeNavbar } from "./components/headers/HomeNavbar";
 import { OtherNavbar } from "./components/headers/OtherNavbar";
 import { AuthenticationModal, type AuthMode } from "./components/auth";
+import { TelegramButton } from "./components/TelegramButton";
 import "../css/app.css";
 
 function App() {
@@ -56,6 +57,7 @@ function App() {
         </Switch>
       </main>
       <Footer />
+      <TelegramButton />
 
       <AuthenticationModal
         open={authOpen}
