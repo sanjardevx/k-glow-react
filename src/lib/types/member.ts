@@ -34,12 +34,12 @@ export interface LoginInput {
 }
 
 export interface MemberUpdateInput {
-  _id: string;
   memberStatus?: MemberStatus;
   memberNick?: string;
   memberPhone?: string;
   memberPassword?: string;
   memberAddress?: string;
   memberDesc?: string;
-  memberImage?: string;
+  /** A `File` when the form is staging a new upload, a path once it's saved. */
+  memberImage?: string | File;
 }
