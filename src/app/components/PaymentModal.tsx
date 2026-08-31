@@ -27,6 +27,9 @@ export function PaymentModal({ open, onClose, items, subtotal }: PaymentModalPro
   const [step, setStep] = useState<Step>("bank");
   const [screenshot, setScreenshot] = useState<File | null>(null);
   const [transferNote, setTransferNote] = useState("");
+  const [deliveryAddress, setDeliveryAddress] = useState(
+    authMember?.memberAddress ?? "",
+  );
   const [submitting, setSubmitting] = useState(false);
 
   // Snapshot the order at open time so the Thanks step still shows correct
@@ -47,6 +50,7 @@ export function PaymentModal({ open, onClose, items, subtotal }: PaymentModalPro
     setStep("bank");
     setScreenshot(null);
     setTransferNote("");
+    setDeliveryAddress(authMember?.memberAddress ?? "");
     setSubmitting(false);
     onClose();
   }
@@ -63,7 +67,7 @@ export function PaymentModal({ open, onClose, items, subtotal }: PaymentModalPro
       await orderService.createOrder(items, {
         paymentProof: [screenshot],
         transferNote,
-        deliveryAddress: authMember?.memberAddress,
+        deliveryAddress,
       });
 
       // Only once the order is really on the server — otherwise the bag would
@@ -123,9 +127,38 @@ export function PaymentModal({ open, onClose, items, subtotal }: PaymentModalPro
                   <span className="amt">{formatPrice(snap.subtotal)}</span>
                 </Box>
               </Box>
+
+              <Box className="next-steps">
+                <Box className="step">
+                  <span className="n">1</span>Transfer the amount above to the
+                  card shown.
+                </Box>
+                <Box className="step">
+                  <span className="n">2</span>Save a screenshot or receipt of
+                  the transfer — you'll upload it on the next step.
+                </Box>
+                <Box className="step">
+                  <span className="n">3</span>Enter your delivery address
+                  below, then continue.
+                </Box>
+              </Box>
+
+              <Box className="modal-field">
+                <label>Delivery address</label>
+                <input
+                  value={deliveryAddress}
+                  onChange={(e) => setDeliveryAddress(e.target.value)}
+                  placeholder="e.g. Tashkent, Chilonzor tumani, 12-uy"
+                />
+              </Box>
+              <p className="modal-subtext" style={{ marginTop: -6, marginBottom: 14 }}>
+                We'll ship your order via BTS post to this address.
+              </p>
+
               <button
                 type="button"
                 className="modal-btn"
+                disabled={!deliveryAddress.trim()}
                 onClick={() => setStep("confirm")}
               >
                 I've sent the payment →

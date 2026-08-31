@@ -35,7 +35,7 @@ export function TelegramButton() {
           />
         </svg>
       </span>
-      <span className="telegram-fab-tooltip">Admin bilan 1:1 bog'lanish</span>
+      <span className="telegram-fab-tooltip">Chat 1:1 with our admin</span>
     </a>
   );
 }

@@ -517,6 +517,25 @@
   margin: 10px 0 0;
 }
 
+.reviews-foot {
+  margin-top: 36px;
+  text-align: center;
+}
+
+.reviews-channel-link {
+  display: inline-block;
+  padding: 12px 26px;
+  background: #fadadd;
+  text-decoration: underline;
+  text-underline-offset: 5px;
+  text-decoration-thickness: 1px;
+  transition: background 0.2s ease;
+}
+
+.reviews-channel-link:hover {
+  background: #f4c4cb;
+}
+
 .review-grid {
   max-width: 1080px;
   margin: 0 auto;

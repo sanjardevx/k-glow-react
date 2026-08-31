@@ -39,10 +39,6 @@ export function Reviews() {
                     </Box>
                   ) : null}
                 </Box>
-                <Box className="verified">
-                  <span className="verified-dot">✓</span>
-                  Tasdiqlangan xaridor
-                </Box>
               </Box>
             );
           })}
@@ -50,6 +46,16 @@ export function Reviews() {
       ) : (
         <Box className="review-empty">No reviews yet — check back soon.</Box>
       )}
+      <Box className="reviews-foot">
+        <a
+          href="https://t.me/k_glow_secret"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="section-link reviews-channel-link"
+        >
+          View all reviews in our Telegram channel →
+        </a>
+      </Box>
     </section>
   );
 }
