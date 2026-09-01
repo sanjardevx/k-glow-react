@@ -1,5 +1,6 @@
 import type { Order, OrderItem } from "../../../lib/types/order";
 import type { Product } from "../../../lib/types/product";
+import { OrderStatus } from "../../../lib/enums/order.enum";
 
 /**
  * The API returns an order's items and the products they point at as two
@@ -17,4 +18,26 @@ export function findOrderProduct(
   return order.productData?.find(
     (product) => String(product._id) === String(item.productId),
   );
+}
+
+const STATUS_LABEL: Record<OrderStatus, string> = {
+  [OrderStatus.WAITING_CONFIRMATION]: "Waiting Confirmation",
+  [OrderStatus.CONFIRMED]: "Confirmed",
+  [OrderStatus.REJECTED]: "Rejected",
+};
+
+const STATUS_PILL_CLASS: Record<OrderStatus, string> = {
+  [OrderStatus.WAITING_CONFIRMATION]: "wait",
+  [OrderStatus.CONFIRMED]: "confirmed",
+  [OrderStatus.REJECTED]: "rejected",
+};
+
+/** Human label for a status, shared by every place that lists mixed-status orders. */
+export function orderStatusLabel(status: OrderStatus): string {
+  return STATUS_LABEL[status] ?? status;
+}
+
+/** `status-pill` modifier class for a status — matches orders.css's wait/confirmed/rejected. */
+export function orderStatusPillClass(status: OrderStatus): string {
+  return STATUS_PILL_CLASS[status] ?? "wait";
 }

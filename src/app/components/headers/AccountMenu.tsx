@@ -35,9 +35,10 @@ export function AccountMenu() {
       // either. Without this, the old items and the "Pay" flow both stayed
       // reachable after signing out.
       dispatch(clearCart());
-      // My Page and Cart are the two routes that mean nothing once signed out.
+      // My Page, Orders, and Cart all mean nothing once signed out.
       if (
         history.location.pathname === "/member-page" ||
+        history.location.pathname === "/orders" ||
         history.location.pathname === "/cart"
       )
         history.push("/");
@@ -102,6 +103,13 @@ export function AccountMenu() {
             onClick={handleClose}
           >
             My Page
+          </NavLink>
+          <NavLink
+            to="/orders"
+            className="account-menu-item"
+            onClick={handleClose}
+          >
+            My Orders
           </NavLink>
           <Box className="account-menu-divider" />
           <button

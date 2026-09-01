@@ -15,6 +15,7 @@ import {
 import { useGlobals } from "../../context/useGlobals";
 import OrderService from "../../services/OrderService";
 import { OrderStatus } from "../../../lib/enums/order.enum";
+import { MemberType } from "../../../lib/enums/member.enum";
 import type { AppDispatch } from "../../store";
 import type { Order } from "../../../lib/types/order";
 import "../../../css/orders.css";
@@ -86,10 +87,18 @@ export function OrdersPage() {
         <Stack className="orders-right">
           <Box className="orders-info-card">
             <Box className="orders-member">
-              <Box className="orders-avatar">N</Box>
+              <Box className="orders-avatar">
+                {(authMember?.memberNick ?? "?").charAt(0).toUpperCase()}
+              </Box>
               <Box>
-                <Box className="orders-member-name">Nodira Karimova</Box>
-                <Box className="orders-member-sub">Member</Box>
+                <Box className="orders-member-name">
+                  {authMember?.memberNick}
+                </Box>
+                <Box className="orders-member-sub">
+                  {authMember?.memberType === MemberType.ADVISOR
+                    ? "Advisor"
+                    : "Member"}
+                </Box>
               </Box>
             </Box>
           </Box>

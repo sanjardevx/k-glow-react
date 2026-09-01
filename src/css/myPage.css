@@ -17,7 +17,7 @@
 
 .mypage-layout {
   display: grid;
-  grid-template-columns: 1.3fr 1fr;
+  grid-template-columns: minmax(280px, 340px) 1fr;
   gap: 26px;
   align-items: start;
 }
@@ -65,6 +65,12 @@
   font-weight: 600;
   margin: 0 0 20px;
   color: #2d1b2e;
+}
+
+.order-history-empty {
+  font-size: 13px;
+  color: #6b5a5f;
+  margin: 0 0 4px;
 }
 
 .avatar-upload-row {
@@ -202,6 +208,47 @@
   background: #a54f6b;
 }
 
+.profile-edit-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.profile-edit-actions .profile-save {
+  flex: 1;
+}
+
+.profile-edit-toggle {
+  display: block;
+  width: 100%;
+  margin-top: 14px;
+  background: transparent;
+  border: 1.5px solid #d687a1;
+  color: #b85c7a;
+  font-weight: 700;
+  font-size: 12.5px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s ease;
+}
+
+.profile-edit-toggle:hover {
+  background: #fae9ed;
+}
+
+.profile-edit-toggle.ghost {
+  width: auto;
+  margin-top: 0;
+  border-color: #e5d9dc;
+  color: #6b5a5f;
+}
+
+.profile-edit-toggle.ghost:hover {
+  background: #f7f2f3;
+}
+
 /* right — gradient profile card */
 .profile-card {
   border-radius: 18px;
@@ -317,6 +364,19 @@
   gap: 10px;
 }
 
+.acc-head-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.acc-head-right strong {
+  font-variant-numeric: tabular-nums;
+  color: #2d1b2e;
+  font-size: 13px;
+}
+
 .acc-chevron {
   font-size: 11px;
   color: #9c8489;
@@ -335,7 +395,9 @@
 }
 
 .acc-item.open .acc-body {
-  max-height: 200px;
+  /* Generous cap, not a tight fit — rows now carry a 48px thumbnail each,
+     so a few-item order needs more room than the old text-only rows did. */
+  max-height: 520px;
 }
 
 .acc-body-inner {
