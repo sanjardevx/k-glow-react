@@ -1,65 +1,163 @@
+/**
+ * Announcement bar, navbar, account dropdown and basket popover.
+ * Tokens only above the AUTH MODAL block; that block is left exactly as it
+ * was and is rewritten in Phase 8 together with the auth component.
+ */
+
+/* =========================================================================
+   Announcement bar
+   ========================================================================= */
+.announcement {
+  background: var(--kg-primary);
+  color: var(--kg-on-primary);
+  padding: 8px var(--kg-gutter-mobile);
+  text-align: center;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+.announcement-short {
+  display: none;
+}
+
+@media (max-width: 480px) {
+  .announcement-full {
+    display: none;
+  }
+
+  .announcement-short {
+    display: inline;
+  }
+}
+
+/* =========================================================================
+   Navbar
+   ========================================================================= */
 .nav {
-  background: #fadadd;
-  padding: 0 32px;
+  background: var(--kg-bg);
+  border-bottom: 1px solid var(--kg-border);
+  padding: 0 var(--kg-gutter);
 }
 
 .nav-inner {
-  max-width: 1300px;
+  max-width: var(--kg-container);
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 0;
   gap: 20px;
+  padding: 14px 0;
   flex-wrap: wrap;
 }
 
+/* "K-glow" in ink, "secrets" italic in the warm accent — the brand mark. */
 .nav .logo {
-  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  font-weight: 600;
-  font-size: 19px;
-  color: #2d1b2e;
-  letter-spacing: 0.01em;
+  font-family: var(--kg-font-display);
+  font-size: var(--kg-text-2xl);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  color: var(--kg-ink);
   text-decoration: none;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.nav .logo em {
+  font-style: italic;
+  color: var(--kg-accent);
 }
 
 .nav .links {
   display: flex;
-  gap: 6px;
-  font-size: 13.5px;
-  font-weight: 600;
+  gap: 8px;
+  font-size: var(--kg-text-sm);
+  font-weight: 500;
+  letter-spacing: 0.025em;
   flex-wrap: wrap;
 }
 
 .nav .links a {
-  padding: 8px 16px;
-  border-radius: 999px;
-  color: #2d1b2e;
+  position: relative;
+  padding: 6px 12px;
+  border-radius: 4px;
+  color: var(--kg-ink-soft);
   text-decoration: none;
+  transition: color var(--kg-duration) var(--kg-ease);
+}
+
+/* Warm underline that grows in on the active item, and — like the
+   reference — slides in from the left while an inactive item is hovered. */
+.nav .links a::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 0;
+  height: 2px;
+  background: var(--kg-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s var(--kg-ease);
 }
 
 .nav .links a.active {
-  background: #ffb6c1;
+  color: var(--kg-ink);
+}
+
+.nav .links a.active::after {
+  transform: scaleX(1);
 }
 
 .nav .links a:not(.active):hover {
-  background: #e8b4b8;
+  color: var(--kg-ink);
+}
+
+.nav .links a:not(.active):hover::after {
+  transform: scaleX(1);
+}
+
+/* Placeholder labels for pages that do not exist yet. */
+.nav .links a.placeholder {
+  cursor: default;
 }
 
 .nav .right {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
+}
+
+/* Plain-text Login next to the filled Sign Up, as in the reference. */
+.nav-login {
+  padding: 6px 4px;
+  border: none;
+  border-radius: 4px;
+  background: none;
+  color: var(--kg-ink-soft);
+  font-family: inherit;
+  font-size: var(--kg-text-sm);
+  font-weight: 500;
+  letter-spacing: 0.025em;
+  cursor: pointer;
+  transition: color var(--kg-duration) var(--kg-ease);
+}
+
+.nav-login:hover {
+  color: var(--kg-ink);
 }
 
 .nav .icon {
   width: 20px;
   height: 20px;
-  color: #2d1b2e;
+  color: var(--kg-ink);
+  transition: color var(--kg-duration) var(--kg-ease);
 }
 
 .nav .icon:hover {
-  color: #e8b4b8;
+  color: var(--kg-primary);
 }
 
 .cart-wrap {
@@ -69,110 +167,102 @@
 
 .cart-badge {
   position: absolute;
-  top: -7px;
-  right: -9px;
-  background: #ffb6c1;
-  color: #2d1b2e;
-  font-size: 9.5px;
-  font-weight: 700;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
+  top: -8px;
+  right: -10px;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: var(--kg-primary);
+  color: var(--kg-on-primary);
+  font-size: 10px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
 .nav-account {
   display: flex;
   align-items: center;
   gap: 9px;
+  padding: 4px 12px 4px 4px;
+  border-radius: var(--kg-radius-pill);
+  color: var(--kg-ink);
   text-decoration: none;
-  color: #2d1b2e;
-  padding: 4px 10px 4px 4px;
-  border-radius: 999px;
-  transition: background 0.2s ease;
   cursor: pointer;
+  transition: background-color var(--kg-duration) var(--kg-ease);
 }
 
 .nav-account:hover,
 .nav-account.active {
-  background: #ffb6c1;
+  background: var(--kg-sand);
 }
 
 .nav-avatar {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: #b85c7a;
-  color: #fff;
-  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  font-size: 13px;
-  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 30px;
+  height: 30px;
   flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--kg-primary-soft);
+  color: var(--kg-primary);
+  font-size: var(--kg-text-sm);
+  font-weight: 600;
 }
 
 .nav-account-name {
-  font-size: 12.5px;
-  font-weight: 700;
+  font-size: var(--kg-text-sm);
+  font-weight: 600;
 }
 
+/* Sizing only — colours come from the button primitive in components.css. */
 .nav-auth-btn {
-  background: #b85c7a;
-  color: #fff;
-  font-family: inherit;
-  font-size: 12.5px;
-  font-weight: 700;
-  padding: 9px 22px;
-  border: none;
-  border-radius: 999px;
-  cursor: pointer;
-  transition: background 0.2s ease;
+  padding: 10px 22px;
+  font-size: var(--kg-text-sm);
 }
 
-.nav-auth-btn:hover {
-  background: #a54f6b;
-}
-
-/* ACCOUNT DROPDOWN */
-
+/* =========================================================================
+   Account dropdown
+   ========================================================================= */
 .account-menu-frame {
-  width: 180px;
-  border-radius: 16px;
-  overflow: hidden;
+  width: 200px;
   padding: 8px;
-  animation: basket-pop-in 0.18s ease-out;
 }
 
 .account-menu-item {
   display: block;
   width: 100%;
   box-sizing: border-box;
-  text-align: left;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  color: #2d1b2e;
-  text-decoration: none;
-  background: none;
-  border: none;
-  border-radius: 10px;
   padding: 10px 12px;
+  border: none;
+  border-radius: var(--kg-radius-sm);
+  background: none;
+  color: var(--kg-ink);
+  font-family: inherit;
+  font-size: var(--kg-text-sm);
+  font-weight: 500;
+  text-align: left;
+  text-decoration: none;
   cursor: pointer;
+  transition: background-color var(--kg-duration) var(--kg-ease);
 }
 
 .account-menu-item:hover {
-  background: #fae9ed;
+  background: var(--kg-sand);
 }
 
 .account-menu-logout {
-  color: #b85c7a;
   display: flex;
   align-items: center;
   gap: 9px;
+  color: var(--kg-danger);
+}
+
+.account-menu-logout:hover {
+  background: var(--kg-danger-soft);
 }
 
 .account-menu-logout svg {
@@ -183,23 +273,13 @@
 
 .account-menu-divider {
   height: 1px;
-  background: #f2e4e8;
   margin: 4px 4px;
+  background: var(--kg-border);
 }
 
-/* BASKET DROPDOWN */
-
-@keyframes basket-pop-in {
-  from {
-    opacity: 0;
-    transform: translateY(-6px) scale(0.97);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
+/* =========================================================================
+   Basket popover
+   ========================================================================= */
 @keyframes basket-float {
   0%,
   100% {
@@ -212,9 +292,6 @@
 
 .basket-frame {
   width: 368px;
-  border-radius: 16px;
-  overflow: hidden;
-  animation: basket-pop-in 0.18s ease-out;
 }
 
 .basket-empty {
@@ -226,54 +303,45 @@
 }
 
 .basket-empty-icon {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: #fae9ed;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 64px;
+  height: 64px;
   margin-bottom: 14px;
+  border-radius: 50%;
+  background: var(--kg-sand);
   animation: basket-float 2.4s ease-in-out infinite;
 }
 
 .basket-empty-icon svg {
   width: 28px;
   height: 28px;
-  color: #b85c7a;
+  color: var(--kg-ink-soft);
 }
 
 .basket-empty-title {
-  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  font-size: 17px;
-  font-weight: 600;
-  color: #2d1b2e;
   margin: 0 0 6px;
+  font-family: var(--kg-font-display);
+  font-size: var(--kg-text-xl);
+  font-weight: 500;
+  letter-spacing: var(--kg-tracking-display);
+  color: var(--kg-ink);
 }
 
 .basket-empty-text {
-  font-size: 13px;
-  line-height: 1.5;
-  color: #5c4650;
-  margin: 0 0 20px;
   max-width: 220px;
+  margin: 0 0 20px;
+  font-size: var(--kg-text-sm);
+  line-height: 1.5;
+  color: var(--kg-ink-soft);
 }
 
+/* Sizing only — the sage fill comes from components.css. */
 .basket-empty-cta {
   width: 100%;
-  background: #b85c7a;
-  color: #fff;
-  font-family: inherit;
-  font-weight: 700;
-  font-size: 13.5px;
   padding: 13px 20px;
-  border-radius: 999px;
-  border: none;
-  cursor: pointer;
-}
-
-.basket-empty-cta:hover {
-  background: #a54f6b;
+  font-size: var(--kg-text-md);
 }
 
 .basket-header {
@@ -281,27 +349,29 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px;
-  border-bottom: 1px solid #f2e4e8;
+  border-bottom: 1px solid var(--kg-border);
 }
 
 .basket-header-title {
-  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  font-size: 15.5px;
+  font-size: var(--kg-text-md);
   font-weight: 600;
-  color: #2d1b2e;
+  color: var(--kg-ink);
 }
 
 .basket-clear-all {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 8px;
+  width: 28px;
+  height: 28px;
   border: none;
+  border-radius: var(--kg-radius-sm);
   background: none;
-  color: #9c8489;
+  color: var(--kg-ink-faint);
   cursor: pointer;
+  transition:
+    background-color var(--kg-duration) var(--kg-ease),
+    color var(--kg-duration) var(--kg-ease);
 }
 
 .basket-clear-all svg {
@@ -310,15 +380,15 @@
 }
 
 .basket-clear-all:hover {
-  background: #fae9ed;
-  color: #b85c7a;
+  background: var(--kg-danger-soft);
+  color: var(--kg-danger);
 }
 
 .basket-filled {
-  padding: 16px 20px;
   display: flex;
   flex-direction: column;
   gap: 16px;
+  padding: 16px 20px;
   /* Only the list scrolls — the header, subtotal and CTA stay put. The vh
      term keeps the whole popover on screen on short windows; the reserved
      220px covers the navbar above it plus those fixed rows below. */
@@ -335,12 +405,11 @@
 .basket-line-thumb {
   width: 52px;
   height: 52px;
-  border-radius: 8px;
-  background: #fdf2f4;
-  border: 1px solid #f0dce1;
-  object-fit: contain;
-  padding: 3px;
   flex-shrink: 0;
+  padding: 3px;
+  border-radius: var(--kg-radius-sm);
+  background: var(--kg-sand);
+  object-fit: contain;
 }
 
 .basket-line-info {
@@ -359,27 +428,27 @@
 }
 
 .basket-line-name {
-  font-size: 13.5px;
-  font-weight: 600;
-  color: #2d1b2e;
   overflow: hidden;
+  font-size: var(--kg-text-sm);
+  font-weight: 600;
+  color: var(--kg-ink);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .basket-line-remove {
   flex-shrink: 0;
+  padding: 0;
   border: none;
   background: none;
-  color: #9c8489;
-  font-size: 15px;
+  color: var(--kg-ink-faint);
+  font-size: 16px;
   line-height: 1;
   cursor: pointer;
-  padding: 0;
 }
 
 .basket-line-remove:hover {
-  color: #ef4444;
+  color: var(--kg-danger);
 }
 
 .basket-line-bottom {
@@ -389,48 +458,104 @@
   gap: 8px;
 }
 
-.basket-qty-stepper {
-  display: flex;
-  align-items: center;
-  border: 1.5px solid #f0dce1;
-  border-radius: 999px;
-  flex-shrink: 0;
-}
-
+/* Compact stepper for the popover; base look comes from components.css. */
 .basket-qty-stepper button {
-  width: 27px;
-  height: 27px;
-  border: none;
-  background: transparent;
-  font-size: 14px;
-  font-weight: 700;
-  color: #2d1b2e;
-  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  font-size: var(--kg-text-md);
 }
 
 .basket-qty-stepper span {
-  width: 22px;
-  text-align: center;
-  font-weight: 700;
-  font-size: 12.5px;
-  display: inline-block;
+  min-width: 22px;
+  font-size: var(--kg-text-sm);
 }
 
 .basket-line-price {
-  font-size: 13.5px;
-  font-weight: 700;
-  color: #2d1b2e;
   flex-shrink: 0;
+  font-size: var(--kg-text-sm);
+  font-weight: 600;
+  color: var(--kg-ink);
+  font-variant-numeric: tabular-nums;
 }
 
 .basket-subtotal-row {
   display: flex;
   justify-content: space-between;
-  font-size: 14px;
-  font-weight: 700;
-  color: #2d1b2e;
   padding-top: 10px;
-  border-top: 1px solid #f2e4e8;
+  border-top: 1px solid var(--kg-border);
+  font-size: var(--kg-text-md);
+  font-weight: 600;
+  color: var(--kg-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* =========================================================================
+   Mobile: logo and actions on the first row, links as a scrollable row
+   ========================================================================= */
+@media (max-width: 860px) {
+  .nav {
+    padding: 0 var(--kg-gutter-mobile);
+  }
+
+  .nav-inner {
+    padding: 10px 0 0;
+    gap: 4px 12px;
+  }
+
+  .nav .logo {
+    font-size: var(--kg-text-xl);
+  }
+
+  .nav .links {
+    order: 3;
+    width: 100%;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 0;
+    margin: 0 calc(-1 * var(--kg-gutter-mobile));
+    padding: 2px 8px 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .nav .links::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav .links a {
+    flex-shrink: 0;
+    padding: 10px 12px;
+  }
+
+  .nav .right {
+    gap: 8px;
+  }
+
+  .nav-login {
+    padding: 6px 2px;
+  }
+
+  .nav-account-name {
+    display: none;
+  }
+
+  .nav-account {
+    padding-right: 4px;
+  }
+
+  .basket-frame {
+    width: min(368px, calc(100vw - 32px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .basket-empty-icon {
+    animation: none;
+  }
+
+  .nav .links a::after {
+    transition: none;
+  }
 }
 
 /* AUTH MODAL */

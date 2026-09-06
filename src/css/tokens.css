@@ -22,6 +22,11 @@
   --kg-ink-soft: #705c70;      /* hsl(300 10% 40%) secondary text     5.7:1   */
   --kg-ink-faint: #9c8b9c;     /* hsl(300 8% 58%)  icons, placeholders — not body text */
   --kg-on-dark: #faf8f4;       /* text on --kg-ink surfaces                   */
+  --kg-on-dark-soft: rgba(250, 248, 244, 0.72);  /* secondary text on ink   */
+  --kg-on-dark-faint: rgba(250, 248, 244, 0.55); /* fine print on ink       */
+  --kg-on-dark-line: rgba(250, 248, 244, 0.12);  /* hairlines on ink        */
+  --kg-on-dark-tint: rgba(250, 248, 244, 0.08);  /* icon tiles on ink       */
+  --kg-ink-deep: #211521;      /* hsl(300 22% 11%) footer panel              */
   --kg-on-primary: #ffffff;    /* text on sage / danger / accent-deep fills   */
 
   /* ---- Brand: sage, used with restraint -------------------------------- */

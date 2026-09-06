@@ -1,37 +1,66 @@
 import { Link } from "react-router-dom";
+import { TELEGRAM_URL } from "../../../lib/config";
+import { BoltIcon, BoxIcon, ShieldIcon, TruckIcon } from "../icons";
 import "../../../css/footer.css";
 
+/**
+ * "Live Tutorials" and "AI Beauty" mirror the navbar placeholders: approved
+ * labels for pages that are not built yet, rendered inert until they exist.
+ */
 export function Footer() {
   return (
     <footer className="footer">
       <div className="footer-inner">
         <div className="footer-grid">
           <div className="footer-col">
-            <h5>K-glow secrets</h5>
-            <p>
-              Authentic Korean skincare and makeup, sourced directly and
-              delivered across Uzbekistan.
+            <p className="footer-brand">
+              K-glow <em>secrets</em>
             </p>
-            <div className="footer-trust">
-              <div className="footer-trust-item">
-                <span className="ic">🚚</span>Shipped from Korea
-              </div>
-              <div className="footer-trust-item">
-                <span className="ic">🛡</span>100% authentic
-              </div>
-              <div className="footer-trust-item">
-                <span className="ic">📦</span>Usually in stock
-              </div>
-              <div className="footer-trust-item">
-                <span className="ic">⚡</span>Same-day dispatch via BTS post
-              </div>
-            </div>
+            <p className="footer-about">
+              Authentic Korean skincare and makeup, sourced directly from Seoul
+              and delivered across Uzbekistan.
+            </p>
+            <ul className="footer-trust">
+              <li>
+                <TruckIcon />
+                Shipped from Korea
+              </li>
+              <li>
+                <ShieldIcon />
+                100% authentic
+              </li>
+              <li>
+                <BoxIcon />
+                Usually in stock
+              </li>
+              <li>
+                <BoltIcon />
+                Same-day dispatch via BTS post
+              </li>
+            </ul>
           </div>
           <div className="footer-col">
             <h5>Shop</h5>
             <Link to="/">Home</Link>
             <Link to="/products">Shop</Link>
-            <Link to="/products">Bestsellers</Link>
+            <a
+              href="#"
+              className="placeholder"
+              aria-disabled="true"
+              title="Coming soon"
+              onClick={(e) => e.preventDefault()}
+            >
+              Live Tutorials
+            </a>
+            <a
+              href="#"
+              className="placeholder"
+              aria-disabled="true"
+              title="Coming soon"
+              onClick={(e) => e.preventDefault()}
+            >
+              AI Beauty
+            </a>
             <Link to="/help">Help</Link>
           </div>
           <div className="footer-col">
@@ -43,6 +72,14 @@ export function Footer() {
           <div className="footer-col">
             <h5>Stay in the loop</h5>
             <p>New arrivals, restocks, discount events.</p>
+            <a
+              className="footer-cta"
+              href={TELEGRAM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Join our Telegram →
+            </a>
           </div>
         </div>
       </div>

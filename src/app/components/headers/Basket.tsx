@@ -64,9 +64,10 @@ export function Basket() {
         slotProps={{
           paper: {
             elevation: 0,
+            // Colour, border and shadow come from the theme's MuiMenu
+            // override; only the position and the little pointer live here.
             sx: {
               overflow: "visible",
-              filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
               mt: 1.5,
               "&:before": {
                 content: '""',
@@ -77,6 +78,9 @@ export function Basket() {
                 width: 10,
                 height: 10,
                 bgcolor: "background.paper",
+                borderTop: "1px solid",
+                borderLeft: "1px solid",
+                borderColor: "divider",
                 transform: "translateY(-50%) rotate(45deg)",
                 zIndex: 0,
               },

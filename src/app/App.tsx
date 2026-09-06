@@ -11,6 +11,7 @@ import { HomeNavbar } from "./components/headers/HomeNavbar";
 import { OtherNavbar } from "./components/headers/OtherNavbar";
 import { AuthenticationModal, type AuthMode } from "./components/auth";
 import { TelegramButton } from "./components/TelegramButton";
+import { AnnouncementBar } from "./components/AnnouncementBar";
 import "../css/app.css";
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
 
   return (
     <div className="app-shell">
+      <AnnouncementBar />
       {location.pathname === "/" ? (
         <HomeNavbar onAuthOpen={handleAuthOpen} />
       ) : (

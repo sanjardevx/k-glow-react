@@ -1,12 +1,16 @@
 /**
- * Sticky footer: the shell fills the window and the routed page takes whatever
- * height is left over, so on a short page — an empty bag, the Help tabs — the
- * footer sits on the bottom edge instead of leaving a white band beneath it.
+ * App shell: sticky footer layout and the floating Telegram button.
+ * Tokens only — see src/css/tokens.css.
  */
+
+/* The shell fills the window and the routed page takes whatever height is
+   left over, so on a short page — an empty bag, the Help tabs — the footer
+   sits on the bottom edge instead of leaving a band beneath it. */
 .app-shell {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: var(--kg-bg);
 }
 
 .app-main {
@@ -24,8 +28,20 @@
   width: 58px;
   height: 58px;
   border-radius: 50%;
-  box-shadow: 0 10px 28px -8px rgba(184, 92, 122, 0.65);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: var(--kg-shadow-lg);
+  transition:
+    transform var(--kg-duration) var(--kg-ease),
+    box-shadow var(--kg-duration) var(--kg-ease);
+}
+
+.telegram-fab:hover {
+  transform: scale(1.06);
+}
+
+.telegram-fab:focus-visible {
+  outline: 2px solid var(--kg-primary);
+  outline-offset: 3px;
+  border-radius: 50%;
 }
 
 .telegram-fab-spin {
@@ -43,6 +59,19 @@
   display: block;
 }
 
+.telegram-fab-disc {
+  fill: var(--kg-primary);
+  transition: fill var(--kg-duration) var(--kg-ease);
+}
+
+.telegram-fab:hover .telegram-fab-disc {
+  fill: var(--kg-primary-hover);
+}
+
+.telegram-fab-plane {
+  fill: var(--kg-on-primary);
+}
+
 @keyframes telegram-fab-spin {
   0% {
     transform: rotate(0deg);
@@ -55,26 +84,21 @@
   }
 }
 
-.telegram-fab:hover {
-  transform: scale(1.08);
-  box-shadow: 0 14px 32px -8px rgba(184, 92, 122, 0.8);
-}
-
 .telegram-fab-tooltip {
   position: absolute;
   right: calc(100% + 12px);
   top: 50%;
   transform: translateY(-50%);
-  background: #2d1b2e;
-  color: #fff;
-  font-size: 12.5px;
+  background: var(--kg-ink);
+  color: var(--kg-on-dark);
+  font-size: var(--kg-text-xs);
   font-weight: 600;
   white-space: nowrap;
   padding: 7px 12px;
-  border-radius: 8px;
+  border-radius: var(--kg-radius-sm);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s ease;
+  transition: opacity var(--kg-duration) var(--kg-ease);
 }
 
 .telegram-fab-tooltip::after {
@@ -84,11 +108,18 @@
   top: 50%;
   transform: translateY(-50%);
   border: 5px solid transparent;
-  border-left-color: #2d1b2e;
+  border-left-color: var(--kg-ink);
 }
 
-.telegram-fab:hover .telegram-fab-tooltip {
+.telegram-fab:hover .telegram-fab-tooltip,
+.telegram-fab:focus-visible .telegram-fab-tooltip {
   opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .telegram-fab-spin {
+    animation: none;
+  }
 }
 
 @media (max-width: 640px) {

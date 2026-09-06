@@ -1,85 +1,166 @@
+/**
+ * Footer: a deep plum panel closing every page, after the reference design —
+ * brand mark, short description and trust lines on the left, three quiet
+ * link columns on the right, a hairline bottom band. Tokens only.
+ */
 .footer {
-  background: linear-gradient(180deg, #fff0f2, #ffe8ea);
-  padding: 48px 32px 0;
+  background: var(--kg-ink-deep);
+  color: var(--kg-on-dark);
+  padding: 64px var(--kg-gutter) 0;
 }
 
 .footer-inner {
-  max-width: 1300px;
+  max-width: var(--kg-container);
   margin: 0 auto;
 }
 
 .footer-grid {
   display: grid;
-  grid-template-columns: 1.3fr 1fr 1fr 1fr;
-  gap: 30px;
-  padding-bottom: 30px;
+  grid-template-columns: 1.25fr 1fr 1fr 1fr;
+  gap: 40px;
+  padding-bottom: 48px;
+}
+
+/* Brand mark: "K-glow" in cream, "secrets" italic in the warm accent.
+   Written as .footer-col .footer-brand so it outranks the generic
+   .footer-col p rule below. */
+.footer-col .footer-brand {
+  margin: 0 0 14px;
+  font-family: var(--kg-font-display);
+  font-size: var(--kg-text-2xl);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  color: var(--kg-on-dark);
+}
+
+.footer-col .footer-brand em {
+  font-style: italic;
+  color: var(--kg-accent);
+}
+
+.footer-col .footer-about {
+  max-width: 30ch;
 }
 
 .footer-col h5 {
-  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  font-size: 14px;
-  margin: 0 0 14px;
-  color: #2d1b2e;
+  margin: 0 0 18px;
+  font-family: var(--kg-font-body);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--kg-on-dark-faint);
 }
 
 .footer-col p {
-  font-size: 12.5px;
-  color: rgba(45, 27, 46, 0.7);
-  margin: 0 0 8px;
+  margin: 0 0 10px;
+  font-size: var(--kg-text-md);
+  line-height: 1.6;
+  color: var(--kg-on-dark-soft);
 }
 
 .footer-col a {
   display: block;
-  font-size: 12.5px;
-  color: rgba(45, 27, 46, 0.7);
-  margin-bottom: 9px;
+  margin-bottom: 12px;
+  font-size: var(--kg-text-md);
+  line-height: 1.4;
+  color: var(--kg-on-dark-soft);
   text-decoration: none;
+  transition: color var(--kg-duration) var(--kg-ease);
 }
 
 .footer-col a:hover {
-  color: #ffb6c1;
+  color: var(--kg-on-dark);
 }
 
+.footer-col a.placeholder {
+  cursor: default;
+}
+
+.footer-col a:focus-visible {
+  outline-color: var(--kg-on-dark);
+}
+
+/* Warm call-to-action link in the last column. */
+.footer-col a.footer-cta {
+  margin-top: 6px;
+  font-weight: 600;
+  color: var(--kg-accent);
+}
+
+.footer-col a.footer-cta:hover {
+  color: var(--kg-on-dark);
+}
+
+/* Trust lines: small icon + short text, no tiles. */
 .footer-trust {
+  list-style: none;
+  margin: 24px 0 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-top: 6px;
+  gap: 10px;
 }
 
-.footer-trust-item {
+.footer-trust li {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 12px;
-  color: rgba(45, 27, 46, 0.7);
+  font-size: var(--kg-text-xs);
+  color: var(--kg-on-dark-soft);
 }
 
-.footer-trust-item .ic {
-  width: 26px;
-  height: 26px;
-  border-radius: 8px;
-  background: rgba(255, 182, 193, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
+.footer-trust svg {
+  width: 14px;
+  height: 14px;
   flex-shrink: 0;
+  color: var(--kg-on-dark-soft);
 }
 
 .footer-bottom {
-  background: rgba(255, 232, 234, 0.5);
-  padding: 16px 32px;
-  border-top: 1px solid rgba(255, 182, 193, 0.2);
+  border-top: 1px solid var(--kg-on-dark-line);
+  padding: 20px var(--kg-gutter);
+  /* Cancel the .footer side padding so the hairline runs edge to edge. */
+  margin: 0 calc(-1 * var(--kg-gutter));
 }
 
 .footer-bottom-inner {
-  max-width: 1300px;
+  max-width: var(--kg-container);
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
-  font-size: 11.5px;
-  color: rgba(45, 27, 46, 0.7);
   flex-wrap: wrap;
   gap: 8px;
+  font-size: var(--kg-text-xs);
+  color: var(--kg-on-dark-faint);
+}
+
+@media (max-width: 860px) {
+  .footer {
+    padding: 48px var(--kg-gutter-mobile) 0;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px 24px;
+    padding-bottom: 36px;
+  }
+
+  .footer-bottom {
+    padding: 16px var(--kg-gutter-mobile);
+    margin: 0 calc(-1 * var(--kg-gutter-mobile));
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-bottom-inner {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
 }
