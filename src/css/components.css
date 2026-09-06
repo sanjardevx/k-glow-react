@@ -1,0 +1,642 @@
+/**
+ * Shared primitives — anything used by more than one page lives here.
+ *
+ * Cascade position: this file loads BEFORE the per-page stylesheets (see
+ * src/main.tsx), so a page can always override a primitive with a rule of
+ * equal specificity. Page classes that already play one of these roles are
+ * listed alongside the primitive as aliases; as each page is rewritten in a
+ * later phase, its own duplicate rules are deleted and the alias does the work.
+ *
+ * Only tokens here — no colour literals (see tokens.css).
+ */
+
+/* =========================================================================
+   Buttons
+   ========================================================================= */
+.btn,
+.btn-primary,
+.btn-ink,
+.btn-outline,
+.btn-ghost,
+.nav-auth-btn,
+.basket-empty-cta,
+.modal-btn,
+.pdp-addbag,
+.pay-btn,
+.profile-save,
+.help-contact-submit,
+.cta-signup-btn,
+.load-more-btn,
+.confirm-cta,
+.profile-edit-toggle,
+.p-quickadd,
+.modal-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-sizing: border-box;
+  padding: 12px 24px;
+  border: 1px solid transparent;
+  border-radius: var(--kg-radius-pill);
+  font-family: var(--kg-font-body);
+  font-size: var(--kg-text-md);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--kg-duration) var(--kg-ease),
+    border-color var(--kg-duration) var(--kg-ease),
+    color var(--kg-duration) var(--kg-ease),
+    box-shadow var(--kg-duration) var(--kg-ease);
+}
+
+/* Filled sage: the one call-to-action colour. */
+.btn-primary,
+.nav-auth-btn,
+.basket-empty-cta,
+.modal-btn,
+.pdp-addbag,
+.pay-btn,
+.profile-save,
+.help-contact-submit,
+.cta-signup-btn {
+  background: var(--kg-primary);
+  border-color: var(--kg-primary);
+  color: var(--kg-on-primary);
+}
+
+.btn-primary:hover,
+.nav-auth-btn:hover,
+.basket-empty-cta:hover,
+.modal-btn:hover,
+.pdp-addbag:hover,
+.pay-btn:hover,
+.profile-save:hover,
+.help-contact-submit:hover,
+.cta-signup-btn:hover {
+  background: var(--kg-primary-hover);
+  border-color: var(--kg-primary-hover);
+  color: var(--kg-on-primary);
+}
+
+/* Filled ink: the hero lead and other non-conversion emphasis. */
+.btn-ink {
+  background: var(--kg-ink);
+  border-color: var(--kg-ink);
+  color: var(--kg-on-dark);
+}
+
+.btn-ink:hover {
+  background: var(--kg-ink-soft);
+  border-color: var(--kg-ink-soft);
+  color: var(--kg-on-dark);
+}
+
+/* Outline: secondary actions. */
+.btn-outline,
+.load-more-btn,
+.confirm-cta,
+.profile-edit-toggle,
+.p-quickadd {
+  background: transparent;
+  border-color: var(--kg-border-strong);
+  color: var(--kg-ink);
+}
+
+.btn-outline:hover,
+.load-more-btn:hover,
+.confirm-cta:hover,
+.profile-edit-toggle:hover,
+.p-quickadd:hover {
+  background: var(--kg-ink);
+  border-color: var(--kg-ink);
+  color: var(--kg-on-dark);
+}
+
+/* Ghost: text-only tertiary actions. */
+.btn-ghost,
+.modal-back,
+.profile-edit-toggle.ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--kg-ink-soft);
+}
+
+.btn-ghost:hover,
+.modal-back:hover,
+.profile-edit-toggle.ghost:hover {
+  background: var(--kg-sand);
+  border-color: transparent;
+  color: var(--kg-ink);
+}
+
+/* Sizes */
+.btn-sm {
+  padding: 8px 16px;
+  font-size: var(--kg-text-sm);
+}
+
+.btn-lg {
+  padding: 15px 30px;
+  font-size: var(--kg-text-lg);
+}
+
+.btn-block {
+  display: flex;
+  width: 100%;
+}
+
+/* Disabled, whether by attribute or by a state class the pages already use. */
+.btn:disabled,
+.btn.is-disabled,
+.modal-btn:disabled,
+.pdp-addbag.disabled,
+.p-quickadd.disabled,
+.btn:disabled:hover,
+.btn.is-disabled:hover,
+.modal-btn:disabled:hover,
+.pdp-addbag.disabled:hover,
+.p-quickadd.disabled:hover {
+  background: var(--kg-sand);
+  border-color: var(--kg-sand);
+  color: var(--kg-ink-faint);
+  cursor: not-allowed;
+}
+
+/* =========================================================================
+   Text links
+   ========================================================================= */
+.link {
+  color: var(--kg-primary);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.link:hover {
+  color: var(--kg-primary-hover);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.link-quiet {
+  color: var(--kg-ink);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: var(--kg-border-strong);
+}
+
+.link-quiet:hover {
+  text-decoration-color: var(--kg-ink);
+}
+
+/* =========================================================================
+   Form fields
+   ========================================================================= */
+.field {
+  margin-bottom: 16px;
+}
+
+.field label,
+.field-label,
+.modal-field label,
+.profile-field label,
+.help-field label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: var(--kg-text-xs);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--kg-ink-soft);
+}
+
+.input,
+.field input,
+.field textarea,
+.field select,
+.modal-field input,
+.profile-field input,
+.profile-field textarea,
+.help-field input,
+.help-field textarea {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px 14px;
+  background: var(--kg-card);
+  border: 1px solid var(--kg-border-strong);
+  border-radius: var(--kg-radius-md);
+  color: var(--kg-ink);
+  font-family: var(--kg-font-body);
+  font-size: var(--kg-text-md);
+  line-height: 1.4;
+  transition:
+    border-color var(--kg-duration) var(--kg-ease),
+    box-shadow var(--kg-duration) var(--kg-ease);
+}
+
+.input:focus,
+.field input:focus,
+.field textarea:focus,
+.field select:focus,
+.modal-field input:focus,
+.profile-field input:focus,
+.profile-field textarea:focus,
+.help-field input:focus,
+.help-field textarea:focus {
+  outline: none;
+  border-color: var(--kg-primary);
+  box-shadow: var(--kg-focus-ring);
+}
+
+.input[aria-invalid="true"],
+.field.is-invalid input,
+.field.is-invalid textarea {
+  border-color: var(--kg-danger);
+}
+
+.field-hint {
+  margin: 6px 0 0;
+  font-size: var(--kg-text-xs);
+  color: var(--kg-ink-soft);
+}
+
+.field-error {
+  margin: 6px 0 0;
+  font-size: var(--kg-text-xs);
+  color: var(--kg-danger);
+}
+
+/* =========================================================================
+   Cards and surfaces
+   ========================================================================= */
+.card,
+.p-card,
+.cart-item,
+.summary-card,
+.order-card,
+.orders-info-card,
+.settings-card,
+.help-card,
+.review-card {
+  background: var(--kg-card);
+  border: 1px solid var(--kg-border);
+  border-radius: var(--kg-radius-lg);
+  box-shadow: none;
+}
+
+.card-hover {
+  transition:
+    transform 0.25s var(--kg-ease),
+    box-shadow 0.25s var(--kg-ease),
+    border-color 0.25s var(--kg-ease);
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  border-color: var(--kg-border-strong);
+  box-shadow: var(--kg-shadow-md);
+}
+
+.surface-sand {
+  background: var(--kg-sand);
+  border-radius: var(--kg-radius-md);
+}
+
+.surface-ink {
+  background: var(--kg-ink);
+  color: var(--kg-on-dark);
+  border-radius: var(--kg-radius-lg);
+}
+
+.divider {
+  height: 1px;
+  background: var(--kg-border);
+  border: none;
+  margin: 0;
+}
+
+/* =========================================================================
+   Badges (on product photos) and status pills (on orders)
+   ========================================================================= */
+.badge,
+.p-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: var(--kg-radius-pill);
+  font-family: var(--kg-font-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.badge-new,
+.p-badge.new {
+  background: var(--kg-primary);
+  color: var(--kg-on-primary);
+}
+
+.badge-best,
+.p-badge.best,
+.p-badge.top {
+  background: var(--kg-ink);
+  color: var(--kg-on-dark);
+}
+
+.badge-sale,
+.p-badge.sale {
+  background: var(--kg-accent-deep);
+  color: var(--kg-on-primary);
+}
+
+.badge-soldout,
+.p-badge.soldout {
+  background: var(--kg-card);
+  border: 1px solid var(--kg-border-strong);
+  color: var(--kg-ink-soft);
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  border-radius: var(--kg-radius-pill);
+  font-family: var(--kg-font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.status-pill.wait {
+  background: var(--kg-warning-soft);
+  color: var(--kg-warning);
+}
+
+.status-pill.confirmed {
+  background: var(--kg-success-soft);
+  color: var(--kg-success);
+}
+
+.status-pill.rejected {
+  background: var(--kg-danger-soft);
+  color: var(--kg-danger);
+}
+
+/* =========================================================================
+   Filter chips
+   ========================================================================= */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 9px 18px;
+  border: 1px solid var(--kg-border-strong);
+  border-radius: var(--kg-radius-pill);
+  background: transparent;
+  color: var(--kg-ink-soft);
+  font-family: var(--kg-font-body);
+  font-size: var(--kg-text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color var(--kg-duration) var(--kg-ease),
+    color var(--kg-duration) var(--kg-ease),
+    border-color var(--kg-duration) var(--kg-ease);
+}
+
+.chip:hover {
+  background: var(--kg-sand);
+  color: var(--kg-ink);
+}
+
+.chip.active {
+  background: var(--kg-ink);
+  border-color: var(--kg-ink);
+  color: var(--kg-on-dark);
+}
+
+/* =========================================================================
+   Quantity stepper
+   ========================================================================= */
+.qty-stepper,
+.basket-qty-stepper {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--kg-border-strong);
+  border-radius: var(--kg-radius-pill);
+  background: var(--kg-card);
+  flex-shrink: 0;
+}
+
+.qty-stepper button,
+.basket-qty-stepper button {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  color: var(--kg-ink);
+  font-family: var(--kg-font-body);
+  font-size: var(--kg-text-lg);
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: var(--kg-radius-pill);
+}
+
+.qty-stepper button:hover,
+.basket-qty-stepper button:hover {
+  background: var(--kg-sand);
+}
+
+.qty-stepper button:disabled,
+.basket-qty-stepper button:disabled {
+  color: var(--kg-ink-faint);
+  background: transparent;
+  cursor: not-allowed;
+}
+
+.qty-stepper span,
+.basket-qty-stepper span {
+  min-width: 30px;
+  text-align: center;
+  font-weight: 600;
+  font-size: var(--kg-text-md);
+  font-variant-numeric: tabular-nums;
+}
+
+/* =========================================================================
+   Modal shell (auth modal, payment modal)
+   ========================================================================= */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: var(--kg-overlay);
+  animation: kg-fade-in var(--kg-duration) ease-out;
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
+  padding: 30px 30px 26px;
+  background: var(--kg-card);
+  border: 1px solid var(--kg-border);
+  border-radius: var(--kg-radius-lg);
+  box-shadow: var(--kg-shadow-lg);
+  animation: kg-pop-in 0.22s ease-out;
+}
+
+.modal-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.modal-head h4,
+.modal-title {
+  margin: 0;
+  font-family: var(--kg-font-display);
+  font-size: var(--kg-text-2xl);
+  font-weight: 500;
+  letter-spacing: var(--kg-tracking-display);
+  color: var(--kg-ink);
+}
+
+.modal-close {
+  color: var(--kg-ink-faint);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.modal-close:hover {
+  color: var(--kg-ink);
+}
+
+.modal-subtext {
+  font-size: var(--kg-text-sm);
+  color: var(--kg-ink-soft);
+}
+
+/* =========================================================================
+   Popover frame (basket and account menus rendered inside MUI Menu)
+   ========================================================================= */
+.popover-frame,
+.basket-frame,
+.account-menu-frame {
+  overflow: hidden;
+  border-radius: var(--kg-radius-lg);
+  background: var(--kg-card);
+  animation: kg-pop-in var(--kg-duration) ease-out;
+}
+
+/* =========================================================================
+   Empty states
+   ========================================================================= */
+.empty-state,
+.shop-empty,
+.cart-empty,
+.orders-empty,
+.review-empty,
+.order-history-empty {
+  padding: 48px 20px;
+  border: 1px dashed var(--kg-border-strong);
+  border-radius: var(--kg-radius-lg);
+  background: var(--kg-card);
+  color: var(--kg-ink-soft);
+  font-size: var(--kg-text-md);
+  text-align: center;
+}
+
+/* =========================================================================
+   Section headers and eyebrow labels
+   ========================================================================= */
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 26px;
+}
+
+.section-title {
+  margin: 0;
+  font-family: var(--kg-font-display);
+  font-size: var(--kg-text-3xl);
+  font-weight: 500;
+  line-height: var(--kg-leading-tight);
+  letter-spacing: var(--kg-tracking-display);
+  color: var(--kg-ink);
+}
+
+.section-title em {
+  font-style: italic;
+  color: var(--kg-accent-deep);
+}
+
+.eyebrow,
+.reviews-badge {
+  display: inline-block;
+  margin-bottom: 12px;
+  font-family: var(--kg-font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--kg-primary);
+}
+
+/* =========================================================================
+   Keyframes shared by the primitives above
+   ========================================================================= */
+@keyframes kg-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes kg-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-overlay,
+  .modal-card,
+  .popover-frame,
+  .basket-frame,
+  .account-menu-frame {
+    animation: none;
+  }
+
+  .card-hover:hover {
+    transform: none;
+  }
+}

@@ -1,0 +1,198 @@
+/**
+ * Document-level rules: fonts, colours, focus, selection, motion, and the
+ * theme for SweetAlert2 popups. No colour literals — tokens only.
+ */
+
+html {
+  height: 100%;
+  background: var(--kg-bg);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100%;
+  margin: 0;
+  background: var(--kg-bg);
+  color: var(--kg-ink);
+  font-family: var(--kg-font-body);
+  font-size: var(--kg-text-md);
+  line-height: var(--kg-leading-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Form controls do not inherit the body font by default. */
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+img,
+svg {
+  max-width: 100%;
+  height: auto;
+}
+
+::placeholder {
+  color: var(--kg-ink-faint);
+  opacity: 1;
+}
+
+::selection {
+  background: var(--kg-primary-soft);
+  color: var(--kg-ink);
+}
+
+/* One focus ring for the whole site. Mouse clicks do not show it. */
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--kg-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Display headings by default; pages may set sizes, this sets the face. */
+h1,
+h2,
+h3 {
+  font-family: var(--kg-font-display);
+  font-weight: 500;
+  letter-spacing: var(--kg-tracking-display);
+  line-height: var(--kg-leading-tight);
+  text-wrap: balance;
+}
+
+h4,
+h5,
+h6 {
+  font-family: var(--kg-font-body);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+/* Prices, totals and any column of digits line up. */
+.tabular,
+.price,
+.p-price,
+.pdp-price,
+.line-total,
+.summary-row,
+.order-line-price,
+.order-total-row,
+.stat-num {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   SweetAlert2 theme.
+   The library appends its own stylesheet at runtime, after ours, and declares
+   its variables on `:root`; `html:root` outranks that without !important.
+   ------------------------------------------------------------------------- */
+html:root {
+  --swal2-background: var(--kg-card);
+  --swal2-color: var(--kg-ink);
+  --swal2-border: 1px solid var(--kg-border);
+  --swal2-border-radius: var(--kg-radius-lg);
+  --swal2-backdrop: var(--kg-overlay);
+  --swal2-confirm-button-background-color: var(--kg-primary);
+  --swal2-confirm-button-color: var(--kg-on-primary);
+  --swal2-confirm-button-border-radius: var(--kg-radius-pill);
+  --swal2-confirm-button-box-shadow: none;
+  --swal2-cancel-button-background-color: var(--kg-sand);
+  --swal2-cancel-button-color: var(--kg-ink);
+  --swal2-cancel-button-border-radius: var(--kg-radius-pill);
+  --swal2-deny-button-background-color: var(--kg-danger);
+  --swal2-deny-button-border-radius: var(--kg-radius-pill);
+  --swal2-timer-progress-bar-background: var(--kg-primary);
+  --swal2-input-border: 1px solid var(--kg-border-strong);
+  --swal2-input-border-radius: var(--kg-radius-md);
+  --swal2-input-focus-border: 1px solid var(--kg-primary);
+  --swal2-input-focus-box-shadow: var(--kg-focus-ring);
+  --swal2-outline: var(--kg-focus-ring);
+  --swal2-action-button-focus-box-shadow: var(--kg-focus-ring);
+  --swal2-close-button-color: var(--kg-ink-faint);
+  --swal2-footer-color: var(--kg-ink-soft);
+  --swal2-footer-border-color: var(--kg-border);
+}
+
+body .swal2-popup {
+  font-family: var(--kg-font-body);
+  box-shadow: var(--kg-shadow-lg);
+}
+
+body .swal2-title {
+  font-family: var(--kg-font-body);
+  font-size: var(--kg-text-xl);
+  font-weight: 600;
+  color: var(--kg-ink);
+}
+
+body .swal2-html-container {
+  color: var(--kg-ink-soft);
+  font-size: var(--kg-text-md);
+}
+
+body .swal2-styled.swal2-confirm {
+  font-weight: 600;
+  font-size: var(--kg-text-md);
+}
+
+body .swal2-toast .swal2-title {
+  font-size: var(--kg-text-md);
+}
+
+/* Icons: the library hard-codes green, red and blue; restate with tokens. */
+body .swal2-icon.swal2-success {
+  border-color: var(--kg-success);
+  color: var(--kg-success);
+}
+
+body .swal2-icon.swal2-success [class^="swal2-success-line"] {
+  background-color: var(--kg-success);
+}
+
+body .swal2-icon.swal2-success .swal2-success-ring {
+  border-color: var(--kg-primary-soft);
+}
+
+body .swal2-icon.swal2-error {
+  border-color: var(--kg-danger);
+  color: var(--kg-danger);
+}
+
+body .swal2-icon.swal2-error [class^="swal2-x-mark-line"] {
+  background-color: var(--kg-danger);
+}
+
+body .swal2-icon.swal2-warning {
+  border-color: var(--kg-warning);
+  color: var(--kg-warning);
+}
+
+body .swal2-icon.swal2-info,
+body .swal2-icon.swal2-question {
+  border-color: var(--kg-ink-soft);
+  color: var(--kg-ink-soft);
+}

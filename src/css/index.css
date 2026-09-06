@@ -1,0 +1,11 @@
+/**
+ * Global stylesheet entry. Imported FIRST in src/main.tsx so that tokens,
+ * base rules and shared primitives sit underneath every per-page stylesheet
+ * in the cascade — a page can override a primitive with equal specificity.
+ *
+ * Order matters: tokens define the custom properties, base consumes them for
+ * the document, components builds the shared primitives on top.
+ */
+@import "./tokens.css";
+@import "./base.css";
+@import "./components.css";

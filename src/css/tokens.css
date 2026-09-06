@@ -1,0 +1,86 @@
+/**
+ * K-Glow Secrets design tokens.
+ *
+ * This is the ONLY stylesheet allowed to contain a colour literal. Every other
+ * file (page CSS, components.css, the MUI theme) reads these custom properties,
+ * so a colour change happens here once.
+ *
+ * Contrast was checked for every pairing noted in the comments (WCAG AA is
+ * 4.5:1 for text, 3:1 for large text and UI edges).
+ */
+:root {
+  /* ---- Surfaces -------------------------------------------------------- */
+  --kg-bg: #faf8f4;            /* hsl(36 40% 97%)  page background            */
+  --kg-card: #fefdfb;          /* hsl(40 54% 99%)  cards, modals, popovers    */
+  --kg-sand: #f4eee7;          /* hsl(36 36% 93%)  image wells, hover rows    */
+  --kg-sand-2: #ede5da;        /* hsl(36 32% 89%)  pressed / deeper sand      */
+  --kg-border: #e6dfd3;        /* hsl(36 26% 87%)  hairlines                  */
+  --kg-border-strong: #cfc4b4; /* hsl(36 22% 76%)  inputs, outlines, steppers */
+
+  /* ---- Text ------------------------------------------------------------ */
+  --kg-ink: #2f1e2f;           /* hsl(300 22% 15%) text, dark panels  14.7:1  */
+  --kg-ink-soft: #705c70;      /* hsl(300 10% 40%) secondary text     5.7:1   */
+  --kg-ink-faint: #9c8b9c;     /* hsl(300 8% 58%)  icons, placeholders — not body text */
+  --kg-on-dark: #faf8f4;       /* text on --kg-ink surfaces                   */
+  --kg-on-primary: #ffffff;    /* text on sage / danger / accent-deep fills   */
+
+  /* ---- Brand: sage, used with restraint -------------------------------- */
+  --kg-primary: #3e6f58;       /* hsl(152 28% 34%) 5.8:1 with white           */
+  --kg-primary-hover: #345d4a; /* hsl(152 28% 28%)                            */
+  --kg-primary-soft: #e4f1eb;  /* hsl(150 30% 92%) tinted backgrounds         */
+
+  /* ---- Accent: terracotta ---------------------------------------------- */
+  --kg-accent: #ca7c68;        /* hsl(12 48% 60%)  large text and fills only  */
+  --kg-accent-deep: #a34a33;   /* hsl(12 52% 42%)  small text, sale   5.5:1   */
+  --kg-accent-soft: #f9ebe7;   /* hsl(14 60% 94%)                             */
+
+  /* ---- Semantic (separate from the accent) ------------------------------ */
+  --kg-success: var(--kg-primary);
+  --kg-success-soft: var(--kg-primary-soft);
+  --kg-warning: #956318;       /* hsl(36 72% 34%)  4.5:1 on its soft          */
+  --kg-warning-soft: #fbefda;  /* hsl(38 80% 92%)                             */
+  --kg-danger: #b12f2f;        /* hsl(0 58% 44%)   5.4:1 on its soft          */
+  --kg-danger-soft: #fbe9e9;   /* hsl(0 70% 95%)                              */
+  --kg-star: #e0a416;          /* hsl(42 90% 52%)  ratings                    */
+
+  /* ---- Shape ------------------------------------------------------------ */
+  --kg-radius-sm: 8px;         /* badges, thumbnails                          */
+  --kg-radius-md: 12px;        /* inputs, rows, accordions                    */
+  --kg-radius-lg: 16px;        /* cards, modals, popovers                     */
+  --kg-radius-pill: 999px;     /* buttons, chips, pills                       */
+
+  /* ---- Type ------------------------------------------------------------- */
+  --kg-font-display: "Playfair Display", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --kg-font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* The eight-step scale. Nothing outside it after Phase 12. */
+  --kg-text-xs: 12px;
+  --kg-text-sm: 13px;
+  --kg-text-md: 14px;
+  --kg-text-lg: 16px;
+  --kg-text-xl: 20px;
+  --kg-text-2xl: 24px;
+  --kg-text-3xl: 32px;
+  --kg-text-4xl: 40px;
+
+  --kg-leading-tight: 1.15;
+  --kg-leading-body: 1.6;
+  --kg-tracking-caps: 0.12em;   /* uppercase labels                          */
+  --kg-tracking-display: -0.02em;
+
+  /* ---- Elevation (ink-tinted, never grey) ------------------------------- */
+  --kg-shadow-sm: 0 1px 2px rgba(47, 30, 47, 0.06);
+  --kg-shadow-md: 0 12px 28px -14px rgba(47, 30, 47, 0.22);
+  --kg-shadow-lg: 0 24px 48px -20px rgba(47, 30, 47, 0.3);
+  --kg-overlay: rgba(47, 30, 47, 0.55);
+  --kg-focus-ring: 0 0 0 3px var(--kg-primary-soft);
+
+  /* ---- Layout ----------------------------------------------------------- */
+  --kg-container: 1300px;
+  --kg-gutter: 32px;
+  --kg-gutter-mobile: 18px;
+
+  /* ---- Motion ----------------------------------------------------------- */
+  --kg-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --kg-duration: 0.18s;
+}
