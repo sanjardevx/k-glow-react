@@ -9,6 +9,7 @@ import { setProducts } from "./slice";
 import { retrieveProducts } from "./selector";
 import ProductService from "../../services/ProductService";
 import { serverApi } from "../../../lib/config";
+import { ChevronDownIcon, SearchIcon } from "../../components/icons";
 import type { AppDispatch } from "../../store";
 import type { Product, ProductInquiry } from "../../../lib/types/product";
 import {
@@ -24,20 +25,47 @@ const productsRetriever = createSelector(retrieveProducts, (products) => ({
   products,
 }));
 
-const chips = ["All", "Bestseller", "Sale", "Skincare", "Makeup", "Sets"] as const;
+/**
+ * The chips the catalog can actually back: "All" (no filter), the two computed
+ * views "Bestseller" (top-N by views) and "Sale" (has a discount), and the
+ * three stored categories. Finer product-type chips were dropped — they only
+ * matched product names by regex, which silently misfiles anything oddly
+ * named; add them back as a real `productType` field if the shop ever needs
+ * sub-types.
+ */
+const chips = [
+  "All",
+  "Bestseller",
+  "Sale",
+  "Skincare",
+  "Makeup",
+  "Sets",
+] as const;
 type Chip = (typeof chips)[number];
-const PAGE_SIZE = 8;
+
+const sortOptions = [
+  { value: "featured", label: "Featured" },
+  { value: "price-asc", label: "Price: Low to High" },
+  { value: "price-desc", label: "Price: High to Low" },
+  { value: "top-rated", label: "Top Rated" },
+] as const;
+type SortValue = (typeof sortOptions)[number]["value"];
+
+// The grid shows this many first, then a Load More button reveals the next
+// batch of the same size. 10 is two full rows of the 5-wide desktop grid.
+const PAGE_SIZE = 10;
 
 /**
- * Search runs on the server (`productSearch.search`), the chips filter what
- * comes back in the browser. The chips stay client-side because two of them
- * can't be expressed as a backend query — "Bestseller" is a top-N slice of the
- * view counts, and "Sale" needs a discount field the API doesn't have — and a
- * split where some chips refetch and others don't would be worse than either.
- * Since every fetch asks for the whole matching set, the two stay consistent.
+ * Search runs on the server (`productSearch.search`), the chips and the sort
+ * work on what comes back in the browser. The chips stay client-side because
+ * neither computed view can be expressed as a backend query — "Bestseller" is
+ * a top-N slice of the view counts and "Sale" needs a discount field the API
+ * doesn't have — and a split where some chips refetch and others don't would
+ * be worse than either. Since every fetch asks for the whole matching set,
+ * the two stay consistent.
  */
 const FETCH_LIMIT = 100;
-const BESTSELLER_COUNT = 4;
+const BESTSELLER_COUNT = 5;
 
 function chipFromQuery(search: string): Chip {
   const category = new URLSearchParams(search).get("category")?.toLowerCase();
@@ -52,6 +80,7 @@ export function Products() {
   const [activeChip, setActiveChip] = useState<Chip>(() =>
     chipFromQuery(location.search),
   );
+  const [sort, setSort] = useState<SortValue>("featured");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [productSearch, setProductSearch] = useState<ProductInquiry>({
     page: 1,
@@ -105,8 +134,22 @@ export function Products() {
     return products.filter((p) => p.productCategory === category);
   }, [activeChip, products, bestsellers]);
 
-  const visibleItems = filtered.slice(0, visibleCount);
-  const hasMore = visibleCount < filtered.length;
+  // "Featured" keeps the server order (newest first). "Top Rated" ranks by
+  // views — the closest signal the catalog carries until ratings exist.
+  const sorted = useMemo(() => {
+    if (sort === "featured") return filtered;
+    const list = [...filtered];
+    if (sort === "price-asc")
+      list.sort((a, b) => finalPrice(a) - finalPrice(b));
+    if (sort === "price-desc")
+      list.sort((a, b) => finalPrice(b) - finalPrice(a));
+    if (sort === "top-rated")
+      list.sort((a, b) => b.productViews - a.productViews);
+    return list;
+  }, [filtered, sort]);
+
+  const visibleItems = sorted.slice(0, visibleCount);
+  const hasMore = visibleCount < sorted.length;
 
   function selectChip(chip: Chip) {
     setActiveChip(chip);
@@ -116,39 +159,70 @@ export function Products() {
   return (
     <div className="shop-page">
       <Box className="shop-head">
-        <Box className="shop-title">Shop</Box>
-        <Box className="shop-head-right">
-          <Box className="shop-count">{filtered.length} products</Box>
+        <Box className="shop-heading">
+          <span className="eyebrow">Our catalog</span>
+          <h1 className="shop-title">Shop</h1>
+          <Box className="shop-count">
+            {sorted.length} {sorted.length === 1 ? "product" : "products"}
+          </Box>
+        </Box>
+
+        <Box className="shop-tools">
           <Box
             component="form"
             className="shop-search"
+            role="search"
             onSubmit={(e) => {
               e.preventDefault();
               searchProductHandler();
             }}
           >
+            <SearchIcon className="shop-search-glyph" />
             <input
               type="search"
-              placeholder="Search products..."
+              placeholder="Search products…"
+              aria-label="Search products"
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
             />
-            <button type="submit" className="shop-search-icon" aria-label="Search">
-              🔍
+            <button type="submit" className="shop-search-submit">
+              Search
             </button>
           </Box>
+
+          <label className="shop-sort">
+            <span className="shop-sort-label">Sort</span>
+            <select
+              value={sort}
+              onChange={(e) => {
+                setSort(e.target.value as SortValue);
+                setVisibleCount(PAGE_SIZE);
+              }}
+              aria-label="Sort products"
+            >
+              {sortOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            <ChevronDownIcon className="shop-sort-chevron" />
+          </label>
         </Box>
       </Box>
 
-      <Box className="chip-row">
+      <Box className="chip-row" role="tablist" aria-label="Product categories">
         {chips.map((chip) => (
-          <span
+          <button
+            type="button"
             key={chip}
+            role="tab"
+            aria-selected={activeChip === chip}
             className={`chip${activeChip === chip ? " active" : ""}`}
             onClick={() => selectChip(chip)}
           >
             {chip}
-          </span>
+          </button>
         ))}
       </Box>
 
@@ -202,7 +276,7 @@ export function Products() {
                           if (!soldOut) onAdd(ele);
                         }}
                       >
-                        {soldOut ? "Sold Out" : "Quick Add"}
+                        {soldOut ? "Sold Out" : "Add to Cart"}
                       </Box>
                     </Box>
                   </Box>

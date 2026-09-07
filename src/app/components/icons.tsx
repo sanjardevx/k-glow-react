@@ -51,6 +51,25 @@ export function BoxIcon({ className }: IconProps) {
   );
 }
 
+/** Magnifier — search fields. */
+export function SearchIcon({ className }: IconProps) {
+  return (
+    <svg {...base} className={className}>
+      <circle cx="11" cy="11" r="6.5" />
+      <path d="m20 20-4.2-4.2" />
+    </svg>
+  );
+}
+
+/** Small chevron — select fields and accordions. */
+export function ChevronDownIcon({ className }: IconProps) {
+  return (
+    <svg {...base} className={className}>
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+  );
+}
+
 /** Lightning bolt — "Same-day dispatch". */
 export function BoltIcon({ className }: IconProps) {
   return (
