@@ -57,9 +57,6 @@ export function Statistics() {
 
   return (
     <section className="stats" ref={sectionRef}>
-      <span className="stats-blur sb1" />
-      <span className="stats-blur sb2" />
-      <span className="stats-blur sb3" />
       <Box className="stats-grid">
         {stats.map((s, i) => (
           <Box

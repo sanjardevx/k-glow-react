@@ -1,14 +1,16 @@
 import { Box } from "@mui/material";
 import { useAppSelector } from "../../hooks";
+import { useReveal } from "../../components/useReveal";
 import { retrieveReviews } from "./selector";
 
 export function Reviews() {
   const reviews = useAppSelector(retrieveReviews);
+  const revealRef = useReveal<HTMLElement>();
 
   return (
-    <section className="section reviews">
+    <section className="section reviews reveal" ref={revealRef}>
       <Box className="reviews-head">
-        <span className="reviews-badge">❝ Customer Love</span>
+        <span className="eyebrow">Customer love</span>
         <Box className="section-title">
           What Our <em>Beauty Queens</em> Say
         </Box>

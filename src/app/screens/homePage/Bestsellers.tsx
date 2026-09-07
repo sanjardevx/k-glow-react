@@ -3,19 +3,24 @@ import { Link } from "react-router-dom";
 import { finalPrice, formatPrice } from "../productsPage/productsData";
 import { useAppSelector } from "../../hooks";
 import { useBasket } from "../cartPage/useBasket";
+import { useReveal } from "../../components/useReveal";
 import { retrieveBestsellers } from "./selector";
 import { serverApi } from "../../../lib/config";
 
 export function Bestsellers() {
   const { onAdd } = useBasket();
   const bestsellers = useAppSelector(retrieveBestsellers);
+  const revealRef = useReveal<HTMLElement>();
 
   return (
-    <section className="section">
+    <section className="section reveal" ref={revealRef}>
       <Box className="section-inner">
         <Box className="section-head">
-          <Box className="section-title">
-            Best<em>sellers</em>
+          <Box className="section-heading">
+            <span className="eyebrow">Loved by our community</span>
+            <Box className="section-title">
+              Best<em>sellers</em>
+            </Box>
           </Box>
           <Link
             to={{ pathname: "/products", search: "?category=bestseller" }}
@@ -68,7 +73,7 @@ export function Bestsellers() {
                         if (!soldOut) onAdd(ele);
                       }}
                     >
-                      {soldOut ? "Sold Out" : "Quick Add"}
+                      {soldOut ? "Sold Out" : "Add to Cart"}
                     </Box>
                   </Box>
                 </Box>

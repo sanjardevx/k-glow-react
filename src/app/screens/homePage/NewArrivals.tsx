@@ -3,19 +3,24 @@ import { Link } from "react-router-dom";
 import { finalPrice, formatPrice } from "../productsPage/productsData";
 import { useAppSelector } from "../../hooks";
 import { useBasket } from "../cartPage/useBasket";
+import { useReveal } from "../../components/useReveal";
 import { retrieveNewArrivals } from "./selector";
 import { serverApi } from "../../../lib/config";
 
 export function NewArrivals() {
   const { onAdd } = useBasket();
   const newArrivals = useAppSelector(retrieveNewArrivals);
+  const revealRef = useReveal<HTMLElement>();
 
   return (
-    <section className="section">
+    <section className="section reveal" ref={revealRef}>
       <Box className="section-inner">
         <Box className="section-head">
-          <Box className="section-title">
-            New <em>arrivals</em>
+          <Box className="section-heading">
+            <span className="eyebrow">Just landed</span>
+            <Box className="section-title">
+              New <em>arrivals</em>
+            </Box>
           </Box>
           <Link to="/products" className="section-link">
             View all →
@@ -65,7 +70,7 @@ export function NewArrivals() {
                         if (!soldOut) onAdd(ele);
                       }}
                     >
-                      {soldOut ? "Sold Out" : "Quick Add"}
+                      {soldOut ? "Sold Out" : "Add to Cart"}
                     </Box>
                   </Box>
                 </Box>

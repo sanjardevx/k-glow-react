@@ -1,9 +1,12 @@
+/**
+ * Hero. The soft, full-width backdrop is the banner photo itself, blurred and
+ * washed with cream (see .hero-bg in home.css) so the sharp copy of the photo
+ * on the right sits inside one continuous scene rather than on a flat block.
+ */
 export function Hero() {
   return (
     <section className="hero">
-      <span className="blur b1"></span>
-      <span className="blur b2"></span>
-      <span className="blur b3"></span>
+      <div className="hero-bg" aria-hidden="true" />
       <div className="hero-inner">
         <div className="copy">
           <h2>
@@ -16,8 +19,12 @@ export function Hero() {
             trending in Seoul, now in Tashkent.
           </p>
           <div className="cta-row">
-            <button className="btn-primary">Shop Bestsellers</button>
-            <button className="btn-outline">Discover Skincare</button>
+            <button type="button" className="btn-ink">
+              Shop Bestsellers
+            </button>
+            <button type="button" className="btn-outline">
+              Discover Skincare
+            </button>
           </div>
         </div>
         <div className="hero-photo">

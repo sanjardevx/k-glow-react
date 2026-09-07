@@ -16,6 +16,7 @@
   --kg-sand-2: #ede5da;        /* hsl(36 32% 89%)  pressed / deeper sand      */
   --kg-border: #e6dfd3;        /* hsl(36 26% 87%)  hairlines                  */
   --kg-border-strong: #cfc4b4; /* hsl(36 22% 76%)  inputs, outlines, steppers */
+  --kg-matte: #ffffff;         /* white matte behind product photos           */
 
   /* ---- Text ------------------------------------------------------------ */
   --kg-ink: #2f1e2f;           /* hsl(300 22% 15%) text, dark panels  14.7:1  */
@@ -67,6 +68,8 @@
   --kg-text-2xl: 24px;
   --kg-text-3xl: 32px;
   --kg-text-4xl: 40px;
+  --kg-text-hero: 52px;        /* homepage hero headline only                 */
+  --kg-bg-veil: rgba(250, 248, 244, 0.78);  /* cream wash over hero photo     */
 
   --kg-leading-tight: 1.15;
   --kg-leading-body: 1.6;

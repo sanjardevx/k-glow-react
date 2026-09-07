@@ -1,0 +1,238 @@
+/**
+ * Product card — shared by the homepage rows, the Shop grid and the related
+ * products row on the product detail page. Imported by home.css and
+ * products.css; both pages render the same markup (.p-card-link > .p-card).
+ *
+ * Badge colours and the Quick Add button come from the primitives in
+ * components.css (.p-badge / .p-quickadd aliases); this file only lays the
+ * card out. Tokens only.
+ */
+
+/* Grid: minmax(0, 1fr) so the nowrap product name can never widen a track
+   past the viewport on narrow screens. Five across on the desktop. */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.p-card-link {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+  border-radius: var(--kg-radius-lg);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.p-card-link:focus {
+  outline: none;
+}
+
+.p-card-link:focus-visible .p-card {
+  outline: 2px solid var(--kg-primary);
+  outline-offset: 2px;
+}
+
+.p-card {
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 10px;
+  background: var(--kg-card);
+  border: 1px solid var(--kg-border);
+  border-radius: var(--kg-radius-lg);
+  transition:
+    transform 0.25s var(--kg-ease),
+    box-shadow 0.25s var(--kg-ease),
+    border-color 0.25s var(--kg-ease);
+}
+
+.p-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--kg-border-strong);
+  box-shadow: var(--kg-shadow-md);
+}
+
+/* One bordered box for the photo — no inner frame. The image sits directly
+   inside this div and fills it. Its size is fixed by the aspect ratio, and
+   the image is absolutely positioned, so a tall or wide photo can never
+   stretch the box (that was what made one card taller than its row-mates). */
+.p-photo {
+  position: relative;
+  flex-shrink: 0;
+  /* Taller than wide so the box holds ~60-65% of the card height. */
+  aspect-ratio: 5 / 6;
+  overflow: hidden;
+  border: 1px solid var(--kg-border);
+  border-radius: var(--kg-radius-md);
+  background: var(--kg-matte);
+}
+
+/* The old matte wrapper draws nothing now — the image is the box's content. */
+.p-photo-frame {
+  display: contents;
+}
+
+/* cover, not contain: the image fills the whole box edge to edge. Catalog
+   photos with a baked-in background then reach the border instead of sitting
+   as a smaller rectangle with white showing around them. */
+.p-photo img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transform: scale(1);
+  transition: transform 0.35s var(--kg-ease);
+}
+
+.p-card:hover .p-photo img {
+  transform: scale(1.05);
+}
+
+.p-card.soldout .p-photo img {
+  opacity: 0.55;
+}
+
+/* Badge position; look comes from components.css. */
+.p-photo .p-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1;
+}
+
+.p-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 4px;
+  padding: 10px 4px 0;
+}
+
+.p-brand {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: var(--kg-tracking-caps);
+  text-transform: uppercase;
+  color: var(--kg-accent-deep);
+}
+
+.p-name {
+  overflow: hidden;
+  font-family: var(--kg-font-display);
+  font-size: var(--kg-text-lg);
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--kg-ink);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.p-stars {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  color: var(--kg-ink-soft);
+}
+
+.p-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 2px;
+  margin-bottom: 8px;
+}
+
+.p-price {
+  font-size: var(--kg-text-md);
+  font-weight: 600;
+  color: var(--kg-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.p-price-old {
+  font-size: var(--kg-text-xs);
+  color: var(--kg-ink-faint);
+  text-decoration: line-through;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Sizing only — the ink fill and disabled state come from components.css.
+   margin-top:auto pins it to the base of the card like the reference. */
+.p-quickadd {
+  display: flex;
+  width: 100%;
+  margin-top: auto;
+  padding: 13px 16px;
+  font-size: var(--kg-text-md);
+}
+
+@media (max-width: 1200px) {
+  .product-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 980px) {
+  .product-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 680px) {
+  .product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  /* Cards are wide here, so a 4:3 box keeps the photo from getting tall. */
+  .p-photo {
+    aspect-ratio: 4 / 3;
+  }
+
+  .p-body {
+    padding: 12px 2px 2px;
+  }
+
+  .p-name {
+    font-size: var(--kg-text-md);
+  }
+}
+
+@media (max-width: 460px) {
+  .product-grid {
+    gap: 10px;
+  }
+
+  .p-photo {
+    aspect-ratio: 1 / 1;
+  }
+
+  .p-quickadd {
+    padding: 11px;
+    font-size: var(--kg-text-sm);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .p-card,
+  .p-photo img {
+    transition: none;
+  }
+
+  .p-card:hover {
+    transform: none;
+  }
+
+  .p-card:hover .p-photo img {
+    transform: none;
+  }
+}

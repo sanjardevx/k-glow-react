@@ -273,11 +273,10 @@ export function ChosenProduct() {
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
-                          if (!eleSoldOut)
-                            onAdd(ele);
+                          if (!eleSoldOut) onAdd(ele);
                         }}
                       >
-                        {eleSoldOut ? "Sold Out" : "Quick Add"}
+                        {eleSoldOut ? "Sold Out" : "Add to Cart"}
                       </Box>
                     </Box>
                   </Box>

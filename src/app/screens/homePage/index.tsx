@@ -39,12 +39,12 @@ export function HomePage({ onAuthOpen }: HomePageProps) {
     const reviewService = new ReviewService();
 
     productService
-      .getProducts({ page: 1, limit: 4, order: "productViews" })
+      .getProducts({ page: 1, limit: 5, order: "productViews" })
       .then((data) => setBestsellers(data))
       .catch((err) => console.log(err));
 
     productService
-      .getProducts({ page: 1, limit: 4, order: "createdAt" })
+      .getProducts({ page: 1, limit: 5, order: "createdAt" })
       .then((data) => setNewArrivals(data))
       .catch((err) => console.log(err));
 

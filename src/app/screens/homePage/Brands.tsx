@@ -1,4 +1,5 @@
 import { Box } from "@mui/material";
+import { useReveal } from "../../components/useReveal";
 
 const brands = [
   { name: "Round Lab", logo: "/img/brands/round-lab-logo.webp" },
@@ -13,11 +14,13 @@ const brands = [
 ];
 
 export function Brands() {
+  const revealRef = useReveal<HTMLElement>();
+
   return (
-    <section className="section brands">
+    <section className="section brands reveal" ref={revealRef}>
       <Box className="section-inner">
         <Box className="brands-head">
-          <span className="reviews-badge">✦ Authentic Only</span>
+          <span className="eyebrow">Authentic only</span>
           <Box className="section-title">
             Brands We <em>Carry</em>
           </Box>
