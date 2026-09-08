@@ -10,6 +10,13 @@ import { retrieveChosenProduct, retrieveProducts } from "./selector";
 import ProductService from "../../services/ProductService";
 import ReviewService from "../../services/ReviewService";
 import { serverApi } from "../../../lib/config";
+import {
+  BoltIcon,
+  BoxIcon,
+  EyeIcon,
+  ShieldIcon,
+  TruckIcon,
+} from "../../components/icons";
 import type { AppDispatch } from "../../store";
 import type { Product } from "../../../lib/types/product";
 import type { Review } from "../../../lib/types/review";
@@ -26,8 +33,8 @@ const chosenProductRetriever = createSelector(
 );
 
 const CATALOG_LIMIT = 100;
-const RELATED_COUNT = 4;
-const BESTSELLER_COUNT = 4;
+const RELATED_COUNT = 5;
+const BESTSELLER_COUNT = 5;
 
 function isSoldOut(product: Product): boolean {
   return product.productStatus === ProductStatus.PAUSE;
@@ -97,12 +104,12 @@ export function ChosenProduct() {
 
   return (
     <div className="chosen-product-page">
-      <Box className="breadcrumb">
+      <Box component="nav" className="breadcrumb" aria-label="Breadcrumb">
         <Link to="/">Home</Link>
         <span className="sep">/</span>
         <Link to="/products">Shop</Link>
         <span className="sep">/</span>
-        {product.productName}
+        <span className="current">{product.productName}</span>
       </Box>
 
       <Box className="pdp">
@@ -151,7 +158,10 @@ export function ChosenProduct() {
             {product.productName}
           </Box>
           <Box className="pdp-rating">
-            <span className="pdp-views">👁 {product.productViews} views</span>
+            <span className="pdp-views">
+              <EyeIcon />
+              {product.productViews} views
+            </span>
             <a href="#pdp-reviews">
               See {productReviews.length}{" "}
               {productReviews.length === 1 ? "review" : "reviews"}
@@ -174,6 +184,7 @@ export function ChosenProduct() {
               <button
                 type="button"
                 disabled={soldOut}
+                aria-label="Decrease quantity"
                 onClick={() => setQty((q) => Math.max(1, q - 1))}
               >
                 −
@@ -182,6 +193,7 @@ export function ChosenProduct() {
               <button
                 type="button"
                 disabled={soldOut}
+                aria-label="Increase quantity"
                 onClick={() => setQty((q) => q + 1)}
               >
                 +
@@ -189,6 +201,7 @@ export function ChosenProduct() {
             </Box>
             <span
               className={`pdp-addbag${soldOut ? " disabled" : ""}`}
+              role="button"
               onClick={() => {
                 if (soldOut) return;
                 if (!onAdd(product, qty)) return;
@@ -206,27 +219,57 @@ export function ChosenProduct() {
           ) : null}
           <Box className="pdp-trust">
             <Box className="pdp-trust-item">
-              <span className="ic">🚚</span>Shipped from Korea
+              <span className="ic">
+                <TruckIcon />
+              </span>
+              Shipped from Korea
             </Box>
             <Box className="pdp-trust-item">
-              <span className="ic">🛡</span>100% authentic
+              <span className="ic">
+                <ShieldIcon />
+              </span>
+              100% authentic
             </Box>
             <Box className="pdp-trust-item">
-              <span className="ic">📦</span>Usually in stock
+              <span className="ic">
+                <BoxIcon />
+              </span>
+              Usually in stock
             </Box>
             <Box className="pdp-trust-item">
-              <span className="ic">⚡</span>Same-day dispatch via BTS post
+              <span className="ic">
+                <BoltIcon />
+              </span>
+              Same-day dispatch via BTS post
             </Box>
           </Box>
+          {product.productHowToUse ? (
+            <Box className="pdp-detail">
+              <span className="pdp-detail-label">How to use</span>
+              <p>{product.productHowToUse}</p>
+            </Box>
+          ) : null}
+          {product.productSuitableFor ? (
+            <Box className="pdp-detail">
+              <span className="pdp-detail-label">Suitable for</span>
+              <p>{product.productSuitableFor}</p>
+            </Box>
+          ) : null}
         </Box>
       </Box>
 
-      <section className="section">
+      <section className="section pdp-related">
         <Box className="section-inner">
           <Box className="section-head">
-            <Box className="section-title">
-              You may also <em>like</em>
+            <Box className="section-heading">
+              <span className="eyebrow">Pairs well with</span>
+              <Box className="section-title">
+                You may also <em>like</em>
+              </Box>
             </Box>
+            <Link to="/products" className="section-link">
+              View all →
+            </Link>
           </Box>
           <Box className="product-grid">
             {related.map((ele) => {
@@ -287,21 +330,18 @@ export function ChosenProduct() {
         </Box>
       </section>
 
-      <section className="section reviews" id="pdp-reviews">
+      <section className="section reviews pdp-reviews" id="pdp-reviews">
         <Box className="section-inner">
           <Box className="section-head">
-            <Box className="section-title">
-              Reviews for this <em>product</em>
+            <Box className="section-heading">
+              <span className="eyebrow">Customer love</span>
+              <Box className="section-title">
+                Reviews for this <em>product</em>
+              </Box>
             </Box>
           </Box>
           {productReviews.length !== 0 ? (
-            <Box
-              className="review-grid"
-              style={{
-                gridTemplateColumns: "repeat(2, 1fr)",
-                maxWidth: "820px",
-              }}
-            >
+            <Box className="review-grid review-grid-pdp">
               {productReviews.map((review) => (
                 <Box className="review-card" key={review._id}>
                   <Box className="review-stars">

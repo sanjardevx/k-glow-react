@@ -269,52 +269,51 @@
   }
 }
 
-/* Product-detail mobile rules. Kept here from the original file; the .pdp
-   rule is overridden by the desktop rule below (source order) — Phase 5. */
-@media (max-width: 860px) {
-  .breadcrumb {
-    padding-left: 18px;
-    padding-right: 18px;
-  }
-
-  .pdp {
-    grid-template-columns: 1fr;
-    padding: 22px 18px 8px;
-  }
-}
-
 /** PRODUCT DETAIL **/
 
 .breadcrumb {
-  max-width: 1300px;
+  max-width: var(--kg-container);
   margin: 0 auto;
   box-sizing: border-box;
-  padding: 20px 32px 0;
-  font-size: 12.5px;
-  color: #6b5a5f;
+  padding: 24px var(--kg-gutter) 0;
+  font-size: var(--kg-text-sm);
+  color: var(--kg-ink-soft);
 }
 
 .breadcrumb a {
-  color: #b85c7a;
-  font-weight: 600;
+  color: var(--kg-ink-soft);
+  font-weight: 500;
   text-decoration: none;
+  transition: color var(--kg-duration) var(--kg-ease);
+}
+
+.breadcrumb a:hover {
+  color: var(--kg-ink);
 }
 
 .breadcrumb .sep {
-  margin: 0 6px;
-  opacity: 0.5;
+  margin: 0 8px;
+  color: var(--kg-ink-faint);
+}
+
+.breadcrumb .current {
+  color: var(--kg-ink);
 }
 
 .pdp {
-  max-width: 1300px;
+  max-width: var(--kg-container);
   margin: 0 auto;
   box-sizing: border-box;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 44px;
-  padding: 26px 32px 8px;
+  /* Each column keeps its own height — the gallery no longer stretches the
+     info column (or vice versa) into a block of empty space. */
+  align-items: start;
+  gap: 56px;
+  padding: 32px var(--kg-gutter) 24px;
 }
 
+/* Gallery */
 .pdp-gallery {
   display: flex;
   flex-direction: column;
@@ -324,10 +323,12 @@
 .pdp-photo {
   position: relative;
   aspect-ratio: 1 / 1;
-  border-radius: 18px;
-  background: #fae9ed;
-  border: 1px solid #f0dce1;
+  /* Square until it would get tall on a wide column; the cap keeps the
+     gallery from overshooting the info beside it, thumbnails included. */
+  max-height: 500px;
   overflow: hidden;
+  border-radius: var(--kg-radius-lg);
+  background: var(--kg-sand);
 }
 
 /* All views are stacked; only the active one is painted, so switching is a
@@ -335,116 +336,122 @@
 .pdp-photo img {
   position: absolute;
   inset: 0;
+  display: block;
   width: 100%;
   height: 100%;
+  padding: 24px;
+  box-sizing: border-box;
   object-fit: contain;
-  display: block;
   opacity: 0;
-  transition: opacity 0.35s ease;
+  transition: opacity 0.35s var(--kg-ease);
 }
 
 .pdp-photo img.active {
   opacity: 1;
 }
 
+/* Badge position and size; look comes from components.css. */
 .pdp-photo .p-badge {
-  top: 14px;
-  left: 14px;
-  font-size: 11px;
-  padding: 5px 11px;
+  position: absolute;
+  top: 16px;
+  left: 16px;
   z-index: 2; /* sits above the stacked images */
+  padding: 6px 12px;
+  font-size: 11px;
 }
 
 .pdp-thumbs {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
 .pdp-thumb {
-  width: 66px;
-  height: 66px;
+  width: 64px;
+  height: 64px;
   padding: 4px;
-  border-radius: 12px;
-  border: 1.5px solid #f0dce1;
-  background: #fff;
-  cursor: pointer;
   overflow: hidden;
+  border: 1px solid var(--kg-border-strong);
+  border-radius: 10px;
+  background: var(--kg-card);
+  cursor: pointer;
   transition:
-    border-color 0.2s ease,
-    transform 0.2s ease;
+    border-color var(--kg-duration) var(--kg-ease),
+    transform var(--kg-duration) var(--kg-ease);
 }
 
 .pdp-thumb img {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
-  display: block;
 }
 
 .pdp-thumb:hover {
-  border-color: #e8b4b8;
+  border-color: var(--kg-ink-faint);
   transform: translateY(-2px);
 }
 
 .pdp-thumb.active {
-  border-color: #b85c7a;
+  border-color: var(--kg-ink);
 }
 
-.pdp-thumb:focus-visible {
-  outline: 2px solid #b85c7a;
-  outline-offset: 2px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .pdp-photo img,
-  .pdp-thumb {
-    transition: none;
-  }
-  .pdp-thumb:hover {
-    transform: none;
-  }
-}
-
+/* Info column */
 .pdp-info {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 }
 
 .pdp-brand {
-  font-size: 12.5px;
-  font-weight: 700;
-  color: #d687a1;
+  font-size: var(--kg-text-xs);
+  font-weight: 500;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  color: var(--kg-accent-deep);
 }
 
 .pdp-title {
-  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  font-size: 28px;
-  font-weight: 600;
-  line-height: 1.2;
   margin: 0;
-  color: #2d1b2e;
+  font-family: var(--kg-font-display);
+  font-size: var(--kg-text-4xl);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: var(--kg-tracking-display);
+  color: var(--kg-ink);
 }
 
 .pdp-rating {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  color: #6b5a5f;
+  gap: 16px;
+  font-size: var(--kg-text-sm);
+  color: var(--kg-ink-soft);
 }
 
 .pdp-rating a {
-  color: #b85c7a;
+  color: var(--kg-primary);
   font-weight: 600;
   text-decoration: none;
 }
 
+.pdp-rating a:hover {
+  color: var(--kg-primary-hover);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .pdp-views {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-variant-numeric: tabular-nums;
+}
+
+.pdp-views svg {
+  width: 15px;
+  height: 15px;
+  color: var(--kg-ink-faint);
 }
 
 .pdp-price-row {
@@ -455,127 +462,194 @@
 }
 
 .pdp-price {
-  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  font-size: 26px;
-  font-weight: 700;
-  color: #2d1b2e;
+  font-size: var(--kg-text-2xl);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--kg-ink);
+  font-variant-numeric: tabular-nums;
 }
 
 .pdp-price-old {
-  font-size: 15px;
-  color: #9ca3af;
+  font-size: var(--kg-text-lg);
+  color: var(--kg-ink-faint);
   text-decoration: line-through;
+  font-variant-numeric: tabular-nums;
 }
 
 .pdp-save {
-  font-size: 11.5px;
-  font-weight: 700;
-  color: #ef4444;
-  background: rgba(239, 68, 68, 0.1);
-  padding: 3px 9px;
-  border-radius: 6px;
+  padding: 4px 10px;
+  border-radius: var(--kg-radius-pill);
+  background: var(--kg-accent-soft);
+  color: var(--kg-accent-deep);
+  font-size: var(--kg-text-xs);
+  font-weight: 600;
 }
 
 .pdp-desc {
-  font-size: 14px;
-  color: #5c4650;
-  line-height: 1.65;
-  margin: 4px 0 0;
+  max-width: 60ch;
+  margin: 0;
+  font-size: var(--kg-text-lg);
+  line-height: 1.7;
+  color: var(--kg-ink-soft);
 }
 
 .qty-row {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 16px;
   margin-top: 8px;
 }
 
-.qty-stepper {
-  display: flex;
-  align-items: center;
-  border: 1.5px solid #f0dce1;
-  border-radius: 999px;
-  flex-shrink: 0;
+/* Sizing only — the stepper's look comes from components.css. */
+.pdp .qty-stepper button {
+  width: 40px;
+  height: 40px;
 }
 
-.qty-stepper button {
-  width: 38px;
-  height: 38px;
-  font-size: 16px;
-  font-weight: 700;
-  color: #2d1b2e;
-  background: transparent;
-  border: none;
-  cursor: pointer;
+.pdp .qty-stepper span {
+  min-width: 34px;
 }
 
-.qty-stepper span {
-  width: 34px;
-  text-align: center;
-  font-weight: 700;
-  font-size: 14px;
-  display: inline-block;
-}
-
+/* Sizing only — the sage fill and disabled state come from components.css. */
 .pdp-addbag {
   flex: 1;
-  background: #b85c7a;
-  color: #fff;
-  font-weight: 700;
-  font-size: 14px;
-  padding: 14px 0;
-  border-radius: 999px;
-  text-align: center;
-  cursor: pointer;
-  border: none;
-}
-
-.pdp-addbag:hover {
-  background: #a54f6b;
-}
-
-.pdp-addbag.disabled {
-  background: #e5e5e5;
-  color: #9ca3af;
-  cursor: not-allowed;
-}
-
-.pdp-addbag.disabled:hover {
-  background: #e5e5e5;
+  padding: 15px 24px;
+  font-size: var(--kg-text-md);
 }
 
 .pdp-soldout-note {
-  font-size: 12.5px;
-  color: #6b5a5f;
-  margin: 4px 0 0;
+  margin: 0;
+  font-size: var(--kg-text-sm);
+  color: var(--kg-ink-soft);
 }
 
 .pdp-trust {
   display: flex;
-  gap: 22px;
-  margin-top: 10px;
-  padding-top: 18px;
-  border-top: 1px solid #f2e4e8;
+  gap: 16px 24px;
   flex-wrap: wrap;
+  margin-top: 8px;
+  padding-top: 24px;
+  border-top: 1px solid var(--kg-border);
 }
 
 .pdp-trust-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  color: #6b5a5f;
+  gap: 10px;
+  font-size: var(--kg-text-sm);
+  color: var(--kg-ink-soft);
 }
 
 .pdp-trust-item .ic {
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  background: #fae9ed;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 13px;
-  color: #b85c7a;
+  width: 32px;
+  height: 32px;
   flex-shrink: 0;
+  border-radius: var(--kg-radius-sm);
+  background: var(--kg-sand);
+  color: var(--kg-ink);
+}
+
+.pdp-trust-item .ic svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* "How to use" / "Suitable for" — quiet detail blocks below the trust row.
+   Each only renders when the product carries that field. */
+.pdp-detail {
+  padding-top: 4px;
+}
+
+.pdp-detail-label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: var(--kg-text-xs);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--kg-ink-faint);
+}
+
+.pdp-detail p {
+  margin: 0;
+  font-size: var(--kg-text-md);
+  line-height: 1.6;
+  color: var(--kg-ink-soft);
+}
+
+/* Related products: the shared card on the cream ground. */
+.pdp-related {
+  padding-top: 40px;
+}
+
+/* Reviews for this product: two columns, narrower than the homepage grid. */
+.review-grid-pdp {
+  max-width: 880px;
+  margin: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* Mobile — after the desktop rules so the single column actually wins. */
+@media (max-width: 860px) {
+  .breadcrumb {
+    padding: 16px var(--kg-gutter-mobile) 0;
+  }
+
+  .pdp {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 16px var(--kg-gutter-mobile) 8px;
+  }
+
+  .pdp-title {
+    font-size: var(--kg-text-3xl);
+  }
+
+  .pdp-desc {
+    font-size: var(--kg-text-md);
+  }
+
+  .qty-row {
+    flex-wrap: wrap;
+  }
+
+  .pdp-addbag {
+    flex-basis: 100%;
+  }
+
+  .pdp-related {
+    padding-top: 24px;
+  }
+
+  .review-grid-pdp {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .pdp-price {
+    font-size: var(--kg-text-xl);
+  }
+
+  .pdp-trust {
+    gap: 12px;
+  }
+
+  .pdp-trust-item {
+    flex-basis: calc(50% - 6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pdp-photo img,
+  .pdp-thumb {
+    transition: none;
+  }
+
+  .pdp-thumb:hover {
+    transform: none;
+  }
 }
