@@ -1,12 +1,20 @@
+/**
+ * Checkout stepper: a hairline strip on the cart page, a compact sand panel
+ * inside the payment modal. Done = sage filled, current = sage ring,
+ * upcoming = quiet outline. Tokens only.
+ */
 .stepper-wrap {
-  background: #fae9ed;
-  padding: 22px 32px 20px;
+  padding: 24px var(--kg-gutter) 20px;
+  background: var(--kg-bg);
+  border-bottom: 1px solid var(--kg-border);
 }
 
 .stepper-wrap.in-modal {
-  border-radius: 14px;
-  padding: 16px 10px 14px;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
+  padding: 16px 12px 14px;
+  border-bottom: none;
+  border-radius: var(--kg-radius-md);
+  background: var(--kg-sand);
 }
 
 .stepper-wrap.in-modal .stepper {
@@ -18,8 +26,8 @@
 }
 
 .stepper-wrap.in-modal .step-label {
-  font-size: 9px;
   max-width: 56px;
+  font-size: 10px;
 }
 
 .stepper {
@@ -39,61 +47,63 @@
 }
 
 .step-circle {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12.5px;
-  font-weight: 700;
-  border: 2px solid #e8b4b8;
-  background: #fff;
-  color: #9c8489;
+  width: 32px;
+  height: 32px;
+  border: 1.5px solid var(--kg-border-strong);
+  border-radius: 50%;
+  background: var(--kg-card);
+  color: var(--kg-ink-faint);
+  font-size: var(--kg-text-sm);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
   transition:
-    border-color 0.3s ease,
-    background 0.3s ease,
-    color 0.3s ease,
-    box-shadow 0.3s ease;
+    border-color 0.3s var(--kg-ease),
+    background-color 0.3s var(--kg-ease),
+    color 0.3s var(--kg-ease),
+    box-shadow 0.3s var(--kg-ease);
 }
 
 .step-node.done .step-circle {
-  background: #b85c7a;
-  border-color: #b85c7a;
-  color: #fff;
-  animation: step-pop 0.4s ease;
+  border-color: var(--kg-primary);
+  background: var(--kg-primary);
+  color: var(--kg-on-primary);
+  animation: step-pop 0.4s var(--kg-ease);
 }
 
 .step-node.current .step-circle {
-  border-color: #b85c7a;
-  color: #b85c7a;
-  box-shadow: 0 0 0 5px rgba(184, 92, 122, 0.16);
+  border-color: var(--kg-primary);
+  color: var(--kg-primary);
+  box-shadow: 0 0 0 5px var(--kg-primary-soft);
   animation: step-pulse 2.2s ease-in-out infinite;
 }
 
 .step-label {
-  font-size: 10.5px;
-  font-weight: 600;
-  color: #9c8489;
-  text-align: center;
   max-width: 76px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-align: center;
+  color: var(--kg-ink-faint);
 }
 
 .step-node.done .step-label,
 .step-node.current .step-label {
-  color: #2d1b2e;
+  color: var(--kg-ink);
 }
 
 .step-line {
   width: 64px;
   height: 2px;
-  background: #e8b4b8;
   margin: 15px -2px 0;
-  transition: background 1.1s ease 0.15s;
+  background: var(--kg-border-strong);
+  transition: background-color 1.1s var(--kg-ease) 0.15s;
 }
 
 .step-line.filled {
-  background: #b85c7a;
+  background: var(--kg-primary);
 }
 
 @keyframes step-pop {
@@ -110,10 +120,10 @@
 @keyframes step-pulse {
   0%,
   100% {
-    box-shadow: 0 0 0 5px rgba(184, 92, 122, 0.16);
+    box-shadow: 0 0 0 5px var(--kg-primary-soft);
   }
   50% {
-    box-shadow: 0 0 0 8px rgba(184, 92, 122, 0.08);
+    box-shadow: 0 0 0 8px var(--kg-primary-soft);
   }
 }
 
@@ -122,13 +132,34 @@
   .step-node.current .step-circle {
     animation: none;
   }
+
+  .step-circle,
+  .step-line {
+    transition: none;
+  }
 }
 
 @media (max-width: 860px) {
+  .stepper-wrap {
+    padding: 16px var(--kg-gutter-mobile) 14px;
+  }
+
   .stepper {
     max-width: 100%;
   }
+
   .step-line {
     width: 34px;
+  }
+}
+
+@media (max-width: 480px) {
+  .step-line {
+    width: 20px;
+  }
+
+  .step-label {
+    max-width: 60px;
+    font-size: 10px;
   }
 }

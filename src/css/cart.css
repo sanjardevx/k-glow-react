@@ -1,35 +1,47 @@
+/**
+ * Cart page: item rows on the left, a sticky order summary on the right.
+ * Card, stepper, button and empty-state looks come from components.css;
+ * this file lays the page out. Tokens only.
+ */
 .cart-body {
-  max-width: 1300px;
+  max-width: var(--kg-container);
   margin: 0 auto;
-  padding: 26px 32px 60px;
-  background: #fff;
+  box-sizing: border-box;
+  padding: 32px var(--kg-gutter) 64px;
+  background: var(--kg-bg);
 }
 
 .cart-title {
-  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  font-size: 26px;
-  font-weight: 600;
-  margin: 0 0 20px;
-  color: #2d1b2e;
+  margin: 0 0 24px;
+  font-family: var(--kg-font-display);
+  font-size: var(--kg-text-4xl);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: var(--kg-tracking-display);
+  color: var(--kg-ink);
 }
 
+/* Empty and signed-out states share the dashed panel from components.css. */
 .cart-empty {
-  text-align: center;
-  padding: 60px 20px;
-  font-size: 14px;
-  color: #6b5a5f;
+  padding: 64px 24px;
 }
 
 .cart-empty-link {
-  color: #b85c7a;
-  font-weight: 700;
+  color: var(--kg-primary);
+  font-weight: 600;
   text-decoration: none;
+}
+
+.cart-empty-link:hover {
+  color: var(--kg-primary-hover);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .cart-layout {
   display: grid;
   grid-template-columns: 1.6fr 1fr;
-  gap: 26px;
+  gap: 32px;
   align-items: start;
 }
 
@@ -43,21 +55,18 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  background: #fff;
-  border: 1px solid #f2e4e8;
-  border-radius: 14px;
-  padding: 14px;
+  padding: 16px;
 }
 
 .cart-item .thumb {
-  width: 60px;
-  height: 60px;
-  border-radius: 10px;
-  background: #fae9ed;
-  border: 1px solid #f0dce1;
-  object-fit: contain;
-  padding: 4px;
+  width: 72px;
+  height: 72px;
   flex-shrink: 0;
+  padding: 6px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  background: var(--kg-sand);
+  object-fit: contain;
 }
 
 .cart-item .info {
@@ -65,143 +74,188 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
 }
 
 .cart-item .brand {
-  font-size: 10.5px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: var(--kg-tracking-caps);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: rgba(45, 27, 46, 0.6);
+  color: var(--kg-accent-deep);
 }
 
 .cart-item .name {
-  font-size: 13.5px;
-  font-weight: 700;
-  color: #2d1b2e;
+  overflow: hidden;
+  font-family: var(--kg-font-display);
+  font-size: var(--kg-text-lg);
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--kg-ink);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .cart-item .unit {
-  font-size: 12px;
-  color: #6b5a5f;
-  margin-top: 2px;
+  font-size: var(--kg-text-sm);
+  color: var(--kg-ink-soft);
+  font-variant-numeric: tabular-nums;
 }
 
-.cart-item .qty-stepper {
-  display: flex;
-  align-items: center;
-  border: 1.5px solid #f0dce1;
-  border-radius: 999px;
-  flex-shrink: 0;
-}
-
+/* Sizing only — the stepper's look comes from components.css. */
 .cart-item .qty-stepper button {
-  width: 30px;
-  height: 30px;
-  border: none;
-  background: transparent;
-  font-size: 15px;
-  font-weight: 700;
-  color: #2d1b2e;
-  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  font-size: var(--kg-text-md);
 }
 
 .cart-item .qty-stepper span {
-  width: 26px;
-  text-align: center;
-  font-weight: 700;
-  font-size: 13px;
-  display: inline-block;
+  min-width: 28px;
+  font-size: var(--kg-text-sm);
 }
 
 .cart-item .line-total {
-  font-weight: 700;
-  font-size: 14px;
-  min-width: 92px;
-  text-align: right;
+  min-width: 96px;
   flex-shrink: 0;
+  text-align: right;
+  font-size: var(--kg-text-md);
+  font-weight: 600;
+  color: var(--kg-ink);
   font-variant-numeric: tabular-nums;
 }
 
 .cart-item .remove {
-  color: #9c8489;
-  font-size: 17px;
-  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
   flex-shrink: 0;
-  background: none;
   border: none;
+  border-radius: var(--kg-radius-sm);
+  background: none;
+  color: var(--kg-ink-faint);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background-color var(--kg-duration) var(--kg-ease),
+    color var(--kg-duration) var(--kg-ease);
 }
 
 .cart-item .remove:hover {
-  color: #ef4444;
+  background: var(--kg-danger-soft);
+  color: var(--kg-danger);
 }
 
+/* Order summary */
 .summary-card {
-  background: #fff;
-  border: 1px solid #f2e4e8;
-  border-radius: 16px;
-  padding: 22px;
+  position: sticky;
+  top: 24px;
+  padding: 24px;
 }
 
 .summary-card h4 {
-  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  font-size: 18px;
   margin: 0 0 16px;
-  font-weight: 600;
-  color: #2d1b2e;
+  font-family: var(--kg-font-display);
+  font-size: var(--kg-text-2xl);
+  font-weight: 500;
+  letter-spacing: var(--kg-tracking-display);
+  color: var(--kg-ink);
 }
 
 .summary-row {
   display: flex;
   justify-content: space-between;
-  font-size: 13.5px;
-  color: #6b5a5f;
-  margin-bottom: 10px;
-}
-
-.summary-row.total {
-  font-weight: 700;
-  color: #2d1b2e;
-  font-size: 16px;
-  padding-top: 12px;
-  border-top: 1px solid #f2e4e8;
-  margin-top: 4px;
+  gap: 16px;
+  margin-bottom: 12px;
+  font-size: var(--kg-text-md);
+  color: var(--kg-ink-soft);
   font-variant-numeric: tabular-nums;
 }
 
-.pay-btn {
-  display: block;
-  width: 100%;
-  background: #b85c7a;
-  color: #fff;
-  font-weight: 700;
-  font-size: 14px;
-  padding: 14px 0;
-  border-radius: 999px;
-  text-align: center;
-  margin-top: 16px;
-  border: none;
-  cursor: pointer;
-  font-family: inherit;
+.summary-row.total {
+  margin-top: 4px;
+  padding-top: 16px;
+  border-top: 1px solid var(--kg-border);
+  font-size: var(--kg-text-lg);
+  font-weight: 600;
+  color: var(--kg-ink);
 }
 
-.pay-btn:hover {
-  background: #a54f6b;
+/* Sizing only — the sage fill comes from components.css. */
+.pay-btn {
+  display: flex;
+  width: 100%;
+  margin-top: 16px;
+  padding: 15px 24px;
+  font-size: var(--kg-text-md);
 }
 
 .cart-note {
-  font-size: 11.5px;
-  color: #9c8489;
-  text-align: center;
-  margin: 10px 0 0;
+  margin: 12px 0 0;
+  font-size: var(--kg-text-xs);
   line-height: 1.5;
+  text-align: center;
+  color: var(--kg-ink-soft);
 }
 
 @media (max-width: 860px) {
+  .cart-body {
+    padding: 24px var(--kg-gutter-mobile) 48px;
+  }
+
+  .cart-title {
+    font-size: var(--kg-text-3xl);
+  }
+
   .cart-layout {
     grid-template-columns: 1fr;
+    gap: 24px;
   }
-  .cart-body {
-    padding: 22px 18px 44px;
+
+  .summary-card {
+    position: static;
+  }
+
+  /* Thumb + info on the first row; stepper, total and remove wrap under. */
+  .cart-item {
+    flex-wrap: wrap;
+    gap: 12px 14px;
+  }
+
+  .cart-item .info {
+    flex-basis: calc(100% - 72px - 14px);
+  }
+
+  .cart-item .qty-stepper {
+    margin-left: calc(72px + 14px);
+  }
+
+  .cart-item .line-total {
+    min-width: 0;
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .cart-item .thumb {
+    width: 64px;
+    height: 64px;
+  }
+
+  .cart-item .info {
+    flex-basis: calc(100% - 64px - 14px);
+  }
+
+  .cart-item .qty-stepper {
+    margin-left: 0;
+  }
+
+  .cart-item .name {
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
   }
 }
