@@ -1,0 +1,113 @@
+/**
+ * Login / sign-up modal.
+ *
+ * The shell — overlay, card, head, close, subtext, fields, primary button —
+ * comes from the shared primitives in components.css. Only the pieces unique
+ * to this modal live here: the password show/hide toggle, the forgot-password
+ * link and the line that switches between logging in and signing up.
+ *
+ * Tokens only.
+ */
+
+/* The overlay is the scroll container: `margin: auto` centres the card while
+   there's room and collapses to the top once the form is taller than the
+   screen (landscape phone, on-screen keyboard), so the whole thing stays
+   reachable. `overscroll-behavior: contain` plus the body lock in the
+   component keep that scroll off the page behind. */
+.auth-modal {
+  align-items: flex-start;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.auth-modal .modal-card {
+  max-width: 400px;
+  margin: auto;
+}
+
+.auth-modal .modal-subtext {
+  margin: -8px 0 20px;
+}
+
+/* Password field: the toggle sits inside the input's right edge. */
+.pw-wrap {
+  position: relative;
+}
+
+.pw-wrap input {
+  padding-right: 64px;
+}
+
+.pw-toggle {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 6px 8px;
+  border: none;
+  border-radius: var(--kg-radius-sm);
+  background: none;
+  color: var(--kg-primary);
+  font-family: var(--kg-font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition:
+    background-color var(--kg-duration) var(--kg-ease),
+    color var(--kg-duration) var(--kg-ease);
+}
+
+.pw-toggle:hover {
+  background: var(--kg-primary-soft);
+  color: var(--kg-primary-hover);
+}
+
+.forgot-link {
+  display: block;
+  margin: -8px 0 20px;
+  color: var(--kg-ink-soft);
+  font-size: var(--kg-text-sm);
+  font-weight: 500;
+  text-align: right;
+  cursor: pointer;
+  transition: color var(--kg-duration) var(--kg-ease);
+}
+
+.forgot-link:hover {
+  color: var(--kg-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.modal-switch {
+  margin: 18px 0 0;
+  font-size: var(--kg-text-sm);
+  text-align: center;
+  color: var(--kg-ink-soft);
+}
+
+.modal-switch a {
+  color: var(--kg-primary);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal-switch a:hover {
+  color: var(--kg-primary-hover);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+  .auth-modal .modal-card {
+    padding: 24px 20px 20px;
+  }
+
+  /* 16px stops iOS Safari zooming the page when the field is focused. */
+  .auth-modal .modal-field input {
+    font-size: var(--kg-text-lg);
+  }
+}

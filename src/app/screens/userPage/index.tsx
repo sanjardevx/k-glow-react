@@ -7,6 +7,7 @@ import {
   sweetErrorHandling,
   sweetTopSmallSuccessAlert,
 } from "../../../lib/sweetAlert";
+import { PencilIcon, PhoneIcon, PinIcon } from "../../components/icons";
 import type { MemberUpdateInput } from "../../../lib/types/member";
 import { MemberType } from "../../../lib/enums/member.enum";
 import { OrderHistory } from "./OrderHistory";
@@ -125,8 +126,8 @@ export function UserPage() {
                         </svg>
                       )}
                     </Box>
-                    <label className="avatar-edit-badge">
-                      ✎
+                    <label className="avatar-edit-badge" title="Change photo">
+                      <PencilIcon />
                       <input
                         type="file"
                         accept="image/jpeg,image/jpg,image/png"
@@ -215,13 +216,19 @@ export function UserPage() {
                       : "Member"}
                   </Box>
                   {profile.phone ? (
-                    <Box className="profile-address">📞 {profile.phone}</Box>
+                    <Box className="profile-address">
+                      <PhoneIcon />
+                      {profile.phone}
+                    </Box>
                   ) : null}
                   {/* Address and description are blank until the shopper
                       fills them in — a lone pin or empty quotes would just
                       look broken. */}
                   {profile.address ? (
-                    <Box className="profile-address">📍 {profile.address}</Box>
+                    <Box className="profile-address">
+                      <PinIcon />
+                      {profile.address}
+                    </Box>
                   ) : null}
                   {profile.desc ? (
                     <>

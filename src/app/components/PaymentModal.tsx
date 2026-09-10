@@ -7,6 +7,7 @@ import type { CartItem } from "../../lib/types/cart";
 import { useBasket } from "../screens/cartPage/useBasket";
 import { useGlobals } from "../context/useGlobals";
 import { CheckIcon, CopyIcon, UploadIcon } from "./icons";
+import { useBodyScrollLock } from "./useBodyScrollLock";
 import OrderService from "../services/OrderService";
 import { sweetErrorHandling } from "../../lib/sweetAlert";
 import "../../css/orders.css";
@@ -80,20 +81,8 @@ export function PaymentModal({ open, onClose, items, subtotal }: PaymentModalPro
   }, [open]);
 
   // Freeze the page behind the modal so a scroll gesture that runs past the
-  // modal's own scroll edge doesn't drag the cart page underneath. Locking
-  // both <html> and <body> covers whichever one the browser scrolls.
-  useEffect(() => {
-    if (!open) return;
-    const root = document.documentElement;
-    const prevRoot = root.style.overflow;
-    const prevBody = document.body.style.overflow;
-    root.style.overflow = "hidden";
-    document.body.style.overflow = "hidden";
-    return () => {
-      root.style.overflow = prevRoot;
-      document.body.style.overflow = prevBody;
-    };
-  }, [open]);
+  // modal's own scroll edge doesn't drag the cart page underneath.
+  useBodyScrollLock(open);
 
   function handleClose() {
     setStep("bank");

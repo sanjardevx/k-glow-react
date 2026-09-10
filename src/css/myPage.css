@@ -1,24 +1,39 @@
+/**
+ * My Page: the profile card and edit form on the left, a compact order
+ * history accordion on the right.
+ *
+ * Cards, inputs, buttons, badges and the empty state come from the shared
+ * primitives in components.css; this file lays the page out. The accordion
+ * body reuses the order-line markup that orders.css owns, so those few rules
+ * are restated here under `.orders-summary` until that file's own phase.
+ *
+ * Tokens only.
+ */
+
 .mypage-body {
-  max-width: 1300px;
+  max-width: var(--kg-container);
   margin: 0 auto;
-  padding: 30px 32px 60px;
-  background: #fff;
+  box-sizing: border-box;
+  padding: 32px var(--kg-gutter) 64px;
+  background: var(--kg-bg);
 }
 
 .mypage-title {
-  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  font-size: 24px;
-  font-weight: 600;
-  margin: 0 0 22px;
-  color: #2d1b2e;
+  margin: 0 0 24px;
+  font-family: var(--kg-font-display);
+  font-size: var(--kg-text-4xl);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: var(--kg-tracking-display);
+  color: var(--kg-ink);
   opacity: 0;
-  animation: mypage-rise 0.5s ease forwards;
+  animation: mypage-rise 0.5s var(--kg-ease) forwards;
 }
 
 .mypage-layout {
   display: grid;
   grid-template-columns: minmax(280px, 340px) 1fr;
-  gap: 26px;
+  gap: 28px;
   align-items: start;
 }
 
@@ -35,12 +50,12 @@
 
 .mypage-stagger-1 {
   opacity: 0;
-  animation: mypage-rise 0.5s ease 0.05s forwards;
+  animation: mypage-rise 0.5s var(--kg-ease) 0.05s forwards;
 }
 
 .mypage-stagger-2 {
   opacity: 0;
-  animation: mypage-rise 0.5s ease 0.15s forwards;
+  animation: mypage-rise 0.5s var(--kg-ease) 0.15s forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -52,32 +67,112 @@
   }
 }
 
+/* =========================================================================
+   Profile card (read-only view)
+   ========================================================================= */
+.profile-card {
+  padding: 32px 24px;
+  text-align: center;
+  background: var(--kg-card);
+  border: 1px solid var(--kg-border);
+  border-radius: var(--kg-radius-lg);
+}
+
+.profile-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 88px;
+  height: 88px;
+  margin: 0 auto 16px;
+  border: 1px solid var(--kg-border);
+  border-radius: 50%;
+  background: var(--kg-sand);
+  color: var(--kg-ink-soft);
+}
+
+.profile-avatar svg {
+  width: 40px;
+  height: 40px;
+}
+
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-name {
+  font-family: var(--kg-font-display);
+  font-size: var(--kg-text-2xl);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: var(--kg-tracking-display);
+  color: var(--kg-ink);
+}
+
+.profile-type {
+  margin-top: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: var(--kg-tracking-caps);
+  text-transform: uppercase;
+  color: var(--kg-primary);
+}
+
+.profile-address {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+  font-size: var(--kg-text-sm);
+  color: var(--kg-ink-soft);
+}
+
+.profile-address svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  color: var(--kg-ink-faint);
+}
+
+.profile-divider {
+  height: 1px;
+  margin: 20px 0 16px;
+  background: var(--kg-border);
+}
+
+.profile-desc {
+  font-family: var(--kg-font-display);
+  font-style: italic;
+  font-size: var(--kg-text-lg);
+  line-height: 1.5;
+  color: var(--kg-ink-soft);
+}
+
+/* =========================================================================
+   Edit form
+   ========================================================================= */
 .settings-card {
-  background: #fff;
-  border: 1px solid #f2e4e8;
-  border-radius: 16px;
   padding: 26px;
 }
 
 .settings-card h4 {
-  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  font-size: 16px;
-  font-weight: 600;
   margin: 0 0 20px;
-  color: #2d1b2e;
-}
-
-.order-history-empty {
-  font-size: 13px;
-  color: #6b5a5f;
-  margin: 0 0 4px;
+  font-family: var(--kg-font-display);
+  font-size: var(--kg-text-2xl);
+  font-weight: 500;
+  letter-spacing: var(--kg-tracking-display);
+  color: var(--kg-ink);
 }
 
 .avatar-upload-row {
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-bottom: 22px;
+  margin-bottom: 24px;
 }
 
 .avatar-edit-wrap {
@@ -86,18 +181,15 @@
 }
 
 .avatar-edit {
-  width: 66px;
-  height: 66px;
-  border-radius: 50%;
-  background: #fae9ed;
-  color: #b85c7a;
-  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  font-size: 24px;
-  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid #e8b4b8;
+  width: 68px;
+  height: 68px;
+  border: 1px solid var(--kg-border);
+  border-radius: 50%;
+  background: var(--kg-sand);
+  color: var(--kg-ink-soft);
 }
 
 .avatar-edit svg {
@@ -114,254 +206,139 @@
 
 .avatar-edit-badge {
   position: absolute;
-  bottom: -2px;
   right: -2px;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: #b85c7a;
-  color: #fff;
+  bottom: -2px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
-  border: 2px solid #fff;
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--kg-card);
+  border-radius: 50%;
+  background: var(--kg-primary);
+  color: var(--kg-on-primary);
   cursor: pointer;
   transition:
-    background 0.2s ease,
-    transform 0.2s ease;
+    background-color var(--kg-duration) var(--kg-ease),
+    transform var(--kg-duration) var(--kg-ease);
+}
+
+.avatar-edit-badge svg {
+  width: 13px;
+  height: 13px;
 }
 
 .avatar-edit-badge:hover {
-  background: #a54f6b;
+  background: var(--kg-primary-hover);
   transform: scale(1.08);
 }
 
 .avatar-upload-copy {
-  font-size: 12px;
-  color: #6b5a5f;
+  font-size: var(--kg-text-sm);
+  color: var(--kg-ink-soft);
 }
 
 .avatar-upload-copy strong {
   display: block;
-  font-size: 13px;
-  color: #2d1b2e;
   margin-bottom: 2px;
+  font-size: var(--kg-text-md);
+  font-weight: 600;
+  color: var(--kg-ink);
 }
 
+/* Labels and inputs come from components.css. */
 .profile-field {
   margin-bottom: 16px;
 }
 
-.profile-field label {
-  display: block;
-  font-size: 11.5px;
-  font-weight: 700;
-  color: #2d1b2e;
-  margin-bottom: 6px;
-}
-
-.profile-field input,
 .profile-field textarea {
-  width: 100%;
-  border: 1.5px solid #f0dce1;
-  border-radius: 10px;
-  padding: 10px 13px;
-  font-size: 13px;
-  font-family: inherit;
-  box-sizing: border-box;
-  color: #2d1b2e;
-  transition: border-color 0.2s ease;
-}
-
-.profile-field input:focus,
-.profile-field textarea:focus {
-  outline: none;
-  border-color: #d687a1;
-}
-
-.profile-field textarea {
-  min-height: 70px;
+  min-height: 80px;
   resize: vertical;
 }
 
+/* Phone and address used to sit side by side, but the form lives in a ~320px
+   sidebar, so each got about 150px — too narrow to read a typed address in.
+   They stack instead; .profile-field already carries the spacing. */
 .profile-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-.profile-save {
-  background: #b85c7a;
-  color: #fff;
-  font-weight: 700;
-  font-size: 13.5px;
-  padding: 12px 28px;
-  border-radius: 999px;
-  border: none;
-  cursor: pointer;
-  font-family: inherit;
-  transition: background 0.2s ease;
-}
-
-.profile-save:hover {
-  background: #a54f6b;
+  display: block;
 }
 
 .profile-edit-actions {
   display: flex;
-  gap: 10px;
   align-items: center;
+  gap: 10px;
+  margin-top: 4px;
 }
 
-.profile-edit-actions .profile-save {
+/* Sizing only — the sage fill and the outline come from components.css. */
+.profile-save {
   flex: 1;
+  padding: 12px 24px;
+  font-size: var(--kg-text-md);
 }
 
 .profile-edit-toggle {
-  display: block;
+  display: flex;
   width: 100%;
   margin-top: 14px;
-  background: transparent;
-  border: 1.5px solid #d687a1;
-  color: #b85c7a;
-  font-weight: 700;
-  font-size: 12.5px;
-  padding: 10px 20px;
-  border-radius: 999px;
-  cursor: pointer;
-  font-family: inherit;
-  transition: background 0.2s ease;
-}
-
-.profile-edit-toggle:hover {
-  background: #fae9ed;
+  padding: 12px 24px;
+  font-size: var(--kg-text-md);
 }
 
 .profile-edit-toggle.ghost {
   width: auto;
   margin-top: 0;
-  border-color: #e5d9dc;
-  color: #6b5a5f;
 }
 
-.profile-edit-toggle.ghost:hover {
-  background: #f7f2f3;
-}
-
-/* right — gradient profile card */
-.profile-card {
-  border-radius: 18px;
-  padding: 30px 24px;
-  text-align: center;
-  color: #fff;
-  background: linear-gradient(160deg, #b85c7a, #d687a1 70%, #ffb6c1);
-  box-shadow: 0 18px 40px -20px rgba(184, 92, 122, 0.55);
-}
-
-.profile-avatar {
-  width: 84px;
-  height: 84px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.18);
-  border: 2px solid rgba(255, 255, 255, 0.5);
-  color: #fff;
-  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  font-size: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 14px;
-}
-
-.profile-avatar svg {
-  width: 40px;
-  height: 40px;
-}
-
-.profile-avatar img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.profile-name {
-  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  font-size: 19px;
-  font-weight: 600;
-}
-
-.profile-type {
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  opacity: 0.85;
-  margin-top: 3px;
-}
-
-.profile-address {
-  font-size: 12.5px;
-  opacity: 0.9;
-  margin-top: 8px;
-}
-
-.profile-divider {
-  height: 1px;
-  background: rgba(255, 255, 255, 0.25);
-  margin: 16px 0;
-}
-
-.profile-desc {
-  font-size: 12.5px;
-  opacity: 0.92;
-  font-style: italic;
-}
-
-/* accordion order rows */
+/* =========================================================================
+   Order history accordion
+   ========================================================================= */
 .orders-summary h4 {
-  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  font-size: 16px;
-  font-weight: 600;
   margin: 0 0 4px;
-  color: #2d1b2e;
 }
 
 .orders-summary .sub {
-  font-size: 12px;
-  color: #9c8489;
-  margin: 0 0 14px;
+  margin: 0 0 18px;
+  font-size: var(--kg-text-sm);
+  color: var(--kg-ink-soft);
+}
+
+.order-history-empty {
+  margin: 0;
+  padding: 40px 20px;
 }
 
 .acc-item {
-  border: 1px solid #f2e4e8;
-  border-radius: 12px;
-  margin-bottom: 10px;
   overflow: hidden;
+  margin-bottom: 10px;
+  border: 1px solid var(--kg-border);
+  border-radius: var(--kg-radius-md);
 }
 
 .acc-head {
-  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 13px 16px;
-  background: #fff;
+  width: 100%;
+  padding: 14px 16px;
   border: none;
-  cursor: pointer;
-  text-align: left;
+  background: var(--kg-card);
   font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--kg-duration) var(--kg-ease);
 }
 
 .acc-head:hover {
-  background: #fff0f2;
+  background: var(--kg-sand);
 }
 
 .acc-head-left {
   display: flex;
   align-items: center;
   gap: 10px;
+  min-width: 0;
 }
 
 .acc-head-right {
@@ -372,77 +349,192 @@
 }
 
 .acc-head-right strong {
+  font-size: var(--kg-text-md);
+  font-weight: 600;
+  color: var(--kg-ink);
   font-variant-numeric: tabular-nums;
-  color: #2d1b2e;
-  font-size: 13px;
 }
 
 .acc-chevron {
-  font-size: 11px;
-  color: #9c8489;
-  transition: transform 0.25s ease;
+  display: flex;
+  color: var(--kg-ink-faint);
+  transition: transform 0.25s var(--kg-ease);
+}
+
+.acc-chevron svg {
+  width: 16px;
+  height: 16px;
 }
 
 .acc-item.open .acc-chevron {
   transform: rotate(180deg);
 }
 
+/* Height is set inline from the panel's real scrollHeight (see OrderHistory),
+   so an order with any number of items opens fully without a max-height guess
+   clipping the last rows. */
 .acc-body {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.3s ease;
-  background: #fff0f2;
-}
-
-.acc-item.open .acc-body {
-  /* Generous cap, not a tight fit — rows now carry a 48px thumbnail each,
-     so a few-item order needs more room than the old text-only rows did. */
-  max-height: 520px;
+  background: var(--kg-sand);
+  transition: max-height 0.3s var(--kg-ease);
 }
 
 .acc-body-inner {
-  padding: 4px 16px 14px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 10px;
+  padding: 14px 16px;
 }
 
-.acc-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  font-size: 12.5px;
-  color: #6b5a5f;
-}
-
-.acc-row strong {
-  color: #2d1b2e;
-  font-variant-numeric: tabular-nums;
-  text-align: right;
+@media (prefers-reduced-motion: reduce) {
+  .acc-body {
+    transition: none;
+  }
 }
 
 .see-all-link {
   display: block;
+  margin-top: 16px;
+  font-size: var(--kg-text-sm);
+  font-weight: 600;
   text-align: center;
-  margin-top: 14px;
-  font-size: 12.5px;
-  font-weight: 700;
-  color: #b85c7a;
+  color: var(--kg-primary);
   text-decoration: none;
 }
 
 .see-all-link:hover {
-  color: #a54f6b;
+  color: var(--kg-primary-hover);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Order-line rows inside the accordion. orders.css owns these classes for the
+   Orders page and is rewritten in its own phase; scoping by `.orders-summary`
+   keeps this page consistent now without reaching over there. */
+.orders-summary .order-date {
+  font-size: var(--kg-text-sm);
+  color: var(--kg-ink-soft);
+}
+
+.orders-summary .order-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.orders-summary .order-line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.orders-summary .order-line-thumb {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  padding: 4px;
+  box-sizing: border-box;
+  border-radius: var(--kg-radius-sm);
+  background: var(--kg-card);
+  object-fit: contain;
+}
+
+.orders-summary .order-line-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.orders-summary .order-line-name {
+  overflow: hidden;
+  font-size: var(--kg-text-sm);
+  font-weight: 600;
+  color: var(--kg-ink);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.orders-summary .order-line-qty {
+  font-size: var(--kg-text-xs);
+  color: var(--kg-ink-soft);
+}
+
+.orders-summary .order-line-price {
+  flex-shrink: 0;
+  font-size: var(--kg-text-sm);
+  font-weight: 600;
+  color: var(--kg-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.orders-summary .order-total-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 10px;
+  border-top: 1px solid var(--kg-border-strong);
+  font-size: var(--kg-text-sm);
+  color: var(--kg-ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.orders-summary .order-total-row.total {
+  font-size: var(--kg-text-md);
+  font-weight: 600;
+  color: var(--kg-ink);
+}
+
+/* Status pills also live in orders.css until its phase. */
+.orders-summary .status-pill.wait {
+  background: var(--kg-warning-soft);
+  color: var(--kg-warning);
+}
+
+.orders-summary .status-pill.confirmed {
+  background: var(--kg-success-soft);
+  color: var(--kg-success);
+}
+
+.orders-summary .status-pill.rejected {
+  background: var(--kg-danger-soft);
+  color: var(--kg-danger);
 }
 
 @media (max-width: 860px) {
+  .mypage-body {
+    padding: 24px var(--kg-gutter-mobile) 48px;
+  }
+
+  .mypage-title {
+    font-size: var(--kg-text-3xl);
+  }
+
   .mypage-layout {
     grid-template-columns: 1fr;
+    gap: 20px;
   }
-  .profile-row {
-    grid-template-columns: 1fr;
+
+  /* 16px stops iOS Safari zooming the page when the field is focused. */
+  .profile-field input,
+  .profile-field textarea {
+    font-size: var(--kg-text-lg);
   }
-  .mypage-body {
-    padding: 22px 18px 44px;
+}
+
+@media (max-width: 480px) {
+  .settings-card {
+    padding: 20px 18px;
+  }
+
+  .profile-card {
+    padding: 26px 18px;
+  }
+
+  .acc-head {
+    flex-wrap: wrap;
+    gap: 8px;
   }
 }

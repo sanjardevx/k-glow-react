@@ -90,6 +90,35 @@ export function CopyIcon({ className }: IconProps) {
   );
 }
 
+/** Handset — a saved phone number. */
+export function PhoneIcon({ className }: IconProps) {
+  return (
+    <svg {...base} className={className}>
+      <path d="M7 3H4.5A1.5 1.5 0 0 0 3 4.5C3 12.5 11.5 21 19.5 21A1.5 1.5 0 0 0 21 19.5V17l-4-2-2 2.5A14 14 0 0 1 8.5 11L11 9 9 5z" />
+    </svg>
+  );
+}
+
+/** Map pin — a saved address. */
+export function PinIcon({ className }: IconProps) {
+  return (
+    <svg {...base} className={className}>
+      <path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z" />
+      <circle cx="12" cy="10" r="2.5" />
+    </svg>
+  );
+}
+
+/** Pencil — edit the profile photo. */
+export function PencilIcon({ className }: IconProps) {
+  return (
+    <svg {...base} className={className}>
+      <path d="M4 20h4L19 9a2.1 2.1 0 0 0-3-3L5 17z" />
+      <path d="M14.5 6.5 17.5 9.5" />
+    </svg>
+  );
+}
+
 /** Magnifier — search fields. */
 export function SearchIcon({ className }: IconProps) {
   return (

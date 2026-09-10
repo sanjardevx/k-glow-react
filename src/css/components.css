@@ -571,6 +571,16 @@
   color: var(--kg-ink-soft);
 }
 
+.modal-field {
+  margin-bottom: 16px;
+}
+
+/* Both modals run their primary action full width. */
+.modal-btn {
+  display: flex;
+  width: 100%;
+}
+
 /* =========================================================================
    Popover frame (basket and account menus rendered inside MUI Menu)
    ========================================================================= */

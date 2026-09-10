@@ -3,11 +3,12 @@ import { Box } from "@mui/material";
 import MemberService from "../../services/MemberService";
 import { Messages } from "../../../lib/config";
 import { useGlobals } from "../../context/useGlobals";
+import { useBodyScrollLock } from "../useBodyScrollLock";
 import {
   sweetErrorHandling,
   sweetTopSmallSuccessAlert,
 } from "../../../lib/sweetAlert";
-import "../../../css/navbar.css";
+import "../../../css/auth.css";
 
 export type AuthMode = "login" | "signup";
 
@@ -28,6 +29,8 @@ export function AuthenticationModal(props: AuthenticationModalProps) {
   const [showConfirm, setShowConfirm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const { setAuthMember } = useGlobals();
+
+  useBodyScrollLock(open);
 
   // Never carry a half-typed password over into the next time it opens.
   useEffect(() => {
@@ -110,7 +113,7 @@ export function AuthenticationModal(props: AuthenticationModalProps) {
   if (!open) return null;
 
   return (
-    <Box className="modal-overlay" onClick={onClose}>
+    <Box className="modal-overlay auth-modal" onClick={onClose}>
       <Box className="modal-card" onClick={(e) => e.stopPropagation()}>
         <Box className="modal-head">
           <h4>{isSignup ? "Create your account" : "Welcome back"}</h4>

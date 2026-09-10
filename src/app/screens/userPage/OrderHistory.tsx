@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Box } from "@mui/material";
 import { Link } from "react-router-dom";
 import { formatPrice } from "../productsPage/productsData";
@@ -7,6 +7,7 @@ import {
   orderStatusLabel,
   orderStatusPillClass,
 } from "../ordersPage/orderHelpers";
+import { ChevronDownIcon } from "../../components/icons";
 import OrderService from "../../services/OrderService";
 import { useGlobals } from "../../context/useGlobals";
 import { OrderStatus } from "../../../lib/enums/order.enum";
@@ -30,6 +31,16 @@ export function OrderHistory() {
   const { authMember } = useGlobals();
   const [orders, setOrders] = useState<Order[]>([]);
   const [openId, setOpenId] = useState<string | null>(null);
+  // The open panel's height is measured from its content, so any number of
+  // order items expands fully instead of hitting a fixed max-height cap.
+  const panelRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const [openHeight, setOpenHeight] = useState(0);
+
+  useEffect(() => {
+    if (!openId) return;
+    const panel = panelRefs.current[openId];
+    if (panel) setOpenHeight(panel.scrollHeight);
+  }, [openId, orders]);
 
   useEffect(() => {
     if (!authMember) return;
@@ -92,11 +103,21 @@ export function OrderHistory() {
                 </Box>
                 <Box className="acc-head-right">
                   <strong>{formatPrice(order.orderTotal)}</strong>
-                  <span className="acc-chevron">⌄</span>
+                  <span className="acc-chevron">
+                    <ChevronDownIcon />
+                  </span>
                 </Box>
               </button>
-              <Box className="acc-body">
-                <Box className="acc-body-inner">
+              <Box
+                className="acc-body"
+                style={{ maxHeight: open ? openHeight : 0 }}
+              >
+                <Box
+                  className="acc-body-inner"
+                  ref={(el: HTMLDivElement | null) => {
+                    panelRefs.current[order._id] = el;
+                  }}
+                >
                   <Box className="order-items">
                     {order.orderItems?.map((item) => {
                       const product = findOrderProduct(order, item);
