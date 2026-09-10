@@ -6,12 +6,15 @@ import { formatPrice } from "../screens/productsPage/productsData";
 import type { CartItem } from "../../lib/types/cart";
 import { useBasket } from "../screens/cartPage/useBasket";
 import { useGlobals } from "../context/useGlobals";
+import { CheckIcon, CopyIcon, UploadIcon } from "./icons";
 import OrderService from "../services/OrderService";
 import { sweetErrorHandling } from "../../lib/sweetAlert";
 import "../../css/orders.css";
 import "../../css/payment-modal.css";
 
 type Step = "bank" | "confirm" | "thanks";
+
+const CARD_NUMBER = "8600 1234 5678 9012";
 
 interface PaymentModalProps {
   open: boolean;
@@ -31,6 +34,36 @@ export function PaymentModal({ open, onClose, items, subtotal }: PaymentModalPro
     authMember?.memberAddress ?? "",
   );
   const [submitting, setSubmitting] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  async function handleCopyCard() {
+    const digits = CARD_NUMBER.replace(/\s/g, "");
+    let ok = false;
+    try {
+      await navigator.clipboard.writeText(digits);
+      ok = true;
+    } catch {
+      // Older or sandboxed contexts block the async Clipboard API — fall back
+      // to the legacy path before giving up.
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = digits;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        ok = document.execCommand("copy");
+        document.body.removeChild(ta);
+      } catch {
+        ok = false;
+      }
+    }
+    // If both paths fail the number is still on screen to copy by hand.
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1600);
+    }
+  }
 
   // Snapshot the order at open time so the Thanks step still shows correct
   // totals after the cart is cleared on submit.
@@ -44,6 +77,22 @@ export function PaymentModal({ open, onClose, items, subtotal }: PaymentModalPro
       };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
+  // Freeze the page behind the modal so a scroll gesture that runs past the
+  // modal's own scroll edge doesn't drag the cart page underneath. Locking
+  // both <html> and <body> covers whichever one the browser scrolls.
+  useEffect(() => {
+    if (!open) return;
+    const root = document.documentElement;
+    const prevRoot = root.style.overflow;
+    const prevBody = document.body.style.overflow;
+    root.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+    return () => {
+      root.style.overflow = prevRoot;
+      document.body.style.overflow = prevBody;
+    };
   }, [open]);
 
   function handleClose() {
@@ -96,7 +145,7 @@ export function PaymentModal({ open, onClose, items, subtotal }: PaymentModalPro
   const currentStepNum = step === "bank" ? 2 : step === "confirm" ? 3 : 4;
 
   return (
-    <Box className="modal-overlay" onClick={handleClose}>
+    <Box className="modal-overlay payment-modal" onClick={handleClose}>
       {step !== "thanks" ? (
         <Box className="modal-card" onClick={(e) => e.stopPropagation()}>
           <CheckoutStepper currentStep={currentStepNum} compact />
@@ -118,9 +167,22 @@ export function PaymentModal({ open, onClose, items, subtotal }: PaymentModalPro
                   <span>Account name</span>
                   <strong>K-Glow Secrets</strong>
                 </Box>
-                <Box className="bank-row">
+                <Box className="bank-row bank-row-card">
                   <span>Card number</span>
-                  <strong>8600 1234 5678 9012</strong>
+                  <button
+                    type="button"
+                    className="bank-copy"
+                    onClick={handleCopyCard}
+                    aria-label={`Copy card number ${CARD_NUMBER}`}
+                  >
+                    <span className="bank-copy-num">{CARD_NUMBER}</span>
+                    <span
+                      className={`bank-copy-flag${copied ? " copied" : ""}`}
+                    >
+                      {copied ? <CheckIcon /> : <CopyIcon />}
+                      {copied ? "Copied" : "Copy"}
+                    </span>
+                  </button>
                 </Box>
                 <Box className="bank-amount">
                   <span className="lbl">Amount to transfer</span>
@@ -151,7 +213,7 @@ export function PaymentModal({ open, onClose, items, subtotal }: PaymentModalPro
                   placeholder="e.g. Tashkent, Chilonzor tumani, 12-uy"
                 />
               </Box>
-              <p className="modal-subtext" style={{ marginTop: -6, marginBottom: 14 }}>
+              <p className="modal-subtext tight">
                 We'll ship your order via BTS post to this address.
               </p>
 
@@ -176,7 +238,9 @@ export function PaymentModal({ open, onClose, items, subtotal }: PaymentModalPro
                 </span>
               </Box>
               <label className="upload-box">
-                <span className="ic">⬆</span>
+                <span className="ic">
+                  <UploadIcon />
+                </span>
                 {screenshot
                   ? `Selected: ${screenshot.name}`
                   : "Upload your transfer screenshot"}
@@ -210,7 +274,7 @@ export function PaymentModal({ open, onClose, items, subtotal }: PaymentModalPro
               >
                 ← Previous step
               </button>
-              <p className="modal-subtext" style={{ textAlign: "center", marginTop: 12 }}>
+              <p className="modal-subtext centered">
                 We'll verify your payment and confirm your order within a few
                 hours.
               </p>
@@ -220,7 +284,9 @@ export function PaymentModal({ open, onClose, items, subtotal }: PaymentModalPro
       ) : (
         <Box className="modal-card confirm-wrap" onClick={(e) => e.stopPropagation()}>
           <CheckoutStepper currentStep={4} compact />
-          <Box className="confirm-check">✓</Box>
+          <Box className="confirm-check">
+            <CheckIcon />
+          </Box>
           <h3>Thanks! We're confirming your payment.</h3>
           <p>
             We've received your screenshot and transfer note — we'll verify

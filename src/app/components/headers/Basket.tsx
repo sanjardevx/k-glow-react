@@ -53,7 +53,7 @@ export function Basket() {
             <path d="M3 6h18"></path>
             <path d="M16 10a4 4 0 0 1-8 0"></path>
           </svg>
-          <span className="cart-badge">{count}</span>
+          {count > 0 ? <span className="cart-badge">{count}</span> : null}
         </span>
       </IconButton>
       <Menu

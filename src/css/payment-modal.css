@@ -1,173 +1,461 @@
-.bank-amount {
+/**
+ * Checkout payment modal: bank details, proof upload, thank-you step.
+ *
+ * Everything is scoped under `.payment-modal` on purpose. The shell classes
+ * (.modal-card, .modal-head, .modal-btn, .modal-field, .modal-subtext) are
+ * shared with the auth modal, whose old styles still live at the end of
+ * navbar.css and load after components.css — the extra class in the selector
+ * is what lets the token styling win here without touching the auth modal
+ * before its own phase. The scoping also keeps `.bank-card` and
+ * `.status-pill` from disturbing the Orders page, which still owns them.
+ *
+ * Tokens only.
+ */
+
+/* The overlay is the one scroll container: `margin: auto` centres the card
+   while there's room and collapses to the top once the content is taller
+   than the screen, so the whole card stays reachable by scrolling the
+   overlay. `overscroll-behavior: contain` (plus the body lock in the
+   component) stops that scroll from chaining to the page behind. */
+.payment-modal {
+  align-items: flex-start;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.payment-modal .modal-card {
+  max-width: 440px;
+  margin: auto;
+  padding: 24px 24px 20px;
+  background: var(--kg-card);
+  border: 1px solid var(--kg-border);
+  border-radius: var(--kg-radius-lg);
+  box-shadow: var(--kg-shadow-lg);
+}
+
+.payment-modal .modal-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.payment-modal .modal-head h4 {
+  margin: 0;
+  font-family: var(--kg-font-display);
+  font-size: var(--kg-text-2xl);
+  font-weight: 500;
+  letter-spacing: var(--kg-tracking-display);
+  color: var(--kg-ink);
+}
+
+.payment-modal .modal-close {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--kg-ink-faint);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  transition: color var(--kg-duration) var(--kg-ease);
+}
+
+.payment-modal .modal-close:hover {
+  color: var(--kg-ink);
+}
+
+.payment-modal .modal-subtext {
+  margin: 0;
+  font-size: var(--kg-text-sm);
+  line-height: 1.5;
+  color: var(--kg-ink-soft);
+}
+
+/* Sits directly under the address field, so it hugs it. */
+.payment-modal .modal-subtext.tight {
+  margin: -8px 0 16px;
+}
+
+.payment-modal .modal-subtext.centered {
+  margin-top: 12px;
   text-align: center;
-  padding-top: 10px;
-  margin-top: 8px;
-  border-top: 1px dashed #e8b4b8;
+}
+
+/* Fields */
+.payment-modal .modal-field {
+  margin-bottom: 16px;
+}
+
+.payment-modal .modal-field label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: var(--kg-text-xs);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--kg-ink-soft);
+}
+
+.payment-modal .modal-field input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px 14px;
+  border: 1px solid var(--kg-border-strong);
+  border-radius: var(--kg-radius-md);
+  background: var(--kg-card);
+  color: var(--kg-ink);
+  font-family: var(--kg-font-body);
+  font-size: var(--kg-text-md);
+  transition:
+    border-color var(--kg-duration) var(--kg-ease),
+    box-shadow var(--kg-duration) var(--kg-ease);
+}
+
+.payment-modal .modal-field input:focus {
+  outline: none;
+  border-color: var(--kg-primary);
+  box-shadow: var(--kg-focus-ring);
+}
+
+/* Primary and back buttons */
+.payment-modal .modal-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 24px;
+  border: 1px solid var(--kg-primary);
+  border-radius: var(--kg-radius-pill);
+  background: var(--kg-primary);
+  color: var(--kg-on-primary);
+  font-family: var(--kg-font-body);
+  font-size: var(--kg-text-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color var(--kg-duration) var(--kg-ease),
+    border-color var(--kg-duration) var(--kg-ease);
+}
+
+.payment-modal .modal-btn:hover {
+  background: var(--kg-primary-hover);
+  border-color: var(--kg-primary-hover);
+}
+
+.payment-modal .modal-btn:disabled,
+.payment-modal .modal-btn:disabled:hover {
+  background: var(--kg-sand);
+  border-color: var(--kg-sand);
+  color: var(--kg-ink-faint);
+  cursor: not-allowed;
+}
+
+.payment-modal .modal-back {
+  display: block;
+  width: 100%;
+  padding: 12px 0 0;
+  border: none;
+  background: none;
+  color: var(--kg-ink-soft);
+  font-family: var(--kg-font-body);
+  font-size: var(--kg-text-sm);
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  transition: color var(--kg-duration) var(--kg-ease);
+}
+
+.payment-modal .modal-back:hover {
+  color: var(--kg-ink);
+}
+
+/* Bank details */
+.payment-modal .bank-card {
+  padding: 16px;
+  border-radius: var(--kg-radius-md);
+  background: var(--kg-sand);
+}
+
+.payment-modal .bank-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 6px 0;
+  font-size: var(--kg-text-sm);
+  color: var(--kg-ink-soft);
+}
+
+.payment-modal .bank-row strong {
+  font-weight: 600;
+  color: var(--kg-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The card-number value doubles as a copy-to-clipboard button. The row can
+   wrap the label onto its own line so the number + Copy never get squeezed. */
+.payment-modal .bank-row-card {
+  flex-wrap: wrap;
+}
+
+.payment-modal .bank-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.payment-modal .bank-copy-num {
+  font-weight: 600;
+  color: var(--kg-ink);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.payment-modal .bank-copy-flag {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--kg-ink-faint);
+  transition: color var(--kg-duration) var(--kg-ease);
+}
+
+.payment-modal .bank-copy:hover .bank-copy-flag,
+.payment-modal .bank-copy-flag.copied {
+  color: var(--kg-primary);
+}
+
+.payment-modal .bank-copy-flag svg {
+  width: 13px;
+  height: 13px;
+}
+
+.bank-amount {
+  margin-top: 10px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--kg-border-strong);
+  text-align: center;
 }
 
 .bank-amount .lbl {
   display: block;
-  font-size: 10.5px;
-  color: #6b5a5f;
+  margin-bottom: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: var(--kg-tracking-caps);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  color: var(--kg-ink-soft);
 }
 
 .bank-amount .amt {
-  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  font-size: 22px;
-  font-weight: 700;
-  color: #b85c7a;
+  font-family: var(--kg-font-body);
+  font-size: var(--kg-text-2xl);
+  font-weight: 600;
+  color: var(--kg-ink);
   font-variant-numeric: tabular-nums;
 }
 
-.modal-btn:disabled {
-  background: #e5e5e5;
-  color: #9ca3af;
-  cursor: not-allowed;
+/* Numbered instructions, shared by the bank and thanks steps */
+.next-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 20px 0;
+  font-size: var(--kg-text-sm);
+  line-height: 1.5;
+  text-align: left;
+  color: var(--kg-ink-soft);
 }
 
-.modal-back {
-  display: block;
-  width: 100%;
-  background: none;
-  border: none;
-  color: #6b5a5f;
-  font-size: 12.5px;
-  font-weight: 600;
-  padding: 10px 0 0;
-  cursor: pointer;
-  text-align: center;
-  font-family: inherit;
+.next-steps .step {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
 }
 
-.modal-back:hover {
-  color: #b85c7a;
-}
-
-.upload-box {
-  display: block;
-  border: 1.5px dashed #e8b4b8;
-  border-radius: 12px;
-  padding: 20px;
-  text-align: center;
-  color: #d687a1;
-  font-size: 12px;
-  font-weight: 600;
-  margin-bottom: 14px;
-  background: #fae9ed;
-  cursor: pointer;
-}
-
-.upload-box .ic {
-  font-size: 18px;
-  display: block;
-  margin-bottom: 6px;
-}
-
-/* thanks step, reusing .modal-card for the white rounded shell */
-.confirm-wrap {
-  text-align: center;
-  max-width: 420px;
-}
-
-.confirm-wrap h3 {
-  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  font-size: 21px;
-  font-weight: 600;
-  margin: 0 0 8px;
-  color: #2d1b2e;
-}
-
-.confirm-wrap p {
-  font-size: 13px;
-  color: #6b5a5f;
-  margin: 0 0 14px;
-}
-
-.confirm-check {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  background: rgba(22, 163, 74, 0.12);
-  color: #16a34a;
-  font-size: 22px;
+.next-steps .step .n {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  margin-top: 1px;
+  border-radius: 50%;
+  background: var(--kg-primary-soft);
+  color: var(--kg-primary);
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Proof upload */
+.upload-box {
+  display: block;
+  margin-bottom: 16px;
+  padding: 24px 20px;
+  border: 1px dashed var(--kg-border-strong);
+  border-radius: var(--kg-radius-md);
+  background: var(--kg-sand);
+  color: var(--kg-ink-soft);
+  font-size: var(--kg-text-sm);
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    border-color var(--kg-duration) var(--kg-ease),
+    background-color var(--kg-duration) var(--kg-ease),
+    color var(--kg-duration) var(--kg-ease);
+}
+
+.upload-box:hover {
+  border-color: var(--kg-primary);
+  background: var(--kg-primary-soft);
+  color: var(--kg-primary);
+}
+
+.upload-box .ic {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.upload-box .ic svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* Thanks step — reuses .modal-card for the shell */
+.confirm-wrap {
+  max-width: 440px;
+  text-align: center;
+}
+
+.confirm-wrap h3 {
+  margin: 0 0 8px;
+  font-family: var(--kg-font-display);
+  font-size: var(--kg-text-2xl);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: var(--kg-tracking-display);
+  color: var(--kg-ink);
+}
+
+.confirm-wrap p {
+  margin: 0 0 16px;
+  font-size: var(--kg-text-sm);
+  line-height: 1.55;
+  color: var(--kg-ink-soft);
+}
+
+.confirm-check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
   margin: 0 auto 16px;
+  border-radius: 50%;
+  background: var(--kg-success-soft);
+  color: var(--kg-success);
+}
+
+.confirm-check svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Orders.css still owns .status-pill until its own phase; restate the amber
+   here so the thanks step matches the tokens. */
+.payment-modal .status-pill.wait {
+  background: var(--kg-warning-soft);
+  color: var(--kg-warning);
 }
 
 .confirm-summary {
-  background: #fdf2f4;
-  border: 1px solid #f2e4e8;
-  border-radius: 12px;
-  padding: 14px 16px;
-  margin: 18px 0;
+  margin: 20px 0;
+  padding: 16px;
+  border-radius: var(--kg-radius-md);
+  background: var(--kg-sand);
   text-align: left;
 }
 
 .confirm-summary .row {
   display: flex;
   justify-content: space-between;
-  font-size: 12.5px;
-  color: #6b5a5f;
-  padding: 4px 0;
-}
-
-.confirm-summary .row.total {
-  font-weight: 700;
-  color: #2d1b2e;
-  padding-top: 8px;
-  margin-top: 4px;
-  border-top: 1px solid #f2e4e8;
+  gap: 16px;
+  padding: 5px 0;
+  font-size: var(--kg-text-sm);
+  color: var(--kg-ink-soft);
   font-variant-numeric: tabular-nums;
 }
 
-.next-steps {
-  text-align: left;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  font-size: 12.5px;
-  color: #6b5a5f;
-  margin-bottom: 20px;
-}
-
-.next-steps .step {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-}
-
-.next-steps .step .n {
-  flex-shrink: 0;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #fae9ed;
-  color: #b85c7a;
-  font-size: 10px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 1px;
+.confirm-summary .row.total {
+  margin-top: 4px;
+  padding-top: 10px;
+  border-top: 1px solid var(--kg-border-strong);
+  font-size: var(--kg-text-md);
+  font-weight: 600;
+  color: var(--kg-ink);
 }
 
 .confirm-cta {
-  display: inline-block;
-  border: 1.5px solid #d687a1;
-  color: #b85c7a;
-  font-weight: 700;
-  font-size: 13px;
-  padding: 11px 26px;
-  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 28px;
+  border: 1px solid var(--kg-border-strong);
+  border-radius: var(--kg-radius-pill);
   background: transparent;
+  color: var(--kg-ink);
+  font-family: var(--kg-font-body);
+  font-size: var(--kg-text-md);
+  font-weight: 600;
   cursor: pointer;
-  font-family: inherit;
+  transition:
+    background-color var(--kg-duration) var(--kg-ease),
+    border-color var(--kg-duration) var(--kg-ease),
+    color var(--kg-duration) var(--kg-ease);
 }
 
 .confirm-cta:hover {
-  background: #fae9ed;
+  background: var(--kg-ink);
+  border-color: var(--kg-ink);
+  color: var(--kg-on-dark);
+}
+
+@media (max-width: 480px) {
+  .payment-modal {
+    padding: 16px;
+  }
+
+  .payment-modal .modal-card {
+    padding: 20px 18px 16px;
+  }
+
+  .payment-modal .modal-head h4,
+  .confirm-wrap h3 {
+    font-size: var(--kg-text-xl);
+  }
+
+  /* 16px stops iOS Safari zooming the page when the field is focused. */
+  .payment-modal .modal-field input {
+    font-size: var(--kg-text-lg);
+  }
+
+  /* Card number is long; give it a full line with the label above it. */
+  .payment-modal .bank-row-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
 }

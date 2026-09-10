@@ -61,6 +61,35 @@ export function EyeIcon({ className }: IconProps) {
   );
 }
 
+/** Tray with an up arrow — the payment-proof upload box. */
+export function UploadIcon({ className }: IconProps) {
+  return (
+    <svg {...base} className={className}>
+      <path d="M12 15.5V4m0 0L8 8m4-4 4 4" />
+      <path d="M4 15v3.5A1.5 1.5 0 0 0 5.5 20h13a1.5 1.5 0 0 0 1.5-1.5V15" />
+    </svg>
+  );
+}
+
+/** Tick — the order-received confirmation. */
+export function CheckIcon({ className }: IconProps) {
+  return (
+    <svg {...base} className={className} strokeWidth={2.2}>
+      <path d="m5 12.5 4.5 4.5L19 7.5" />
+    </svg>
+  );
+}
+
+/** Two overlapping sheets — copy to clipboard. */
+export function CopyIcon({ className }: IconProps) {
+  return (
+    <svg {...base} className={className}>
+      <rect x="9" y="9" width="11" height="11" rx="2" />
+      <path d="M5 15V5a2 2 0 0 1 2-2h8" />
+    </svg>
+  );
+}
+
 /** Magnifier — search fields. */
 export function SearchIcon({ className }: IconProps) {
   return (

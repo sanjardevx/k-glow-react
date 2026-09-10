@@ -1,5 +1,9 @@
-import { useEffect, useState } from "react";
-import { Route, Switch, useLocation } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { Route, Switch, useHistory, useLocation } from "react-router-dom";
+import Cookies from "universal-cookie";
+import { useGlobals } from "./context/useGlobals";
+import { useAppDispatch } from "./hooks";
+import { clearCart } from "./screens/cartPage/cartSlice";
 import { HomePage } from "./screens/homePage";
 import { ProductsPage } from "./screens/productsPage";
 import { CartPage } from "./screens/cartPage";
@@ -16,6 +20,9 @@ import "../css/app.css";
 
 function App() {
   const location = useLocation();
+  const history = useHistory();
+  const dispatch = useAppDispatch();
+  const { authMember, setAuthMember } = useGlobals();
   const [authOpen, setAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState<AuthMode>("login");
 
@@ -28,6 +35,37 @@ function App() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
+
+  /**
+   * The session lives in the `accessToken` cookie, which the browser drops the
+   * moment it expires — but React state keeps showing the signed-in navbar and
+   * the bag until a reload. Watch the cookie (and re-check on every tab focus,
+   * since the session usually lapses while the tab is hidden); once it's gone,
+   * tear things down exactly like an explicit logout: forget the member, drop
+   * the saved copy, empty the bag a signed-out visitor may not keep, and leave
+   * any account-only page.
+   */
+  const authRef = useRef(authMember);
+  authRef.current = authMember;
+  useEffect(() => {
+    const cookies = new Cookies();
+    function enforceSession() {
+      if (!authRef.current || cookies.get("accessToken")) return;
+      setAuthMember(null);
+      localStorage.removeItem("memberData");
+      dispatch(clearCart());
+      const gated = ["/cart", "/orders", "/member-page"];
+      if (gated.includes(history.location.pathname)) history.push("/");
+    }
+    const id = window.setInterval(enforceSession, 15000);
+    window.addEventListener("focus", enforceSession);
+    document.addEventListener("visibilitychange", enforceSession);
+    return () => {
+      window.clearInterval(id);
+      window.removeEventListener("focus", enforceSession);
+      document.removeEventListener("visibilitychange", enforceSession);
+    };
+  }, [dispatch, history, setAuthMember]);
 
   /** HANDLERS **/
   const handleAuthOpen = (mode: AuthMode) => {

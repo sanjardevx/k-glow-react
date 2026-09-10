@@ -12,6 +12,8 @@ export interface Product {
   productVolume: string;
   productLeftCount: number;
   productDesc?: string;
+  productHowToUse?: string;
+  productSuitableFor?: string;
   productImages: string[];
   productViews: number;
 }
