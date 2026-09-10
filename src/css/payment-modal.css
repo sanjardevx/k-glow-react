@@ -172,73 +172,10 @@
   color: var(--kg-ink);
 }
 
-/* Bank details */
-.payment-modal .bank-card {
-  padding: 16px;
-  border-radius: var(--kg-radius-md);
-  background: var(--kg-sand);
-}
-
-.payment-modal .bank-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 6px 0;
-  font-size: var(--kg-text-sm);
-  color: var(--kg-ink-soft);
-}
-
-.payment-modal .bank-row strong {
-  font-weight: 600;
-  color: var(--kg-ink);
-  font-variant-numeric: tabular-nums;
-}
-
-/* The card-number value doubles as a copy-to-clipboard button. The row can
-   wrap the label onto its own line so the number + Copy never get squeezed. */
-.payment-modal .bank-row-card {
-  flex-wrap: wrap;
-}
-
-.payment-modal .bank-copy {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 0;
-  border: none;
-  background: none;
-  cursor: pointer;
-}
-
-.payment-modal .bank-copy-num {
-  font-weight: 600;
-  color: var(--kg-ink);
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-.payment-modal .bank-copy-flag {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--kg-ink-faint);
-  transition: color var(--kg-duration) var(--kg-ease);
-}
-
-.payment-modal .bank-copy:hover .bank-copy-flag,
-.payment-modal .bank-copy-flag.copied {
-  color: var(--kg-primary);
-}
-
-.payment-modal .bank-copy-flag svg {
-  width: 13px;
-  height: 13px;
-}
-
+/* Bank details: `.bank-card` / `.bank-row` / `.bank-copy*` are shared with
+   the Orders page (BankDetailsCard) and defined once, globally, in
+   orders.css — which this file's importer (PaymentModal) also loads. Only
+   the amount block below is unique to the modal. */
 .bank-amount {
   margin-top: 10px;
   padding-top: 12px;
@@ -450,12 +387,5 @@
   /* 16px stops iOS Safari zooming the page when the field is focused. */
   .payment-modal .modal-field input {
     font-size: var(--kg-text-lg);
-  }
-
-  /* Card number is long; give it a full line with the label above it. */
-  .payment-modal .bank-row-card {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
   }
 }

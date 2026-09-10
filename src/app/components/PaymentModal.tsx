@@ -6,16 +6,15 @@ import { formatPrice } from "../screens/productsPage/productsData";
 import type { CartItem } from "../../lib/types/cart";
 import { useBasket } from "../screens/cartPage/useBasket";
 import { useGlobals } from "../context/useGlobals";
-import { CheckIcon, CopyIcon, UploadIcon } from "./icons";
+import { CheckIcon, UploadIcon } from "./icons";
 import { useBodyScrollLock } from "./useBodyScrollLock";
+import { BankDetailsCard } from "./BankDetailsCard";
 import OrderService from "../services/OrderService";
 import { sweetErrorHandling } from "../../lib/sweetAlert";
 import "../../css/orders.css";
 import "../../css/payment-modal.css";
 
 type Step = "bank" | "confirm" | "thanks";
-
-const CARD_NUMBER = "8600 1234 5678 9012";
 
 interface PaymentModalProps {
   open: boolean;
@@ -35,36 +34,6 @@ export function PaymentModal({ open, onClose, items, subtotal }: PaymentModalPro
     authMember?.memberAddress ?? "",
   );
   const [submitting, setSubmitting] = useState(false);
-  const [copied, setCopied] = useState(false);
-
-  async function handleCopyCard() {
-    const digits = CARD_NUMBER.replace(/\s/g, "");
-    let ok = false;
-    try {
-      await navigator.clipboard.writeText(digits);
-      ok = true;
-    } catch {
-      // Older or sandboxed contexts block the async Clipboard API — fall back
-      // to the legacy path before giving up.
-      try {
-        const ta = document.createElement("textarea");
-        ta.value = digits;
-        ta.style.position = "fixed";
-        ta.style.opacity = "0";
-        document.body.appendChild(ta);
-        ta.select();
-        ok = document.execCommand("copy");
-        document.body.removeChild(ta);
-      } catch {
-        ok = false;
-      }
-    }
-    // If both paths fail the number is still on screen to copy by hand.
-    if (ok) {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1600);
-    }
-  }
 
   // Snapshot the order at open time so the Thanks step still shows correct
   // totals after the cart is cleared on submit.
@@ -147,37 +116,12 @@ export function PaymentModal({ open, onClose, items, subtotal }: PaymentModalPro
                   ×
                 </span>
               </Box>
-              <Box className="bank-card">
-                <Box className="bank-row">
-                  <span>Bank</span>
-                  <strong>Xalq Banki</strong>
-                </Box>
-                <Box className="bank-row">
-                  <span>Account name</span>
-                  <strong>K-Glow Secrets</strong>
-                </Box>
-                <Box className="bank-row bank-row-card">
-                  <span>Card number</span>
-                  <button
-                    type="button"
-                    className="bank-copy"
-                    onClick={handleCopyCard}
-                    aria-label={`Copy card number ${CARD_NUMBER}`}
-                  >
-                    <span className="bank-copy-num">{CARD_NUMBER}</span>
-                    <span
-                      className={`bank-copy-flag${copied ? " copied" : ""}`}
-                    >
-                      {copied ? <CheckIcon /> : <CopyIcon />}
-                      {copied ? "Copied" : "Copy"}
-                    </span>
-                  </button>
-                </Box>
+              <BankDetailsCard>
                 <Box className="bank-amount">
                   <span className="lbl">Amount to transfer</span>
                   <span className="amt">{formatPrice(snap.subtotal)}</span>
                 </Box>
-              </Box>
+              </BankDetailsCard>
 
               <Box className="next-steps">
                 <Box className="step">

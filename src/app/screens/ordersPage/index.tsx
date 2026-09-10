@@ -3,6 +3,7 @@ import { Box, Stack } from "@mui/material";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
+import { BankDetailsCard } from "../../components/BankDetailsCard";
 import { WaitingOrders } from "./WaitingOrders";
 import { ConfirmedOrders } from "./ConfirmedOrders";
 import { RejectedOrders } from "./RejectedOrders";
@@ -69,6 +70,7 @@ export function OrdersPage() {
   return (
     <div className="orders-page">
       <Box className="orders-layout">
+        <h1 className="orders-title">My Orders</h1>
         <Stack className="orders-left">
           <TabContext value={value}>
             <Box className="orders-tabs-frame">
@@ -105,20 +107,7 @@ export function OrdersPage() {
 
           <Box className="orders-info-card">
             <Box className="orders-info-title">Bank details</Box>
-            <Box className="bank-card">
-              <Box className="bank-row">
-                <span>Bank</span>
-                <strong>Xalq Banki</strong>
-              </Box>
-              <Box className="bank-row">
-                <span>Account name</span>
-                <strong>K-Glow Secrets</strong>
-              </Box>
-              <Box className="bank-row">
-                <span>Card number</span>
-                <strong>8600 **** **** 1234</strong>
-              </Box>
-            </Box>
+            <BankDetailsCard />
             <p className="orders-info-note">
               Transfer here and submit the screenshot when you check out —
               this is just for reference.

@@ -1,16 +1,41 @@
+/**
+ * Orders page: status tabs and order cards on the left, the member card and
+ * bank details on the right.
+ *
+ * Cards, status pills and the empty state come from the shared primitives in
+ * components.css, and the MUI Tabs take their Inter labels, ink selected
+ * state and sage indicator straight from the theme — so this file no longer
+ * restyles them (the old forced pink override is gone). It lays the
+ * page out and styles the order-line markup, which the payment modal and the
+ * My Page order history reuse. Tokens only.
+ */
+
 .orders-page {
-  background: #fff;
   min-height: 60vh;
+  background: var(--kg-bg);
 }
 
 .orders-layout {
-  max-width: 1300px;
+  max-width: var(--kg-container);
   margin: 0 auto;
-  padding: 34px 32px 60px;
+  box-sizing: border-box;
   display: grid;
   grid-template-columns: 1.6fr 1fr;
-  gap: 28px;
+  gap: 24px 32px;
   align-items: start;
+  padding: 32px var(--kg-gutter) 64px;
+}
+
+/* Spans both columns so the tabs and the sidebar start on the same line. */
+.orders-title {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-family: var(--kg-font-display);
+  font-size: var(--kg-text-4xl);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: var(--kg-tracking-display);
+  color: var(--kg-ink);
 }
 
 .orders-left {
@@ -18,24 +43,14 @@
 }
 
 .orders-tabs-frame {
-  border-bottom: 1px solid #f2e4e8;
   margin-bottom: 20px;
+  border-bottom: 1px solid var(--kg-border);
 }
 
-.orders-tabs .MuiTab-root {
-  font-family: inherit;
-  font-weight: 700;
-  font-size: 12.5px;
-  text-transform: none;
-  color: #6b5a5f;
-}
-
-.orders-tabs .Mui-selected {
-  color: #b85c7a !important;
-}
-
-.orders-tabs .MuiTabs-indicator {
-  background-color: #b85c7a;
+/* MUI Lab's TabPanel pads itself 24px, which insets the cards from the tab
+   row above them; the list supplies its own spacing. */
+.orders-left .MuiTabPanel-root {
+  padding: 0;
 }
 
 .orders-list {
@@ -44,55 +59,29 @@
   gap: 16px;
 }
 
+/* Order card — surface from components.css. */
 .order-card {
-  background: #fff;
-  border: 1px solid #f2e4e8;
-  border-radius: 14px;
-  padding: 18px;
+  padding: 20px;
 }
 
 .order-card-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 14px;
-}
-
-.status-pill {
-  display: inline-flex;
-  align-items: center;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 5px 12px;
-  border-radius: 999px;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-}
-
-.status-pill.wait {
-  background: #f3e7d3;
-  color: #a9772f;
-}
-
-.status-pill.confirmed {
-  background: rgba(22, 163, 74, 0.12);
-  color: #16a34a;
-}
-
-.status-pill.rejected {
-  background: rgba(239, 68, 68, 0.12);
-  color: #ef4444;
+  gap: 12px;
+  margin-bottom: 16px;
 }
 
 .order-date {
-  font-size: 12px;
-  color: #9c8489;
+  font-size: var(--kg-text-sm);
+  color: var(--kg-ink-soft);
+  font-variant-numeric: tabular-nums;
 }
 
 .order-items {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .order-line {
@@ -102,13 +91,14 @@
 }
 
 .order-line-thumb {
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
-  object-fit: contain;
-  background: #fdf2f4;
-  border: 1px solid #f0dce1;
+  width: 52px;
+  height: 52px;
   flex-shrink: 0;
+  padding: 4px;
+  box-sizing: border-box;
+  border-radius: var(--kg-radius-sm);
+  background: var(--kg-sand);
+  object-fit: contain;
 }
 
 .order-line-info {
@@ -120,73 +110,93 @@
 }
 
 .order-line-name {
-  font-size: 13px;
-  font-weight: 600;
-  color: #2d1b2e;
   overflow: hidden;
+  font-family: var(--kg-font-display);
+  font-size: var(--kg-text-lg);
+  font-weight: 500;
+  color: var(--kg-ink);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .order-line-qty {
-  font-size: 11.5px;
-  color: #6b5a5f;
+  font-size: var(--kg-text-sm);
+  color: var(--kg-ink-soft);
+  font-variant-numeric: tabular-nums;
 }
 
 .order-line-price {
-  font-size: 13px;
-  font-weight: 700;
-  color: #2d1b2e;
   flex-shrink: 0;
+  font-size: var(--kg-text-md);
+  font-weight: 600;
+  color: var(--kg-ink);
+  font-variant-numeric: tabular-nums;
 }
 
 .order-total-row {
   display: flex;
   justify-content: space-between;
-  font-size: 12.5px;
-  color: #6b5a5f;
+  gap: 16px;
   margin-top: 12px;
   padding-top: 12px;
-  border-top: 1px solid #f2e4e8;
+  border-top: 1px solid var(--kg-border);
+  font-size: var(--kg-text-sm);
+  color: var(--kg-ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The two total rows sit together: only the first one draws the rule. */
+.order-total-row + .order-total-row {
+  margin-top: 6px;
+  padding-top: 0;
+  border-top: none;
 }
 
 .order-total-row.total {
-  font-weight: 700;
-  color: #2d1b2e;
-  font-size: 14px;
+  font-size: var(--kg-text-lg);
+  font-weight: 600;
+  color: var(--kg-ink);
 }
 
 .order-note {
-  font-size: 12px;
-  color: #6b5a5f;
-  margin: 10px 0 0;
+  margin: 14px 0 0;
+  padding: 10px 12px;
+  border-radius: var(--kg-radius-sm);
+  background: var(--kg-sand);
+  font-size: var(--kg-text-sm);
+  line-height: 1.5;
+  color: var(--kg-ink-soft);
 }
 
 .order-note.reject-reason {
-  color: #ef4444;
+  background: var(--kg-danger-soft);
+  color: var(--kg-danger);
 }
 
+/* Empty tab — dashed panel from components.css. */
 .orders-empty {
-  text-align: center;
-  padding: 50px 20px;
-  color: #6b5a5f;
-  font-size: 13.5px;
+  padding: 48px 20px;
 }
 
+/* =========================================================================
+   Sidebar
+   ========================================================================= */
+.orders-right {
+  gap: 16px;
+}
+
+/* Card surface from components.css. */
 .orders-info-card {
-  background: #fff;
-  border: 1px solid #f2e4e8;
-  border-radius: 14px;
-  padding: 18px;
-  margin-bottom: 16px;
+  padding: 20px;
 }
 
 .orders-info-title {
-  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  font-size: 14px;
-  font-weight: 600;
-  color: #2d1b2e;
   margin-bottom: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: var(--kg-tracking-caps);
+  text-transform: uppercase;
+  color: var(--kg-ink-soft);
 }
 
 .orders-member {
@@ -196,60 +206,147 @@
 }
 
 .orders-avatar {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: #fae9ed;
-  color: #b85c7a;
-  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  font-weight: 600;
-  font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 44px;
+  height: 44px;
   flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--kg-primary-soft);
+  color: var(--kg-primary);
+  font-family: var(--kg-font-display);
+  font-size: var(--kg-text-xl);
+  font-weight: 500;
 }
 
 .orders-member-name {
-  font-size: 13.5px;
-  font-weight: 700;
-  color: #2d1b2e;
+  font-family: var(--kg-font-display);
+  font-size: var(--kg-text-lg);
+  font-weight: 500;
+  color: var(--kg-ink);
 }
 
 .orders-member-sub {
-  font-size: 11.5px;
-  color: #9c8489;
+  margin-top: 2px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: var(--kg-tracking-caps);
+  text-transform: uppercase;
+  color: var(--kg-primary);
 }
 
 .bank-card {
-  background: #fae9ed;
-  border-radius: 12px;
-  padding: 14px 16px;
+  padding: 16px;
+  border-radius: var(--kg-radius-md);
+  background: var(--kg-sand);
 }
 
 .bank-row {
   display: flex;
   justify-content: space-between;
-  font-size: 12px;
-  padding: 5px 0;
-  color: #5c4650;
+  gap: 16px;
+  padding: 6px 0;
+  font-size: var(--kg-text-sm);
+  color: var(--kg-ink-soft);
 }
 
 .bank-row strong {
-  color: #2d1b2e;
-  font-weight: 700;
+  font-weight: 600;
+  color: var(--kg-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The card-number value doubles as a copy-to-clipboard button (BankDetailsCard,
+   shared by this page and the payment modal). The row can wrap the label onto
+   its own line so the number + Copy never get squeezed. */
+.bank-row-card {
+  flex-wrap: wrap;
+}
+
+.bank-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.bank-copy-num {
+  font-weight: 600;
+  color: var(--kg-ink);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.bank-copy-flag {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--kg-ink-faint);
+  transition: color var(--kg-duration) var(--kg-ease);
+}
+
+.bank-copy:hover .bank-copy-flag,
+.bank-copy-flag.copied {
+  color: var(--kg-primary);
+}
+
+.bank-copy-flag svg {
+  width: 13px;
+  height: 13px;
 }
 
 .orders-info-note {
-  font-size: 11.5px;
-  color: #9c8489;
   margin: 12px 0 0;
-  line-height: 1.5;
+  font-size: var(--kg-text-xs);
+  line-height: 1.55;
+  color: var(--kg-ink-soft);
 }
 
 @media (max-width: 860px) {
   .orders-layout {
     grid-template-columns: 1fr;
-    padding: 26px 18px 44px;
+    gap: 20px;
+    padding: 24px var(--kg-gutter-mobile) 48px;
+  }
+
+  .orders-title {
+    font-size: var(--kg-text-3xl);
+  }
+
+  /* Three long tab labels don't fit a phone; let the row scroll sideways
+     inside its own frame instead of widening the page. */
+  .orders-tabs-frame {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .orders-tabs-frame::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .order-card,
+  .orders-info-card {
+    padding: 16px;
+  }
+
+  .order-line-name {
+    font-size: var(--kg-text-md);
+  }
+
+  /* Card number is long; give it a full line with the label above it. */
+  .bank-row-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
   }
 }
