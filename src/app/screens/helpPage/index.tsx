@@ -1,9 +1,10 @@
-import { useState, type SyntheticEvent } from "react";
+import { useEffect, useRef, useState, type SyntheticEvent } from "react";
 import { Box, Container, Stack } from "@mui/material";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabPanel from "@mui/lab/TabPanel";
+import { ChevronDownIcon } from "../../components/icons";
 import "../../../css/help.css";
 
 const terms = [
@@ -48,6 +49,17 @@ const faq = [
 export function HelpPage() {
   const [tab, setTab] = useState("1");
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  // Height is measured from the open answer's real content (same technique
+  // as My Page's order accordion) so both the open and close transitions
+  // animate the exact distance instead of racing toward a guessed max-height.
+  const panelRefs = useRef<Record<number, HTMLParagraphElement | null>>({});
+  const [openHeight, setOpenHeight] = useState(0);
+
+  useEffect(() => {
+    if (openFaq === null) return;
+    const panel = panelRefs.current[openFaq];
+    if (panel) setOpenHeight(panel.scrollHeight);
+  }, [openFaq]);
 
   function handleTabChange(_e: SyntheticEvent, newValue: string) {
     setTab(newValue);
@@ -94,10 +106,22 @@ export function HelpPage() {
                       onClick={() => toggleFaq(index)}
                     >
                       <span>{item.question}</span>
-                      <span className="help-acc-chevron">⌄</span>
+                      <span className="help-acc-chevron">
+                        <ChevronDownIcon />
+                      </span>
                     </button>
-                    <Box className="help-acc-body">
-                      <p className="help-acc-body-inner">{item.answer}</p>
+                    <Box
+                      className="help-acc-body"
+                      style={{ maxHeight: openFaq === index ? openHeight : 0 }}
+                    >
+                      <p
+                        className="help-acc-body-inner"
+                        ref={(el: HTMLParagraphElement | null) => {
+                          panelRefs.current[index] = el;
+                        }}
+                      >
+                        {item.answer}
+                      </p>
                     </Box>
                   </Box>
                 ))}

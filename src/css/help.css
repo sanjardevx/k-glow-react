@@ -1,55 +1,56 @@
+/**
+ * Help page: Terms, FAQ and Contact tabs.
+ *
+ * Cards, inputs and the submit button come from the shared primitives in
+ * components.css, and the MUI tabs take their Inter labels, ink selected
+ * state and sage indicator from the theme — so, as on the Orders page, this
+ * file no longer restyles them and the two forced overrides it used to need
+ * are gone. The FAQ accordion matches the one on My Page.
+ *
+ * Tokens only.
+ */
+
 .help-page {
-  background: #fff;
+  background: var(--kg-bg);
 }
 
-.help-container {
-  max-width: 1300px !important;
+/* MUI Container sets its own max-width and padding; the page class alone
+   ties with it, so scope by .help-page to win without forcing it. */
+.help-page .help-container {
+  max-width: var(--kg-container);
   margin: 0 auto;
-  padding: 30px 32px 60px;
+  box-sizing: border-box;
+  padding: 32px var(--kg-gutter) 64px;
 }
 
 .help-title {
-  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  font-size: 24px;
-  font-weight: 600;
-  margin: 0 0 22px;
-  color: #2d1b2e;
+  margin: 0 0 24px;
+  font-family: var(--kg-font-display);
+  font-size: var(--kg-text-4xl);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: var(--kg-tracking-display);
+  color: var(--kg-ink);
 }
 
 .help-tabs-frame {
-  border-bottom: 1px solid #f2e4e8;
   margin-bottom: 20px;
+  border-bottom: 1px solid var(--kg-border);
 }
 
-.help-tabs .MuiTab-root {
-  font-family: inherit;
-  font-weight: 700;
-  font-size: 12.5px;
-  text-transform: none;
-  color: #6b5a5f;
+/* TabPanel pads itself 24px, which would inset every card from the tab row. */
+.help-page .help-tabpanel {
+  padding: 0;
 }
 
-.help-tabs .Mui-selected {
-  color: #b85c7a !important;
-}
-
-.help-tabs .MuiTabs-indicator {
-  background-color: #b85c7a;
-}
-
-.help-tabpanel {
-  padding: 0 !important;
-}
-
+/* Card surface from components.css. */
 .help-card {
-  background: #fff;
-  border: 1px solid #f2e4e8;
-  border-radius: 16px;
   padding: 26px;
 }
 
-/* TERMS */
-
+/* =========================================================================
+   Terms
+   ========================================================================= */
 .terms-list {
   display: flex;
   flex-direction: column;
@@ -57,19 +58,25 @@
 
 .terms-list p {
   margin: 0;
-  padding: 14px 0;
-  border-bottom: 1px solid #f2e4e8;
-  font-size: 13.5px;
-  line-height: 1.6;
-  color: #4a3a40;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--kg-border);
+  font-size: var(--kg-text-md);
+  line-height: 1.65;
+  color: var(--kg-ink-soft);
+}
+
+.terms-list p:first-child {
+  padding-top: 0;
 }
 
 .terms-list p:last-child {
+  padding-bottom: 0;
   border-bottom: none;
 }
 
-/* FAQ accordion */
-
+/* =========================================================================
+   FAQ accordion — same interaction and look as the My Page order history
+   ========================================================================= */
 .help-acc-list {
   display: flex;
   flex-direction: column;
@@ -77,153 +84,160 @@
 }
 
 .help-acc-item {
-  border: 1px solid #f2e4e8;
-  border-radius: 12px;
   overflow: hidden;
+  border: 1px solid var(--kg-border);
+  border-radius: var(--kg-radius-md);
 }
 
 .help-acc-head {
-  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  width: 100%;
   padding: 14px 16px;
-  background: #fff;
   border: none;
-  cursor: pointer;
-  text-align: left;
+  background: var(--kg-card);
+  color: var(--kg-ink);
   font-family: inherit;
-  font-size: 13.5px;
+  font-size: var(--kg-text-md);
   font-weight: 600;
-  color: #2d1b2e;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--kg-duration) var(--kg-ease);
 }
 
 .help-acc-head:hover {
-  background: #fff0f2;
+  background: var(--kg-sand);
 }
 
 .help-acc-chevron {
-  font-size: 11px;
-  color: #9c8489;
-  transition: transform 0.25s ease;
+  display: flex;
   flex-shrink: 0;
+  color: var(--kg-ink-faint);
+  transition: transform 0.25s var(--kg-ease);
+}
+
+.help-acc-chevron svg {
+  width: 16px;
+  height: 16px;
 }
 
 .help-acc-item.open .help-acc-chevron {
   transform: rotate(180deg);
 }
 
+/* Height is set inline from the answer's real scrollHeight (see HelpPage),
+   so both opening and closing animate the exact distance instead of a
+   max-height guess that made the close transition look delayed then rushed. */
 .help-acc-body {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.3s ease;
-  background: #fff0f2;
-}
-
-.help-acc-item.open .help-acc-body {
-  max-height: 160px;
+  background: var(--kg-sand);
+  transition: max-height 0.3s var(--kg-ease);
 }
 
 .help-acc-body-inner {
   margin: 0;
-  padding: 2px 16px 14px;
-  font-size: 12.5px;
-  line-height: 1.6;
-  color: #6b5a5f;
+  padding: 14px 16px;
+  font-size: var(--kg-text-sm);
+  line-height: 1.65;
+  color: var(--kg-ink-soft);
 }
 
-/* CONTACT */
+@media (prefers-reduced-motion: reduce) {
+  .help-acc-body {
+    transition: none;
+  }
+}
 
+/* =========================================================================
+   Contact
+   ========================================================================= */
 .help-contact-card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  text-align: center;
   padding: 40px;
+  text-align: center;
 }
 
 .help-contact-title {
-  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  font-size: 20px;
-  font-weight: 600;
-  color: #2d1b2e;
+  font-family: var(--kg-font-display);
+  font-size: var(--kg-text-2xl);
+  font-weight: 500;
+  letter-spacing: var(--kg-tracking-display);
+  color: var(--kg-ink);
 }
 
 .help-contact-sub {
-  font-size: 13px;
-  color: #6b5a5f;
   margin: 8px 0 0;
+  font-size: var(--kg-text-md);
+  color: var(--kg-ink-soft);
 }
 
 .help-contact-form {
-  width: 100%;
-  max-width: 420px;
-  margin-top: 26px;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  max-width: 420px;
+  margin-top: 28px;
   text-align: left;
 }
 
+/* Labels and inputs come from components.css. */
 .help-field {
   margin-bottom: 16px;
 }
 
-.help-field label {
-  display: block;
-  font-size: 11.5px;
-  font-weight: 700;
-  color: #2d1b2e;
-  margin-bottom: 6px;
-}
-
-.help-field input,
 .help-field textarea {
-  width: 100%;
-  border: 1.5px solid #f0dce1;
-  border-radius: 10px;
-  padding: 10px 13px;
-  font-size: 13px;
-  font-family: inherit;
-  box-sizing: border-box;
-  color: #2d1b2e;
-  transition: border-color 0.2s ease;
-}
-
-.help-field input:focus,
-.help-field textarea:focus {
-  outline: none;
-  border-color: #d687a1;
-}
-
-.help-field textarea {
-  min-height: 90px;
+  min-height: 100px;
   resize: vertical;
 }
 
+/* Sizing only — the sage fill comes from components.css. */
 .help-contact-submit {
   align-self: flex-end;
-  background: #b85c7a;
-  color: #fff;
-  font-weight: 700;
-  font-size: 13.5px;
   padding: 12px 28px;
-  border-radius: 999px;
-  border: none;
-  cursor: pointer;
-  font-family: inherit;
-  transition: background 0.2s ease;
-}
-
-.help-contact-submit:hover {
-  background: #a54f6b;
+  font-size: var(--kg-text-md);
 }
 
 @media (max-width: 860px) {
-  .help-container {
-    padding: 22px 18px 44px;
+  .help-page .help-container {
+    padding: 24px var(--kg-gutter-mobile) 48px;
   }
+
+  .help-title {
+    font-size: var(--kg-text-3xl);
+  }
+
+  /* Three tab labels can outrun a phone; scroll the row, not the page. */
+  .help-tabs-frame {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .help-tabs-frame::-webkit-scrollbar {
+    display: none;
+  }
+
+  .help-card {
+    padding: 20px 18px;
+  }
+
   .help-contact-card {
-    padding: 26px 20px;
+    padding: 28px 18px;
+  }
+
+  /* 16px stops iOS Safari zooming the page when the field is focused. */
+  .help-field input,
+  .help-field textarea {
+    font-size: var(--kg-text-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  .help-contact-submit {
+    align-self: stretch;
   }
 }
