@@ -367,7 +367,7 @@
   left: 16px;
   z-index: 2; /* sits above the stacked images */
   padding: 6px 12px;
-  font-size: 11px;
+  font-size: var(--kg-text-2xs);
 }
 
 .pdp-thumbs {
@@ -580,7 +580,7 @@
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--kg-ink-faint);
+  color: var(--kg-ink-soft);
 }
 
 .pdp-detail p {

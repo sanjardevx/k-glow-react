@@ -10,6 +10,7 @@ import { retrieveProducts } from "./selector";
 import ProductService from "../../services/ProductService";
 import { serverApi } from "../../../lib/config";
 import { ChevronDownIcon, SearchIcon } from "../../components/icons";
+import { onActivateKey } from "../../components/a11y";
 import type { AppDispatch } from "../../store";
 import type { Product, ProductInquiry } from "../../../lib/types/product";
 import {
@@ -270,11 +271,17 @@ export function Products() {
                       </Box>
                       <Box
                         className={`p-quickadd${soldOut ? " disabled" : ""}`}
+                        role="button"
+                        tabIndex={soldOut ? -1 : 0}
+                        aria-disabled={soldOut || undefined}
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
                           if (!soldOut) onAdd(ele);
                         }}
+                        onKeyDown={onActivateKey(() => {
+                          if (!soldOut) onAdd(ele);
+                        })}
                       >
                         {soldOut ? "Sold Out" : "Add to Cart"}
                       </Box>

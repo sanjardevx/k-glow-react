@@ -167,7 +167,7 @@
 
 .stat-label {
   margin-top: 6px;
-  font-size: 11px;
+  font-size: var(--kg-text-2xs);
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -241,13 +241,14 @@
   color: var(--kg-ink-soft);
 }
 
-/* 2 columns divides the 4 reviews we show evenly (two even rows instead of
-   3 + a lone orphan card). */
+/* Desktop shows all 6 fetched reviews as two even rows of 3; mobile only
+   shows the first 4 (the rest stay in the DOM but hidden — see the 860px
+   block below) so there's one request regardless of breakpoint. */
 .review-grid {
-  max-width: 800px;
+  max-width: 1080px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
 }
 
@@ -453,7 +454,7 @@
 }
 
 .brand-name {
-  font-size: 11px;
+  font-size: var(--kg-text-2xs);
   font-weight: 500;
   letter-spacing: var(--kg-tracking-caps);
   text-transform: uppercase;
@@ -520,7 +521,7 @@
   border-radius: var(--kg-radius-pill);
   background: var(--kg-on-dark-tint);
   color: var(--kg-on-dark);
-  font-size: 11px;
+  font-size: var(--kg-text-2xs);
   font-weight: 600;
   letter-spacing: var(--kg-tracking-caps);
   text-transform: uppercase;
@@ -576,12 +577,6 @@
 /* =========================================================================
    Responsive
    ========================================================================= */
-@media (max-width: 1024px) {
-  .hero h2 {
-    font-size: 44px;
-  }
-}
-
 @media (max-width: 860px) {
   .hero {
     padding: 40px var(--kg-gutter-mobile) 44px;
@@ -638,6 +633,13 @@
 
   .review-grid {
     grid-template-columns: 1fr;
+  }
+
+  /* Only the first 4 of the 6 fetched homepage reviews show on mobile —
+     scoped away from .review-grid-pdp (product page), whose review count
+     is real per-product data, not this fixed fetch. */
+  .review-grid:not(.review-grid-pdp) > :nth-child(n + 5) {
+    display: none;
   }
 
   .events {

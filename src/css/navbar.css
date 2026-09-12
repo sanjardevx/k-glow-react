@@ -12,7 +12,7 @@
   color: var(--kg-on-primary);
   padding: 8px var(--kg-gutter-mobile);
   text-align: center;
-  font-size: 11px;
+  font-size: var(--kg-text-2xs);
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -195,7 +195,7 @@
   border-radius: 50%;
   background: var(--kg-primary);
   color: var(--kg-on-primary);
-  font-size: 10px;
+  font-size: var(--kg-text-2xs);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
@@ -460,7 +460,7 @@
   border: none;
   background: none;
   color: var(--kg-ink-faint);
-  font-size: 16px;
+  font-size: var(--kg-text-lg);
   line-height: 1;
   cursor: pointer;
 }

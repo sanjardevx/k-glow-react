@@ -17,6 +17,7 @@ import {
   ShieldIcon,
   TruckIcon,
 } from "../../components/icons";
+import { onActivateKey } from "../../components/a11y";
 import type { AppDispatch } from "../../store";
 import type { Product } from "../../../lib/types/product";
 import type { Review } from "../../../lib/types/review";
@@ -202,12 +203,20 @@ export function ChosenProduct() {
             <span
               className={`pdp-addbag${soldOut ? " disabled" : ""}`}
               role="button"
+              tabIndex={soldOut ? -1 : 0}
+              aria-disabled={soldOut || undefined}
               onClick={() => {
                 if (soldOut) return;
                 if (!onAdd(product, qty)) return;
                 setJustAdded(true);
                 setTimeout(() => setJustAdded(false), 1200);
               }}
+              onKeyDown={onActivateKey(() => {
+                if (soldOut) return;
+                if (!onAdd(product, qty)) return;
+                setJustAdded(true);
+                setTimeout(() => setJustAdded(false), 1200);
+              })}
             >
               {soldOut ? "Sold Out" : justAdded ? "Added ✓" : "Add to Bag"}
             </span>
@@ -313,11 +322,17 @@ export function ChosenProduct() {
                       </Box>
                       <Box
                         className={`p-quickadd${eleSoldOut ? " disabled" : ""}`}
+                        role="button"
+                        tabIndex={eleSoldOut ? -1 : 0}
+                        aria-disabled={eleSoldOut || undefined}
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
                           if (!eleSoldOut) onAdd(ele);
                         }}
+                        onKeyDown={onActivateKey(() => {
+                          if (!eleSoldOut) onAdd(ele);
+                        })}
                       >
                         {eleSoldOut ? "Sold Out" : "Add to Cart"}
                       </Box>

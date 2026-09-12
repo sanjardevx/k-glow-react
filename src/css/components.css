@@ -363,7 +363,7 @@
   padding: 6px 12px;
   border-radius: var(--kg-radius-pill);
   font-family: var(--kg-font-body);
-  font-size: 10px;
+  font-size: var(--kg-text-2xs);
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -404,7 +404,7 @@
   padding: 5px 12px;
   border-radius: var(--kg-radius-pill);
   font-family: var(--kg-font-body);
-  font-size: 11px;
+  font-size: var(--kg-text-2xs);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -570,7 +570,7 @@
 
 .modal-close {
   color: var(--kg-ink-faint);
-  font-size: 20px;
+  font-size: var(--kg-text-xl);
   line-height: 1;
   cursor: pointer;
   background: none;
@@ -654,12 +654,11 @@
   color: var(--kg-accent-deep);
 }
 
-.eyebrow,
-.reviews-badge {
+.eyebrow {
   display: inline-block;
   margin-bottom: 12px;
   font-family: var(--kg-font-body);
-  font-size: 11px;
+  font-size: var(--kg-text-2xs);
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;

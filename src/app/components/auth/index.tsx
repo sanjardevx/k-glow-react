@@ -4,6 +4,7 @@ import MemberService from "../../services/MemberService";
 import { Messages } from "../../../lib/config";
 import { useGlobals } from "../../context/useGlobals";
 import { useBodyScrollLock } from "../useBodyScrollLock";
+import { onActivateKey } from "../a11y";
 import {
   sweetErrorHandling,
   sweetTopSmallSuccessAlert,
@@ -117,7 +118,13 @@ export function AuthenticationModal(props: AuthenticationModalProps) {
       <Box className="modal-card" onClick={(e) => e.stopPropagation()}>
         <Box className="modal-head">
           <h4>{isSignup ? "Create your account" : "Welcome back"}</h4>
-          <span className="modal-close" onClick={onClose} role="button">
+          <span
+            className="modal-close"
+            onClick={onClose}
+            role="button"
+            tabIndex={0}
+            onKeyDown={onActivateKey(onClose)}
+          >
             ×
           </span>
         </Box>
@@ -176,7 +183,9 @@ export function AuthenticationModal(props: AuthenticationModalProps) {
               <span
                 className="pw-toggle"
                 role="button"
+                tabIndex={0}
                 onClick={() => setShowPassword((v) => !v)}
+                onKeyDown={onActivateKey(() => setShowPassword((v) => !v))}
               >
                 {showPassword ? "HIDE" : "SHOW"}
               </span>
@@ -198,7 +207,9 @@ export function AuthenticationModal(props: AuthenticationModalProps) {
                 <span
                   className="pw-toggle"
                   role="button"
+                  tabIndex={0}
                   onClick={() => setShowConfirm((v) => !v)}
+                  onKeyDown={onActivateKey(() => setShowConfirm((v) => !v))}
                 >
                   {showConfirm ? "HIDE" : "SHOW"}
                 </span>
@@ -218,6 +229,10 @@ export function AuthenticationModal(props: AuthenticationModalProps) {
           <a
             onClick={() => onSwitchMode(isSignup ? "login" : "signup")}
             role="button"
+            tabIndex={0}
+            onKeyDown={onActivateKey(() =>
+              onSwitchMode(isSignup ? "login" : "signup"),
+            )}
           >
             {isSignup ? "Log in" : "Create one"}
           </a>

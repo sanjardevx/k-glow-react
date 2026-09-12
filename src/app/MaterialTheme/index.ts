@@ -86,22 +86,6 @@ let theme = createTheme({
         },
       },
     },
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          borderRadius: 999,
-          fontWeight: 600,
-          textTransform: "none",
-        },
-      },
-    },
-    MuiChip: {
-      styleOverrides: {
-        root: {
-          borderRadius: 999,
-        },
-      },
-    },
     MuiPaper: {
       styleOverrides: {
         root: {

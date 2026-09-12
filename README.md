@@ -20,6 +20,28 @@ Box
 - Common (Reusable) Components: Header & Footer
 ```
 
+- CSS Layer Structure
+
+The cream/sage design system (`src/css/`) loads in three layers, then per-page
+stylesheets on top:
+
+```
+tokens.css       every colour/type/radius/shadow literal, as custom properties (--kg-*)
+base.css         document defaults, focus ring, SweetAlert2 theming
+components.css   shared primitives (buttons, inputs, cards, badges, modal shell) —
+                 page classes are listed as aliases alongside each primitive so a
+                 page can override with equal specificity
+```
+
+`src/css/index.css` `@import`s those three first (see `src/main.tsx`), so every
+per-page stylesheet (`home.css`, `products.css`, `cart.css`, `orders.css`,
+`myPage.css`, `help.css`, `navbar.css`, `footer.css`, `auth.css`,
+`payment-modal.css`, `stepper.css`, `product-card.css`, `app.css`) loads after
+and wins ties on equal specificity. `tokens.css` is the only file allowed a
+colour literal — `src/app/MaterialTheme/index.ts` is the sole documented
+exception, since MUI needs real hex values to derive its own hover/disabled
+states and can't read `var(--kg-*)`.
+
 ## Available Scripts
 
 In the project directory, you can run:

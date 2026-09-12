@@ -38,18 +38,23 @@ export function HomePage({ onAuthOpen }: HomePageProps) {
     const productService = new ProductService();
     const reviewService = new ReviewService();
 
+    // 10 fetched so desktop can show 5 per row × 2 rows; mobile only shows
+    // the first 6 (the rest are hidden, not unfetched — see .product-grid-6
+    // in product-card.css) so there's no separate request per breakpoint.
     productService
-      .getProducts({ page: 1, limit: 6, order: "productViews" })
+      .getProducts({ page: 1, limit: 10, order: "productViews" })
       .then((data) => setBestsellers(data))
       .catch((err) => console.log(err));
 
     productService
-      .getProducts({ page: 1, limit: 6, order: "createdAt" })
+      .getProducts({ page: 1, limit: 10, order: "createdAt" })
       .then((data) => setNewArrivals(data))
       .catch((err) => console.log(err));
 
+    // 6 fetched so desktop can show 3 per row × 2 rows; mobile only shows
+    // the first 4 — see .review-grid in home.css.
     reviewService
-      .getReviews(4)
+      .getReviews(6)
       .then((data) => setReviews(data))
       .catch((err) => console.log(err));
   }, []);

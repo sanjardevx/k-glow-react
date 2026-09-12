@@ -78,7 +78,7 @@
 }
 
 .cart-item .brand {
-  font-size: 11px;
+  font-size: var(--kg-text-2xs);
   font-weight: 500;
   letter-spacing: var(--kg-tracking-caps);
   text-transform: uppercase;

@@ -8,6 +8,7 @@ import { useBasket } from "../screens/cartPage/useBasket";
 import { useGlobals } from "../context/useGlobals";
 import { CheckIcon, UploadIcon } from "./icons";
 import { useBodyScrollLock } from "./useBodyScrollLock";
+import { onActivateKey } from "./a11y";
 import { BankDetailsCard } from "./BankDetailsCard";
 import OrderService from "../services/OrderService";
 import { sweetErrorHandling } from "../../lib/sweetAlert";
@@ -112,7 +113,13 @@ export function PaymentModal({ open, onClose, items, subtotal }: PaymentModalPro
             <>
               <Box className="modal-head">
                 <h4>Complete your payment</h4>
-                <span className="modal-close" onClick={handleClose}>
+                <span
+                  className="modal-close"
+                  onClick={handleClose}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={onActivateKey(handleClose)}
+                >
                   ×
                 </span>
               </Box>
@@ -166,7 +173,13 @@ export function PaymentModal({ open, onClose, items, subtotal }: PaymentModalPro
             <>
               <Box className="modal-head">
                 <h4>Confirm your payment</h4>
-                <span className="modal-close" onClick={handleClose}>
+                <span
+                  className="modal-close"
+                  onClick={handleClose}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={onActivateKey(handleClose)}
+                >
                   ×
                 </span>
               </Box>

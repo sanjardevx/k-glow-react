@@ -114,7 +114,7 @@
 
 .profile-type {
   margin-top: 6px;
-  font-size: 11px;
+  font-size: var(--kg-text-2xs);
   font-weight: 600;
   letter-spacing: var(--kg-tracking-caps);
   text-transform: uppercase;

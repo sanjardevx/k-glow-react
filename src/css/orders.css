@@ -192,7 +192,7 @@
 
 .orders-info-title {
   margin-bottom: 12px;
-  font-size: 11px;
+  font-size: var(--kg-text-2xs);
   font-weight: 600;
   letter-spacing: var(--kg-tracking-caps);
   text-transform: uppercase;
@@ -229,7 +229,7 @@
 
 .orders-member-sub {
   margin-top: 2px;
-  font-size: 11px;
+  font-size: var(--kg-text-2xs);
   font-weight: 600;
   letter-spacing: var(--kg-tracking-caps);
   text-transform: uppercase;
@@ -285,11 +285,11 @@
   display: inline-flex;
   align-items: center;
   gap: 3px;
-  font-size: 11px;
+  font-size: var(--kg-text-2xs);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--kg-ink-faint);
+  color: var(--kg-ink-soft);
   transition: color var(--kg-duration) var(--kg-ease);
 }
 

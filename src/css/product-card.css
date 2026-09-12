@@ -117,7 +117,7 @@
 }
 
 .p-brand {
-  font-size: 11px;
+  font-size: var(--kg-text-2xs);
   font-weight: 500;
   letter-spacing: var(--kg-tracking-caps);
   text-transform: uppercase;
@@ -133,14 +133,6 @@
   color: var(--kg-ink);
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.p-stars {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  font-size: 11px;
-  color: var(--kg-ink-soft);
 }
 
 .p-price-row {
@@ -175,12 +167,15 @@
   font-size: var(--kg-text-md);
 }
 
-/* Home's Bestsellers/New Arrivals show exactly 6 products — 3 columns keeps
-   them as two even rows instead of 5 + a lone orphan card. Scoped to >860px
-   so it doesn't fight the 2-column mobile layout below. */
+/* Home's Bestsellers/New Arrivals fetch 10 products but only show 6 on
+   mobile (below) — desktop shows all 10 as two even rows of 5. Forced to 5
+   columns at every width down to 861px (overriding the 4-/3-column steps
+   the plain .product-grid takes at 1200px/1024px for the Shop page's
+   arbitrary item count) so this specific grid never reflows to an uneven
+   row while it's still "desktop". */
 @media (min-width: 861px) {
   .product-grid.product-grid-6 {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 }
 
@@ -200,6 +195,13 @@
   .product-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 14px;
+  }
+
+  /* Mobile keeps the original 6 (3 rows of 2); the extra 4 fetched for
+     desktop's 2×5 stay in the DOM but hidden rather than unfetched, so
+     there's one request per section regardless of breakpoint. */
+  .product-grid.product-grid-6 > :nth-child(n + 7) {
+    display: none;
   }
 
   /* Cards are wide here, so a 4:3 box keeps the photo from getting tall. */

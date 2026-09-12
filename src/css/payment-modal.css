@@ -56,7 +56,7 @@
   border: none;
   background: none;
   color: var(--kg-ink-faint);
-  font-size: 20px;
+  font-size: var(--kg-text-xl);
   line-height: 1;
   cursor: pointer;
   transition: color var(--kg-duration) var(--kg-ease);
@@ -186,7 +186,7 @@
 .bank-amount .lbl {
   display: block;
   margin-bottom: 4px;
-  font-size: 11px;
+  font-size: var(--kg-text-2xs);
   font-weight: 500;
   letter-spacing: var(--kg-tracking-caps);
   text-transform: uppercase;
@@ -230,7 +230,7 @@
   border-radius: 50%;
   background: var(--kg-primary-soft);
   color: var(--kg-primary);
-  font-size: 11px;
+  font-size: var(--kg-text-2xs);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }

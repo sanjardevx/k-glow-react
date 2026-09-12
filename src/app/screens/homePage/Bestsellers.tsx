@@ -4,6 +4,7 @@ import { finalPrice, formatPrice } from "../productsPage/productsData";
 import { useAppSelector } from "../../hooks";
 import { useBasket } from "../cartPage/useBasket";
 import { useReveal } from "../../components/useReveal";
+import { onActivateKey } from "../../components/a11y";
 import { retrieveBestsellers } from "./selector";
 import { serverApi } from "../../../lib/config";
 
@@ -67,11 +68,17 @@ export function Bestsellers() {
                     </Box>
                     <Box
                       className={`p-quickadd${soldOut ? " disabled" : ""}`}
+                      role="button"
+                      tabIndex={soldOut ? -1 : 0}
+                      aria-disabled={soldOut || undefined}
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
                         if (!soldOut) onAdd(ele);
                       }}
+                      onKeyDown={onActivateKey(() => {
+                        if (!soldOut) onAdd(ele);
+                      })}
                     >
                       {soldOut ? "Sold Out" : "Add to Cart"}
                     </Box>
