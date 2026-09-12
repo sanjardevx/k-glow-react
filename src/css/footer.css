@@ -14,11 +14,40 @@
   margin: 0 auto;
 }
 
+/* Named areas (rather than DOM order) place brand/trust/shop/find-us/loop —
+   5 grid items — because trust sits stacked under brand on wide screens but
+   needs to move next to Shop once the grid narrows to 2 columns (see the
+   860px/480px blocks). Column gap stays the wider 40px between topics;
+   row gap is the tighter 24px brand↔trust used before this was a grid. */
 .footer-grid {
   display: grid;
   grid-template-columns: 1.25fr 1fr 1fr 1fr;
-  gap: 40px;
+  grid-template-areas:
+    "brand shop findus loop"
+    "trust shop findus loop";
+  column-gap: 40px;
+  row-gap: 24px;
   padding-bottom: 48px;
+}
+
+.footer-col-brand {
+  grid-area: brand;
+}
+
+.footer-col-trust {
+  grid-area: trust;
+}
+
+.footer-col-shop {
+  grid-area: shop;
+}
+
+.footer-col-findus {
+  grid-area: findus;
+}
+
+.footer-col-loop {
+  grid-area: loop;
 }
 
 /* Brand mark: "K-glow" in cream, "secrets" italic in the warm accent.
@@ -93,10 +122,12 @@
   color: var(--kg-on-dark);
 }
 
-/* Trust lines: small icon + short text, no tiles. */
+/* Trust lines: small icon + short text, no tiles. Spacing above it comes
+   from the grid's row-gap now (it's a grid item, not a child of .footer-col-
+   brand any more), so no top margin here. */
 .footer-trust {
   list-style: none;
-  margin: 24px 0 0;
+  margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
@@ -141,9 +172,17 @@
     padding: 48px var(--kg-gutter-mobile) 0;
   }
 
+  /* 2 columns from here down: brand spans both (full-width row), then trust
+     pairs with Shop and Find us pairs with Stay in the loop — the same
+     side-by-side pattern on both rows instead of one lone tall column. */
   .footer-grid {
     grid-template-columns: 1fr 1fr;
-    gap: 32px 24px;
+    grid-template-areas:
+      "brand brand"
+      "trust shop"
+      "findus loop";
+    column-gap: 24px;
+    row-gap: 32px;
     padding-bottom: 36px;
   }
 
@@ -154,8 +193,25 @@
 }
 
 @media (max-width: 480px) {
+  .footer {
+    padding: 36px var(--kg-gutter-mobile) 0;
+  }
+
+  /* Stay 2-column (brand full-width, trust+Shop and Find us+Stay-in-the-loop
+     paired) here too — collapsing to 1 turned five stacked blocks into a
+     very tall single file. */
   .footer-grid {
-    grid-template-columns: 1fr;
+    column-gap: 20px;
+    row-gap: 24px;
+    padding-bottom: 28px;
+  }
+
+  .footer-col .footer-about {
+    max-width: none;
+  }
+
+  .footer-trust {
+    gap: 8px;
   }
 
   .footer-bottom-inner {

@@ -114,6 +114,21 @@
   font-size: var(--kg-text-sm);
 }
 
+/* Beats the 32px above on touch, where 40px is the minimum comfortable tap. */
+@media (pointer: coarse) {
+  .cart-item .qty-stepper button {
+    width: 40px;
+    height: 40px;
+  }
+
+  /* `.cart-item .remove` is declared further down this file, so match it
+     from the layout wrapper to win on specificity rather than on order. */
+  .cart-layout .cart-item .remove {
+    width: 40px;
+    height: 40px;
+  }
+}
+
 .cart-item .line-total {
   min-width: 96px;
   flex-shrink: 0;

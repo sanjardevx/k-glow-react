@@ -75,7 +75,15 @@ export function HelpPage() {
         <h2 className="help-title">Help</h2>
         <TabContext value={tab}>
           <Box className="help-tabs-frame">
-            <Tabs value={tab} onChange={handleTabChange} className="help-tabs">
+            {/* Scrollable so a very narrow phone (320px) swipes instead of
+                silently clipping a tab — same fix as the Orders tabs. */}
+            <Tabs
+              value={tab}
+              onChange={handleTabChange}
+              className="help-tabs"
+              variant="scrollable"
+              scrollButtons={false}
+            >
               <Tab label="Terms" value="1" />
               <Tab label="FAQ" value="2" />
               <Tab label="Contact" value="3" />

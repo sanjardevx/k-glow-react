@@ -9,9 +9,24 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+/* Belt-and-braces guard: a few pages bleed an element slightly past the
+   viewport at narrow widths (long member data, deliberately-scrollable rows
+   that use a negative-margin bleed). Clipping it here, on the axis
+   perpendicular to normal scrolling, stops any stray sideways page-scroll
+   without touching the components that scroll horizontally on purpose (they
+   manage their own `overflow-x: auto`).
+   `clip`, not `hidden`: the two-axis overflow spec forces `overflow-y` to
+   `auto` the moment `overflow-x` is anything but `visible`/`clip`, which
+   silently turns body into its own scroll container and breaks every
+   `position: sticky` descendant (the mobile nav's pinned logo/basket row
+   among them) — they'd stick to body's box instead of the viewport. `clip`
+   is explicitly exempted from that auto-correction, so overflow-y stays
+   genuinely visible. */
 body {
   min-height: 100%;
   margin: 0;
+  overflow-x: clip;
+  overflow-y: visible;
   background: var(--kg-bg);
   color: var(--kg-ink);
   font-family: var(--kg-font-body);
@@ -157,6 +172,14 @@ body .swal2-html-container {
 body .swal2-styled.swal2-confirm {
   font-weight: 600;
   font-size: var(--kg-text-md);
+}
+
+/* The library sizes its buttons from font-size alone, which lands under the
+   comfortable tap minimum on a phone. */
+@media (pointer: coarse) {
+  body .swal2-styled {
+    min-height: 40px;
+  }
 }
 
 body .swal2-toast .swal2-title {

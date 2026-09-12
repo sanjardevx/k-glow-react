@@ -12,7 +12,10 @@ export function Footer() {
     <footer className="footer">
       <div className="footer-inner">
         <div className="footer-grid">
-          <div className="footer-col">
+          {/* Brand + trust are two separate grid items (not one stacked
+              column) so narrow layouts can place trust next to Shop —
+              see the grid-template-areas in footer.css. */}
+          <div className="footer-col footer-col-brand">
             <p className="footer-brand">
               K-glow <em>secrets</em>
             </p>
@@ -20,26 +23,26 @@ export function Footer() {
               Authentic Korean skincare and makeup, sourced directly from Seoul
               and delivered across Uzbekistan.
             </p>
-            <ul className="footer-trust">
-              <li>
-                <TruckIcon />
-                Shipped from Korea
-              </li>
-              <li>
-                <ShieldIcon />
-                100% authentic
-              </li>
-              <li>
-                <BoxIcon />
-                Usually in stock
-              </li>
-              <li>
-                <BoltIcon />
-                Same-day dispatch via BTS post
-              </li>
-            </ul>
           </div>
-          <div className="footer-col">
+          <ul className="footer-trust footer-col-trust">
+            <li>
+              <TruckIcon />
+              Shipped from Korea
+            </li>
+            <li>
+              <ShieldIcon />
+              100% authentic
+            </li>
+            <li>
+              <BoxIcon />
+              Usually in stock
+            </li>
+            <li>
+              <BoltIcon />
+              Same-day dispatch via BTS post
+            </li>
+          </ul>
+          <div className="footer-col footer-col-shop">
             <h5>Shop</h5>
             <Link to="/">Home</Link>
             <Link to="/products">Shop</Link>
@@ -63,13 +66,13 @@ export function Footer() {
             </a>
             <Link to="/help">Help</Link>
           </div>
-          <div className="footer-col">
+          <div className="footer-col footer-col-findus">
             <h5>Find us</h5>
             <p>Tashkent, Uzbekistan</p>
             <p>+998 94 290 03 26</p>
             <p>hello@kglowsecrets.uz</p>
           </div>
-          <div className="footer-col">
+          <div className="footer-col footer-col-loop">
             <h5>Stay in the loop</h5>
             <p>New arrivals, restocks, discount events.</p>
             <a

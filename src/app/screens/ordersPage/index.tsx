@@ -74,7 +74,17 @@ export function OrdersPage() {
         <Stack className="orders-left">
           <TabContext value={value}>
             <Box className="orders-tabs-frame">
-              <Tabs value={value} onChange={handleChange} className="orders-tabs">
+              {/* "Waiting Confirmation" alone doesn't fit next to the other
+                  two labels under ~390px — scrollable + no arrow buttons
+                  means it swipes like the category chip row instead of
+                  silently clipping the last tab off-screen. */}
+              <Tabs
+                value={value}
+                onChange={handleChange}
+                className="orders-tabs"
+                variant="scrollable"
+                scrollButtons={false}
+              >
                 <Tab label="Waiting Confirmation" value="1" />
                 <Tab label="Confirmed" value="2" />
                 <Tab label="Rejected" value="3" />

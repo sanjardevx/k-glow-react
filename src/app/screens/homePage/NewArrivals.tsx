@@ -26,7 +26,7 @@ export function NewArrivals() {
             View all →
           </Link>
         </Box>
-        <Box className="product-grid">
+        <Box className="product-grid product-grid-6">
           {newArrivals.map((ele) => {
             const soldOut = ele.productStatus === "PAUSE";
             return (

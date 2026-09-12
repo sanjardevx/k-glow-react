@@ -175,6 +175,15 @@
   font-size: var(--kg-text-md);
 }
 
+/* Home's Bestsellers/New Arrivals show exactly 6 products — 3 columns keeps
+   them as two even rows instead of 5 + a lone orphan card. Scoped to >860px
+   so it doesn't fight the 2-column mobile layout below. */
+@media (min-width: 861px) {
+  .product-grid.product-grid-6 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 1200px) {
   .product-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -207,7 +216,7 @@
   }
 }
 
-@media (max-width: 460px) {
+@media (max-width: 480px) {
   .product-grid {
     gap: 10px;
   }

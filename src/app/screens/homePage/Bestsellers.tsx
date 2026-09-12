@@ -29,7 +29,7 @@ export function Bestsellers() {
             View all →
           </Link>
         </Box>
-        <Box className="product-grid">
+        <Box className="product-grid product-grid-6">
           {bestsellers.map((ele) => {
             const soldOut = ele.productStatus === "PAUSE";
             return (

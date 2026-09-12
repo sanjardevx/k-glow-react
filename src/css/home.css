@@ -241,11 +241,13 @@
   color: var(--kg-ink-soft);
 }
 
+/* 2 columns divides the 4 reviews we show evenly (two even rows instead of
+   3 + a lone orphan card). */
 .review-grid {
-  max-width: 1080px;
+  max-width: 800px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
 }
 
@@ -444,7 +446,7 @@
 /* Touch / phone-width: no hover to un-fade the logos, so show them at full
    strength by default (no zoom — that's a hover cue). Either condition is
    enough, so a touch laptop and a narrow window are both covered. */
-@media (hover: none), (max-width: 768px) {
+@media (hover: none), (max-width: 860px) {
   .brand-logo img {
     opacity: 1;
   }
@@ -574,7 +576,7 @@
 /* =========================================================================
    Responsive
    ========================================================================= */
-@media (max-width: 1100px) {
+@media (max-width: 1024px) {
   .hero h2 {
     font-size: 44px;
   }

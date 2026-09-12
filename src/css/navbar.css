@@ -149,6 +149,24 @@
   color: var(--kg-ink);
 }
 
+/* Touch pointers need a 40px-plus target; a mouse keeps the tighter header.
+   Keyed on the input device, so a touch tablet gets it at any width. */
+@media (pointer: coarse) {
+  .nav-login,
+  .nav-auth-btn,
+  .nav-account {
+    min-height: 40px;
+  }
+
+  .nav-login {
+    padding: 6px 10px;
+  }
+
+  .nav .right .MuiIconButton-root {
+    padding: 10px;
+  }
+}
+
 .nav .icon {
   width: 20px;
   height: 20px;
@@ -470,6 +488,13 @@
   font-size: var(--kg-text-sm);
 }
 
+@media (pointer: coarse) {
+  .basket-qty-stepper button {
+    width: 36px;
+    height: 36px;
+  }
+}
+
 .basket-line-price {
   flex-shrink: 0;
   font-size: var(--kg-text-sm);
@@ -493,7 +518,19 @@
    Mobile: logo and actions on the first row, links as a scrollable row
    ========================================================================= */
 @media (max-width: 860px) {
+  /* Pinned so the logo, basket, account and the category links all stay
+     reachable while a long product/catalog page scrolls — adding to the bag
+     no longer strands the shopper with no way back up except scrolling all
+     the way to the top. (A version that pinned only the logo/basket row and
+     let the link row scroll away underneath was tried first, but that row's
+     own containing block — `.nav-inner`, which is only as tall as the two
+     rows put together — gave it just ~110px of "stuck" range before it
+     unpinned again; making the whole `<nav>` sticky sidesteps that because
+     `<nav>`'s own parent is the full-height page shell.) */
   .nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
     padding: 0 var(--kg-gutter-mobile);
   }
 

@@ -310,6 +310,13 @@
   color: var(--kg-ink-soft);
 }
 
+/* The copy control is only as tall as its text; give it a real tap target. */
+@media (pointer: coarse) {
+  .bank-copy {
+    min-height: 40px;
+  }
+}
+
 @media (max-width: 860px) {
   .orders-layout {
     grid-template-columns: 1fr;

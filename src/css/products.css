@@ -150,6 +150,12 @@
 .shop-sort select {
   appearance: none;
   -webkit-appearance: none;
+  /* Fills the row so its tap target matches the whole pill — on mobile
+     `.shop-sort` stretches to 100% width but this stayed its own intrinsic
+     (text) width, leaving a dead zone before the chevron that looked
+     tappable but wasn't wired to the control. */
+  flex: 1;
+  min-width: 0;
   padding: 0 22px 0 0;
   border: none;
   outline: none;
@@ -222,13 +228,21 @@
     font-size: var(--kg-text-3xl);
   }
 
+  /* Side-by-side search + sort get too cramped on a phone-width row —
+     stack them full-width instead. */
   .shop-tools {
     width: 100%;
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .shop-search {
-    flex: 1;
+    width: 100%;
     min-width: 0;
+  }
+
+  .shop-sort {
+    width: 100%;
   }
 
   .shop-search input {
@@ -262,10 +276,6 @@
 @media (max-width: 480px) {
   .shop-search-submit {
     display: none;
-  }
-
-  .shop-sort {
-    flex: 1;
   }
 }
 
@@ -630,6 +640,18 @@
 }
 
 @media (max-width: 480px) {
+  /* The 24px desktop inset leaves a wide band of bare sand around the photo
+     once the box is this narrow — tighter padding lets the product fill
+     more of its own frame. */
+  .pdp-photo img {
+    padding: 12px;
+  }
+
+  .pdp-thumb {
+    width: 56px;
+    height: 56px;
+  }
+
   .pdp-price {
     font-size: var(--kg-text-xl);
   }
