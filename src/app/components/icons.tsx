@@ -146,3 +146,24 @@ export function BoltIcon({ className }: IconProps) {
     </svg>
   );
 }
+
+/** Solid play triangle — the tutorial cards' own play button. Filled
+ *  rather than stroked, so it reads at the small size it renders at. */
+export function PlayIcon({ className }: IconProps) {
+  return (
+    <svg {...base} className={className} fill="currentColor" strokeWidth={0}>
+      <path d="M8 5.5v13l11-6.5z" />
+    </svg>
+  );
+}
+
+/** Arrow leaving a box — a link that opens on another site. */
+export function ExternalLinkIcon({ className }: IconProps) {
+  return (
+    <svg {...base} className={className}>
+      <path d="M14 4h6v6" />
+      <path d="M20 4 11 13" />
+      <path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" />
+    </svg>
+  );
+}

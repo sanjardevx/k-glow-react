@@ -1,0 +1,276 @@
+/**
+ * Live Tutorials page: a grid of vertical (9:16) K-beauty how-tos. The card
+ * shows our stored thumbnail behind a play button and only mounts the real
+ * player once it's clicked — see screens/tutorialsPage/index.tsx.
+ *
+ * Tokens only.
+ */
+
+.tutorials-page {
+  padding-bottom: 64px;
+  background: var(--kg-bg);
+}
+
+/* ---------- Page header ---------- */
+
+.tutorials-head {
+  max-width: var(--kg-container);
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 40px var(--kg-gutter) 0;
+}
+
+.tutorials-title {
+  margin: 0;
+  font-family: var(--kg-font-display);
+  font-size: var(--kg-text-4xl);
+  font-weight: 500;
+  line-height: var(--kg-leading-tight);
+  letter-spacing: var(--kg-tracking-display);
+  color: var(--kg-ink);
+}
+
+.tutorials-title em {
+  font-style: italic;
+  color: var(--kg-accent-deep);
+}
+
+.tutorials-sub {
+  max-width: 54ch;
+  margin: 10px 0 0;
+  font-size: var(--kg-text-md);
+  line-height: var(--kg-leading-body);
+  color: var(--kg-ink-soft);
+}
+
+/* Loading, empty and failure all read as the same quiet panel — the copy
+   carries the difference, the shell shouldn't shout about it. */
+.tutorials-note {
+  max-width: var(--kg-container);
+  margin: 32px auto 0;
+  box-sizing: border-box;
+  padding: 64px 24px;
+  border: 1px dashed var(--kg-border-strong);
+  border-radius: var(--kg-radius-lg);
+  background: var(--kg-card);
+  color: var(--kg-ink-soft);
+  font-size: var(--kg-text-md);
+  text-align: center;
+}
+
+/* ---------- Grid ---------- */
+
+/* minmax(0, 1fr) so a long unbroken title can never widen a track past the
+   viewport, matching the product grid. */
+.tutorials-grid {
+  max-width: var(--kg-container);
+  margin: 0 auto;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+  padding: 32px var(--kg-gutter) 0;
+}
+
+.t-card {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--kg-card);
+  border: 1px solid var(--kg-border);
+  border-radius: var(--kg-radius-lg);
+  transition:
+    transform 0.25s var(--kg-ease),
+    box-shadow 0.25s var(--kg-ease),
+    border-color 0.25s var(--kg-ease);
+}
+
+.t-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--kg-border-strong);
+  box-shadow: var(--kg-shadow-md);
+}
+
+/* Shorts and Reels are 9:16; the box is fixed to that so a card never
+   changes height between its thumbnail and the player that replaces it. */
+.t-embed {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  overflow: hidden;
+  background: var(--kg-sand);
+}
+
+.t-embed iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* The play surface is a real <button> (or <a> for Instagram), so Enter and
+   Space work without a keydown handler of our own. */
+.t-play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: var(--kg-sand);
+  cursor: pointer;
+}
+
+.t-thumb {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1);
+  transition: transform 0.35s var(--kg-ease);
+}
+
+.t-card:hover .t-thumb {
+  transform: scale(1.04);
+}
+
+.t-play-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: var(--kg-bg-veil);
+  color: var(--kg-ink);
+  box-shadow: var(--kg-shadow-md);
+  transition:
+    background-color var(--kg-duration) var(--kg-ease),
+    transform var(--kg-duration) var(--kg-ease);
+}
+
+.t-play-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.t-play:hover .t-play-icon {
+  background: var(--kg-card);
+  transform: scale(1.06);
+}
+
+.t-play:focus-visible {
+  outline: 2px solid var(--kg-primary);
+  outline-offset: -3px;
+}
+
+/* Instagram has no stored thumbnail (its oEmbed needs a Meta app token), so
+   this card is a labelled link out rather than a still to play in place. */
+.t-play-out {
+  flex-direction: column;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.t-play-out-label {
+  font-size: var(--kg-text-sm);
+  font-weight: 600;
+  color: var(--kg-ink-soft);
+}
+
+.t-title {
+  padding: 14px 16px 16px;
+  font-size: var(--kg-text-md);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--kg-ink);
+  /* Two lines, then ellipsis — every card's title block is the same height,
+     so the grid rows stay level however long a creator's caption runs. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ---------- Responsive (the site's 1200 / 1024 / 860 / 480 set) ---------- */
+
+@media (max-width: 1200px) {
+  .tutorials-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1024px) {
+  .tutorials-title {
+    font-size: var(--kg-text-3xl);
+  }
+}
+
+@media (max-width: 860px) {
+  .tutorials-head {
+    padding: 28px var(--kg-gutter-mobile) 0;
+  }
+
+  .tutorials-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    padding: 24px var(--kg-gutter-mobile) 0;
+  }
+
+  .tutorials-note {
+    margin: 24px var(--kg-gutter-mobile) 0;
+    padding: 48px 20px;
+  }
+
+  .t-play-icon {
+    width: 46px;
+    height: 46px;
+  }
+}
+
+/* One column would make each reel taller than the screen, so the phone
+   layout stays at two — the cards just get narrower. */
+@media (max-width: 480px) {
+  .tutorials-grid {
+    gap: 10px;
+  }
+
+  .t-title {
+    padding: 12px;
+    font-size: var(--kg-text-sm);
+  }
+
+  .t-play-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .t-play-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-card,
+  .t-thumb,
+  .t-play-icon {
+    transition: none;
+  }
+
+  .t-card:hover {
+    transform: none;
+  }
+
+  .t-card:hover .t-thumb,
+  .t-play:hover .t-play-icon {
+    transform: none;
+  }
+}

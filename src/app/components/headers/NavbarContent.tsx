@@ -15,9 +15,9 @@ interface NavbarContentProps {
  * them (a taller home header, say) has a place to live without duplicating
  * the links, basket and account menu again.
  *
- * "Live Tutorials" and "AI Beauty" are placeholders: the labels are part of
- * the approved design, the pages are not built yet, so they render as inert
- * links until their routes exist.
+ * "AI Beauty" is still a placeholder: the label is part of the approved
+ * design, the page is not built yet, so it renders as an inert link until
+ * its route exists.
  */
 export function NavbarContent({ onAuthOpen }: NavbarContentProps) {
   const { authMember } = useGlobals();
@@ -35,15 +35,9 @@ export function NavbarContent({ onAuthOpen }: NavbarContentProps) {
           <NavLink to="/products" activeClassName="active">
             Shop
           </NavLink>
-          <a
-            href="#"
-            className="placeholder"
-            aria-disabled="true"
-            title="Coming soon"
-            onClick={(e) => e.preventDefault()}
-          >
+          <NavLink to="/live-tutorials" activeClassName="active">
             Live Tutorials
-          </a>
+          </NavLink>
           <a
             href="#"
             className="placeholder"

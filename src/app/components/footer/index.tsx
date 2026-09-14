@@ -4,8 +4,8 @@ import { BoltIcon, BoxIcon, ShieldIcon, TruckIcon } from "../icons";
 import "../../../css/footer.css";
 
 /**
- * "Live Tutorials" and "AI Beauty" mirror the navbar placeholders: approved
- * labels for pages that are not built yet, rendered inert until they exist.
+ * "AI Beauty" mirrors the navbar placeholder: an approved label for a page
+ * that is not built yet, rendered inert until it exists.
  */
 export function Footer() {
   return (
@@ -46,15 +46,7 @@ export function Footer() {
             <h5>Shop</h5>
             <Link to="/">Home</Link>
             <Link to="/products">Shop</Link>
-            <a
-              href="#"
-              className="placeholder"
-              aria-disabled="true"
-              title="Coming soon"
-              onClick={(e) => e.preventDefault()}
-            >
-              Live Tutorials
-            </a>
+            <Link to="/live-tutorials">Live Tutorials</Link>
             <a
               href="#"
               className="placeholder"

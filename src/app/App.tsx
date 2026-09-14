@@ -10,6 +10,7 @@ import { CartPage } from "./screens/cartPage";
 import { OrdersPage } from "./screens/ordersPage";
 import { UserPage } from "./screens/userPage";
 import { HelpPage } from "./screens/helpPage";
+import { TutorialsPage } from "./screens/tutorialsPage";
 import { Footer } from "./components/footer";
 import { HomeNavbar } from "./components/headers/HomeNavbar";
 import { OtherNavbar } from "./components/headers/OtherNavbar";
@@ -88,6 +89,7 @@ function App() {
           <Route path="/cart" component={CartPage} />
           <Route path="/orders" component={OrdersPage} />
           <Route path="/member-page" component={UserPage} />
+          <Route path="/live-tutorials" component={TutorialsPage} />
           <Route path="/help" component={HelpPage} />
           <Route
             exact
