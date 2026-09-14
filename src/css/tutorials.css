@@ -199,6 +199,177 @@
   overflow: hidden;
 }
 
+/* ---------- Custom YouTube player (controls:0 hides ALL of YouTube's own
+   UI — title, play button, settings, CC — so we draw our own bar below;
+   same approach as the admin's Tutorials page). ---------- */
+
+.t-yt-mount-wrap {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.t-yt-mount {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* pointer-events: none — clicking the video body would otherwise toggle
+   play/pause via YouTube's own hidden handler, which can desync from our
+   button's icon state. All interaction goes through our own controls. */
+.t-yt-mount-wrap iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  pointer-events: none;
+}
+
+.t-yt-tap-toggle {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+/* Gradient behind the bottom bar only, so the white icons/slider stay
+   legible over a bright video without darkening the whole frame. */
+.t-yt-mount-wrap::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 56px;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0));
+}
+
+/* Corner mute button + the volume slider it opens, stacked vertically
+   underneath it — closed (slider hidden) until the button is clicked, and
+   closes itself once the visitor releases the slider. */
+.t-yt-volume-wrap {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.t-yt-mute {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  cursor: pointer;
+}
+
+.t-yt-mute svg {
+  width: 14px;
+  height: 14px;
+}
+
+.t-yt-volume {
+  display: none;
+  width: 3px;
+  height: 70px;
+  margin: 0;
+  padding: 0;
+  -webkit-appearance: slider-vertical;
+  writing-mode: vertical-lr;
+  direction: rtl;
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.45);
+  outline: none;
+  cursor: pointer;
+}
+
+.t-yt-volume-wrap.open .t-yt-volume {
+  display: block;
+}
+
+.t-yt-volume::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.t-yt-volume::-moz-range-thumb {
+  width: 11px;
+  height: 11px;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.t-yt-bottom-controls {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 9px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+}
+
+.t-yt-playpause {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+.t-yt-playpause svg {
+  width: 16px;
+  height: 16px;
+}
+
+.t-yt-progress {
+  position: relative;
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+}
+
+.t-yt-progress-fill {
+  position: absolute;
+  inset: 0;
+  width: 0%;
+  border-radius: 2px;
+  background: #fff;
+}
+
 /* ---------- Responsive (the site's 1200 / 1024 / 860 / 480 set) ---------- */
 
 @media (max-width: 1200px) {
@@ -232,6 +403,15 @@
   .t-play-icon {
     width: 46px;
     height: 46px;
+  }
+
+  /* iOS ignores setVolume() on actual media volume, and the physical
+     buttons are what a visitor reaches for on a phone anyway — below this
+     width the mute button just mutes/unmutes directly (see
+     handleMuteClick in tutorialsPage/index.tsx), so the slider never
+     needs to show. */
+  .t-yt-volume {
+    display: none !important;
   }
 }
 
