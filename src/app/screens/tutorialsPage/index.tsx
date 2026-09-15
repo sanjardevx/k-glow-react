@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { Box } from "@mui/material";
+import { Box, useMediaQuery } from "@mui/material";
 import { Link } from "react-router-dom";
+import { useActiveSlide } from "./useActiveSlide";
 import { ExternalLinkIcon, PlayIcon } from "../../components/icons";
 import TutorialService from "../../services/TutorialService";
 import { finalPrice, formatPrice } from "../productsPage/productsData";
@@ -34,6 +35,12 @@ export function TutorialsPage() {
   const [loading, setLoading] = useState(true);
   const [failed, setFailed] = useState(false);
   const [playingId, setPlayingId] = useState<string | null>(null);
+  // noSsr makes this evaluate synchronously on mount — without it the first
+  // render always reports "not mobile" and a phone would flash the grid
+  // before swapping to the feed.
+  const isPhone = useMediaQuery(`(max-width:${MOBILE_BREAKPOINT}px)`, {
+    noSsr: true,
+  });
 
   useEffect(() => {
     const tutorialService = new TutorialService();
@@ -49,18 +56,24 @@ export function TutorialsPage() {
     new TutorialService().countView(tutorial._id);
   }
 
+  // The feed owns the whole screen below the header, so the page heading
+  // would only push it out of view — the phone layout drops it.
+  const showHeading = !isPhone || loading || failed || tutorials.length === 0;
+
   return (
     <div className="tutorials-page">
-      <Box className="tutorials-head">
-        <span className="eyebrow">Watch and learn</span>
-        <h1 className="tutorials-title">
-          Live <em>tutorials</em>
-        </h1>
-        <p className="tutorials-sub">
-          Short routines and product how-tos — so you know exactly what to do
-          with everything in your bag.
-        </p>
-      </Box>
+      {showHeading ? (
+        <Box className="tutorials-head">
+          <span className="eyebrow">Watch and learn</span>
+          <h1 className="tutorials-title">
+            Live <em>tutorials</em>
+          </h1>
+          <p className="tutorials-sub">
+            Short routines and product how-tos — so you know exactly what to do
+            with everything in your bag.
+          </p>
+        </Box>
+      ) : null}
 
       {loading ? (
         <Box className="tutorials-note">Loading tutorials…</Box>
@@ -73,6 +86,8 @@ export function TutorialsPage() {
         <Box className="tutorials-note">
           No tutorials yet — check back soon.
         </Box>
+      ) : isPhone ? (
+        <TutorialsFeed tutorials={tutorials} />
       ) : (
         <div className="tutorials-grid">
           {tutorials.map((tutorial) => (
@@ -93,6 +108,106 @@ export function TutorialsPage() {
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+/**
+ * The phone layout: one Short per screen, snapped, swiped like the app it
+ * borrows from. A grid of 9:16 cards two-across leaves each video too small
+ * to actually watch, which is what this replaces below MOBILE_BREAKPOINT.
+ *
+ * Only the slide currently on screen mounts a player; the rest stay as
+ * still thumbnails. That keeps one iframe alive at a time instead of a
+ * dozen, and means swiping away from a Short stops it without having to
+ * reach into YouTube's API to pause it — the component simply unmounts.
+ *
+ * While it is open the page itself must not scroll: the feed is its own
+ * scroller, and a second scrollable surface behind it (the announcement
+ * bar and footer sticking out past one viewport) would fight every swipe.
+ * `body.t-feed-lock` handles that, plus hides the chrome that would
+ * otherwise sit over the video — see app.css.
+ */
+function TutorialsFeed({ tutorials }: { tutorials: Tutorial[] }) {
+  const { containerRef, activeIndex } = useActiveSlide<HTMLDivElement>(
+    tutorials.length,
+  );
+  const [muted, setMuted] = useState(true);
+  const countedRef = useRef<Set<string>>(new Set());
+
+  useEffect(() => {
+    // Both elements — see app.css: hiding overflow on <body> alone leaves
+    // <html> free to scroll.
+    document.body.classList.add("t-feed-lock");
+    document.documentElement.classList.add("t-feed-lock");
+
+    // The sticky header's height isn't a constant — it wraps to two rows on
+    // a phone and the row heights follow the font — so it's measured rather
+    // than hard-coded, and re-measured when the viewport changes (rotation,
+    // or the keyboard opening and closing).
+    function measureNav() {
+      const nav = document.querySelector(".nav");
+      const height = nav ? Math.round(nav.getBoundingClientRect().height) : 0;
+      document.documentElement.style.setProperty("--t-nav", `${height}px`);
+    }
+    measureNav();
+    window.addEventListener("resize", measureNav);
+    window.addEventListener("orientationchange", measureNav);
+
+    return () => {
+      document.body.classList.remove("t-feed-lock");
+      document.documentElement.classList.remove("t-feed-lock");
+      document.documentElement.style.removeProperty("--t-nav");
+      window.removeEventListener("resize", measureNav);
+      window.removeEventListener("orientationchange", measureNav);
+    };
+  }, []);
+
+  /** The feed has no "press play", so a view is counted when a Short
+   *  becomes the one on screen — once per visit, not on every swipe back. */
+  useEffect(() => {
+    const active = tutorials[activeIndex];
+    if (!active || countedRef.current.has(active._id)) return;
+    countedRef.current.add(active._id);
+    new TutorialService().countView(active._id);
+  }, [activeIndex, tutorials]);
+
+  /** A slide that isn't the active one still shows its thumbnail and play
+   *  button. Tapping that shouldn't do nothing — it scrolls the slide into
+   *  place, and being the active slide is what starts it playing. */
+  function focusSlide(index: number) {
+    const container = containerRef.current;
+    const slide = container?.querySelector<HTMLElement>(
+      `[data-slide="${index}"]`,
+    );
+    if (!slide) return;
+
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    slide.scrollIntoView({
+      behavior: reduced ? "auto" : "smooth",
+      block: "start",
+    });
+  }
+
+  return (
+    <div className="t-feed" ref={containerRef}>
+      {tutorials.map((tutorial, index) => (
+        <section className="t-slide" key={tutorial._id} data-slide={index}>
+          <div className="t-slide-media">
+            <TutorialEmbed
+              tutorial={tutorial}
+              playing={index === activeIndex}
+              onPlay={() => focusSlide(index)}
+              startMuted={muted}
+              onMutedChange={setMuted}
+            />
+            <TutorialShopBar tutorial={tutorial} playing={index === activeIndex} />
+          </div>
+          <p className="t-slide-title">{tutorial.tutorialTitle}</p>
+        </section>
+      ))}
     </div>
   );
 }
@@ -164,6 +279,8 @@ interface TutorialEmbedProps {
   tutorial: Tutorial;
   playing: boolean;
   onPlay: () => void;
+  startMuted?: boolean;
+  onMutedChange?: (muted: boolean) => void;
 }
 
 /**
@@ -176,7 +293,13 @@ interface TutorialEmbedProps {
  *    needs their script on the page and renders their own chrome around
  *    the post, neither of which belongs on the storefront.
  */
-function TutorialEmbed({ tutorial, playing, onPlay }: TutorialEmbedProps) {
+function TutorialEmbed({
+  tutorial,
+  playing,
+  onPlay,
+  startMuted,
+  onMutedChange,
+}: TutorialEmbedProps) {
   const isYouTube = tutorial.tutorialPlatform === TutorialPlatform.YOUTUBE;
 
   if (isYouTube && (playing || !tutorial.tutorialThumbnail)) {
@@ -185,6 +308,8 @@ function TutorialEmbed({ tutorial, playing, onPlay }: TutorialEmbedProps) {
         embedId={tutorial.tutorialEmbedId}
         title={tutorial.tutorialTitle}
         autoplay={playing}
+        startMuted={startMuted}
+        onMutedChange={onMutedChange}
       />
     );
   }
@@ -229,6 +354,12 @@ interface YouTubeShortPlayerProps {
    * button below is the only "click to watch" affordance left at that
    * point, since YouTube's own controls are hidden. */
   autoplay: boolean;
+  /** The feed starts every Short muted, because browsers refuse to autoplay
+   * audio before the visitor has interacted with the page. Once they unmute
+   * one, `onMutedChange` lets the feed remember that for the next slide —
+   * the tap counts as the gesture, so later Shorts can start with sound. */
+  startMuted?: boolean;
+  onMutedChange?: (muted: boolean) => void;
 }
 
 /**
@@ -243,13 +374,19 @@ interface YouTubeShortPlayerProps {
  * so the previous video actually stops rather than playing on in the
  * background.
  */
-function YouTubeShortPlayer({ embedId, title, autoplay }: YouTubeShortPlayerProps) {
+function YouTubeShortPlayer({
+  embedId,
+  title,
+  autoplay,
+  startMuted,
+  onMutedChange,
+}: YouTubeShortPlayerProps) {
   const mountRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<any>(null);
   const [playing, setPlaying] = useState(autoplay);
   const [volumeOpen, setVolumeOpen] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [muted, setMuted] = useState(false);
+  const [muted, setMuted] = useState(!!startMuted);
 
   useEffect(() => {
     let destroyed = false;
@@ -263,6 +400,7 @@ function YouTubeShortPlayer({ embedId, title, autoplay }: YouTubeShortPlayerProp
         playerVars: {
           controls: 0,
           autoplay: autoplay ? 1 : 0,
+          mute: startMuted ? 1 : 0,
           rel: 0,
           modestbranding: 1,
           iv_load_policy: 3,
@@ -312,6 +450,7 @@ function YouTubeShortPlayer({ embedId, title, autoplay }: YouTubeShortPlayerProp
     if (volume === 0) p.mute();
     else p.unMute();
     setMuted(volume === 0);
+    onMutedChange?.(volume === 0);
   }
 
   /** The fine-grained slider is desktop-only (hidden below MOBILE_BREAKPOINT
@@ -327,6 +466,7 @@ function YouTubeShortPlayer({ embedId, title, autoplay }: YouTubeShortPlayerProp
       if (nowMuted) p.mute();
       else p.unMute();
       setMuted(nowMuted);
+      onMutedChange?.(nowMuted);
       return;
     }
     setVolumeOpen((open) => !open);

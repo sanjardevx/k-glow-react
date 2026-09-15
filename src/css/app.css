@@ -17,6 +17,38 @@
   flex: 1;
 }
 
+/* ---------- Tutorials feed takeover (phone only) ----------
+   The Shorts feed is its own scroller, sized to exactly one screen under
+   the header. Anything else that adds page height — the announcement strip
+   above, the footer below — would leave the page itself scrollable too, and
+   the two scrollers fight each other on every swipe. So while the feed is
+   mounted the page is pinned and that chrome steps aside; the Telegram
+   button goes with it rather than floating over someone's video. The class
+   is added by the feed component and removed when it unmounts, so no other
+   route is affected. */
+/* The class goes on <html> as well as <body>: `overflow: hidden` on <body>
+   alone still leaves <html> scrollable, and the page would drift by
+   whatever height the chrome adds. */
+.t-feed-lock {
+  overflow: hidden;
+}
+
+body.t-feed-lock .app-shell {
+  min-height: 100dvh;
+}
+
+/* The desktop page reserves space under the grid; in the feed that padding
+   is the one thing left making the page taller than the screen. */
+body.t-feed-lock .tutorials-page {
+  padding-bottom: 0;
+}
+
+body.t-feed-lock .announcement,
+body.t-feed-lock .footer,
+body.t-feed-lock .telegram-fab {
+  display: none;
+}
+
 /* ---------- Telegram floating button (every page) ---------- */
 
 .telegram-fab {
