@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { Box } from "@mui/material";
+import { Link } from "react-router-dom";
 import { ExternalLinkIcon, PlayIcon } from "../../components/icons";
 import TutorialService from "../../services/TutorialService";
+import { finalPrice, formatPrice } from "../productsPage/productsData";
+import { serverApi } from "../../../lib/config";
 import { TutorialPlatform } from "../../../lib/enums/tutorial.enum";
 import type { Tutorial } from "../../../lib/types/tutorial";
 import { withYouTubeApi } from "./youtubeApi";
@@ -80,6 +83,10 @@ export function TutorialsPage() {
                   playing={playingId === tutorial._id}
                   onPlay={() => handlePlay(tutorial)}
                 />
+                <TutorialShopBar
+                  tutorial={tutorial}
+                  playing={playingId === tutorial._id}
+                />
               </Box>
               <Box className="t-title">{tutorial.tutorialTitle}</Box>
             </Box>
@@ -87,6 +94,69 @@ export function TutorialsPage() {
         </div>
       )}
     </div>
+  );
+}
+
+/**
+ * The shop bar pinned over the bottom of each video — the whole reason the
+ * tutorials exist, commercially. It is deliberately always visible rather
+ * than an end-card: most viewers never reach the end of a short (and these
+ * loop, so there isn't really an "end"), and the urge to buy lands while
+ * the product is on screen, not after. TikTok Shop and Reels ads pin the
+ * same way.
+ *
+ * Two shapes: the exact product when the admin linked one, otherwise the
+ * brand, which always exists and keeps working after a product sells out,
+ * is deleted, or was never stocked.
+ */
+function TutorialShopBar({
+  tutorial,
+  playing,
+}: {
+  tutorial: Tutorial;
+  playing: boolean;
+}) {
+  const product = tutorial.productData?.[0];
+  // While a player is mounted it draws its own bar (play/pause + progress)
+  // along the bottom edge, so the shop bar lifts clear of it. Driven by a
+  // class rather than :has() so it doesn't depend on selector support.
+  const className = `t-shop${playing ? " t-shop-lifted" : ""}`;
+
+  if (product) {
+    return (
+      <Link to={`/products/${product._id}`} className={className}>
+        <img
+          src={`${serverApi}/${product.productImages[0]}`}
+          alt=""
+          className="t-shop-thumb"
+        />
+        <span className="t-shop-text">
+          <span className="t-shop-name">{product.productName}</span>
+          <span className="t-shop-price">
+            {formatPrice(finalPrice(product))}
+          </span>
+        </span>
+        <span className="t-shop-go" aria-hidden="true">
+          ›
+        </span>
+      </Link>
+    );
+  }
+
+  if (!tutorial.tutorialBrand) return null;
+
+  return (
+    <Link
+      to={`/products?search=${encodeURIComponent(tutorial.tutorialBrand)}`}
+      className={className}
+    >
+      <span className="t-shop-text">
+        <span className="t-shop-name">Shop {tutorial.tutorialBrand}</span>
+      </span>
+      <span className="t-shop-go" aria-hidden="true">
+        ›
+      </span>
+    </Link>
   );
 }
 

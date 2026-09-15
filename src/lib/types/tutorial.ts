@@ -1,4 +1,5 @@
 import type { TutorialPlatform, TutorialStatus } from "../enums/tutorial.enum";
+import type { Product } from "./product";
 
 /**
  * Mirrors the backend type (k-glow/src/libs/types/tutorial.ts). The video
@@ -13,8 +14,15 @@ export interface Tutorial {
   tutorialUrl: string;
   tutorialEmbedId: string;
   tutorialThumbnail?: string;
+  /** What the video is selling. The brand is always set; the product is the
+   *  precise link, only present when the admin picked one. */
+  tutorialBrand: string;
+  tutorialProductId?: string;
   tutorialStatus: TutorialStatus;
   tutorialViews: number;
   createdAt: string;
   updatedAt: string;
+  /** From the backend's $lookup — empty when no product is linked, or when
+   *  the linked one has since been deleted. Always an array, like reviews. */
+  productData?: Product[];
 }

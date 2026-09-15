@@ -74,6 +74,13 @@ function chipFromQuery(search: string): Chip {
   return match ?? "All";
 }
 
+/** `?search=` lets another page hand the shop a starting query — the
+ *  tutorials feed uses it to link a video's brand here. The backend already
+ *  matches a search term against the brand as well as the product name. */
+function searchFromQuery(search: string): string {
+  return new URLSearchParams(search).get("search")?.trim() ?? "";
+}
+
 export function Products() {
   const dispatch = useAppDispatch();
   const { onAdd } = useBasket();
@@ -83,13 +90,15 @@ export function Products() {
   );
   const [sort, setSort] = useState<SortValue>("featured");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
-  const [productSearch, setProductSearch] = useState<ProductInquiry>({
+  const [productSearch, setProductSearch] = useState<ProductInquiry>(() => ({
     page: 1,
     limit: FETCH_LIMIT,
     order: "createdAt",
-    search: "",
-  });
-  const [searchText, setSearchText] = useState("");
+    search: searchFromQuery(location.search),
+  }));
+  const [searchText, setSearchText] = useState(() =>
+    searchFromQuery(location.search),
+  );
 
   /** Slice: Data => Store **/
   const { setProducts } = actionDispatch(dispatch);
