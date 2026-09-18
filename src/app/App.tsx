@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { Route, Switch, useHistory, useLocation } from "react-router-dom";
-import Cookies from "universal-cookie";
 import { useGlobals } from "./context/useGlobals";
 import { useAppDispatch } from "./hooks";
 import { clearCart } from "./screens/cartPage/cartSlice";
+import MemberService from "./services/MemberService";
+import { clearAccessToken } from "../lib/authToken";
 import { HomePage } from "./screens/homePage";
 import { ProductsPage } from "./screens/productsPage";
 import { CartPage } from "./screens/cartPage";
@@ -38,21 +39,32 @@ function App() {
   }, [location.pathname]);
 
   /**
-   * The session lives in the `accessToken` cookie, which the browser drops the
-   * moment it expires — but React state keeps showing the signed-in navbar and
-   * the bag until a reload. Watch the cookie (and re-check on every tab focus,
-   * since the session usually lapses while the tab is hidden); once it's gone,
-   * tear things down exactly like an explicit logout: forget the member, drop
-   * the saved copy, empty the bag a signed-out visitor may not keep, and leave
-   * any account-only page.
+   * The token expires on its own schedule, but React state keeps showing the
+   * signed-in navbar and the bag until a reload. So ask the server (on a timer
+   * and on every tab focus, since a session usually lapses while the tab is
+   * hidden) instead of trying to work it out locally.
+   *
+   * Only an outright "not authenticated" tears anything down. A dropped
+   * connection or a cold-starting API says nothing about whether the session
+   * is still good, and signing someone out mid-checkout over a passing blip
+   * is far worse than carrying a stale session to the next check — so those
+   * are ignored and retried. When it really is gone, unwind exactly like an
+   * explicit logout: forget the member, drop the stored token and its copy of
+   * the member, empty the bag a signed-out visitor may not keep, and leave any
+   * account-only page.
    */
   const authRef = useRef(authMember);
   authRef.current = authMember;
   useEffect(() => {
-    const cookies = new Cookies();
-    function enforceSession() {
-      if (!authRef.current || cookies.get("accessToken")) return;
+    async function enforceSession() {
+      if (!authRef.current) return;
+      try {
+        if (await new MemberService().checkSession()) return;
+      } catch {
+        return; // server unreachable — assume nothing, check again later
+      }
       setAuthMember(null);
+      clearAccessToken();
       localStorage.removeItem("memberData");
       dispatch(clearCart());
       const gated = ["/cart", "/orders", "/member-page"];

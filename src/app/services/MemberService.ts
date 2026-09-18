@@ -1,5 +1,6 @@
 import axios from "axios";
 import { serverApi } from "../../lib/config";
+import { clearAccessToken, setAccessToken } from "../../lib/authToken";
 import type {
   LoginInput,
   Member,
@@ -17,11 +18,13 @@ class MemberService {
   public async signup(input: MemberInput): Promise<Member> {
     try {
       const url = this.path + "/member/signup";
-      // withCredentials so the accessToken cookie the server sets is stored
-      // and sent back on later requests.
+      // withCredentials lets the server's cookie through as well, which is
+      // what a same-origin deployment would use; the stored token below is
+      // what actually carries the session across domains.
       const result = await axios.post(url, input, { withCredentials: true });
 
       const member: Member = result.data.member;
+      setAccessToken(result.data.accessToken);
       localStorage.setItem("memberData", JSON.stringify(member));
 
       return member;
@@ -37,6 +40,7 @@ class MemberService {
       const result = await axios.post(url, input, { withCredentials: true });
 
       const member: Member = result.data.member;
+      setAccessToken(result.data.accessToken);
       localStorage.setItem("memberData", JSON.stringify(member));
 
       return member;
@@ -75,6 +79,27 @@ class MemberService {
     }
   }
 
+  /**
+   * Asks the server whether this session is still good. `/member/detail`
+   * already requires `verifyAuth` server-side, so it doubles as an
+   * "am I still logged in?" probe without a dedicated endpoint.
+   *
+   * False means the server actually answered "not authenticated". Anything
+   * else — the network dropped, the API is cold-starting, a 500 — is rethrown
+   * rather than reported as a dead session: signing someone out over a
+   * passing blip is far worse than letting a stale session linger until the
+   * next check a few seconds later.
+   */
+  public async checkSession(): Promise<boolean> {
+    try {
+      await axios.get(`${this.path}/member/detail`, { withCredentials: true });
+      return true;
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response?.status === 401) return false;
+      throw err;
+    }
+  }
+
   public async logout(): Promise<void> {
     try {
       const url = this.path + "/member/logout";
@@ -85,6 +110,7 @@ class MemberService {
     } finally {
       // Drop the local copy either way — if the server call failed because the
       // token was already gone, staying "signed in" here would be worse.
+      clearAccessToken();
       localStorage.removeItem("memberData");
     }
   }
