@@ -9,10 +9,10 @@ interface BankDetailsCardProps {
 }
 
 /**
- * The shop's receiving bank account, with a working copy button on the card
- * number. Used by the payment modal and, as a plain reference, by the Orders
- * page — one component so the two can never show different numbers again.
- * It's the shop's own account, not the customer's, so showing it in full
+ * The card shoppers transfer to, with a working copy button on the number.
+ * Used by the payment modal and, as a plain reference, by the Orders page —
+ * one component so the two can never show different numbers again. It's the
+ * shop's own receiving card, not the customer's, so showing it in full
  * (rather than masked) is fine, and is what actually makes the copy useful.
  */
 export function BankDetailsCard({ children }: BankDetailsCardProps) {
@@ -50,12 +50,12 @@ export function BankDetailsCard({ children }: BankDetailsCardProps) {
   return (
     <Box className="bank-card">
       <Box className="bank-row">
-        <span>Bank</span>
-        <strong>{BANK_DETAILS.bank}</strong>
+        <span>Card</span>
+        <strong>{BANK_DETAILS.card}</strong>
       </Box>
       <Box className="bank-row">
-        <span>Account name</span>
-        <strong>{BANK_DETAILS.accountName}</strong>
+        <span>Card holder</span>
+        <strong>{BANK_DETAILS.cardHolder}</strong>
       </Box>
       <Box className="bank-row bank-row-card">
         <span>Card number</span>
