@@ -1,0 +1,197 @@
+/**
+ * AI Beauty — a short placeholder page for a feature still being built.
+ * Deliberately light: three cards and a nudge to Telegram, nothing that
+ * pretends the feature already works.
+ *
+ * Tokens only.
+ */
+
+.ai-page {
+  padding-bottom: 64px;
+  background: var(--kg-bg);
+}
+
+/* ---------- Hero ---------- */
+
+.ai-hero {
+  max-width: var(--kg-container);
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 56px var(--kg-gutter) 0;
+  text-align: center;
+}
+
+.ai-title {
+  margin: 8px 0 0;
+  font-family: var(--kg-font-display);
+  font-size: var(--kg-text-4xl);
+  font-weight: 500;
+  line-height: var(--kg-leading-tight);
+  letter-spacing: var(--kg-tracking-display);
+  color: var(--kg-ink);
+}
+
+.ai-title em {
+  font-style: italic;
+  color: var(--kg-accent-deep);
+}
+
+.ai-sub {
+  max-width: 52ch;
+  margin: 12px auto 0;
+  font-size: var(--kg-text-md);
+  line-height: var(--kg-leading-body);
+  color: var(--kg-ink-soft);
+}
+
+.ai-badge {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 6px 14px;
+  border-radius: var(--kg-radius-pill);
+  background: var(--kg-accent-soft);
+  color: var(--kg-accent-deep);
+  font-size: var(--kg-text-xs);
+  font-weight: 600;
+  letter-spacing: var(--kg-tracking-caps);
+  text-transform: uppercase;
+}
+
+/* ---------- What it will do ---------- */
+
+.ai-cards {
+  max-width: var(--kg-container);
+  margin: 0 auto;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  padding: 40px var(--kg-gutter) 0;
+}
+
+.ai-card {
+  padding: 28px 24px;
+  border: 1px solid var(--kg-border);
+  border-radius: var(--kg-radius-lg);
+  background: var(--kg-card);
+  text-align: center;
+}
+
+.ai-card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--kg-sand);
+  color: var(--kg-accent-deep);
+}
+
+.ai-card-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.ai-card-title {
+  margin: 14px 0 0;
+  font-size: var(--kg-text-lg);
+  font-weight: 600;
+  color: var(--kg-ink);
+}
+
+.ai-card-text {
+  margin: 8px 0 0;
+  font-size: var(--kg-text-sm);
+  line-height: var(--kg-leading-body);
+  color: var(--kg-ink-soft);
+}
+
+/* ---------- Nudge ---------- */
+
+.ai-cta {
+  max-width: var(--kg-container);
+  margin: 40px auto 0;
+  box-sizing: border-box;
+  padding: 36px var(--kg-gutter);
+  text-align: center;
+}
+
+.ai-cta-text {
+  max-width: 46ch;
+  margin: 0 auto;
+  font-size: var(--kg-text-md);
+  line-height: var(--kg-leading-body);
+  color: var(--kg-ink-soft);
+}
+
+.ai-cta-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.ai-cta-primary,
+.ai-cta-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 46px;
+  padding: 0 22px;
+  border-radius: var(--kg-radius-pill);
+  font-size: var(--kg-text-sm);
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color var(--kg-duration) var(--kg-ease);
+}
+
+.ai-cta-primary {
+  background: var(--kg-primary);
+  color: var(--kg-on-primary);
+}
+
+.ai-cta-primary:hover {
+  background: var(--kg-primary-hover);
+}
+
+.ai-cta-secondary {
+  border: 1px solid var(--kg-border-strong);
+  background: var(--kg-card);
+  color: var(--kg-ink);
+}
+
+.ai-cta-secondary:hover {
+  background: var(--kg-sand);
+}
+
+/* ---------- Responsive (the site's 1024 / 860 / 480 set) ---------- */
+
+@media (max-width: 1024px) {
+  .ai-title {
+    font-size: var(--kg-text-3xl);
+  }
+}
+
+@media (max-width: 860px) {
+  .ai-hero {
+    padding: 40px var(--kg-gutter-mobile) 0;
+  }
+
+  .ai-cards {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 28px var(--kg-gutter-mobile) 0;
+  }
+
+  .ai-cta {
+    padding: 28px var(--kg-gutter-mobile);
+  }
+}
+
+@media (max-width: 480px) {
+  .ai-cta-actions {
+    flex-direction: column;
+  }
+}

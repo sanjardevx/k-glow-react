@@ -119,11 +119,6 @@
   transform: scaleX(1);
 }
 
-/* Placeholder labels for pages that do not exist yet. */
-.nav .links a.placeholder {
-  cursor: default;
-}
-
 .nav .right {
   display: flex;
   align-items: center;

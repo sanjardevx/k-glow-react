@@ -1,12 +1,8 @@
 import { Link } from "react-router-dom";
-import { TELEGRAM_URL } from "../../../lib/config";
+import { TELEGRAM_CHANNEL_URL, TELEGRAM_URL } from "../../../lib/config";
 import { BoltIcon, BoxIcon, ShieldIcon, TruckIcon } from "../icons";
 import "../../../css/footer.css";
 
-/**
- * "AI Beauty" mirrors the navbar placeholder: an approved label for a page
- * that is not built yet, rendered inert until it exists.
- */
 export function Footer() {
   return (
     <footer className="footer">
@@ -47,29 +43,32 @@ export function Footer() {
             <Link to="/">Home</Link>
             <Link to="/products">Shop</Link>
             <Link to="/live-tutorials">Live Tutorials</Link>
-            <a
-              href="#"
-              className="placeholder"
-              aria-disabled="true"
-              title="Coming soon"
-              onClick={(e) => e.preventDefault()}
-            >
-              AI Beauty
-            </a>
+            <Link to="/ai-beauty">AI Beauty</Link>
             <Link to="/help">Help</Link>
           </div>
           <div className="footer-col footer-col-findus">
             <h5>Find us</h5>
-            <p>Tashkent, Uzbekistan</p>
-            <p>+998 94 290 03 26</p>
-            <p>hello@kglowsecrets.uz</p>
+            <p>Namangan, Uzbekistan</p>
+            {/* Telegram rather than a phone number and a mailbox: it is where
+                the shop actually replies, and it is one tap on the phone most
+                of this traffic arrives on. Carries the same accent colour as
+                the channel link below — both leave the site, and neither is
+                ordinary navigation. */}
+            <a
+              className="footer-accent"
+              href={TELEGRAM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Message us on Telegram
+            </a>
           </div>
           <div className="footer-col footer-col-loop">
             <h5>Stay in the loop</h5>
             <p>New arrivals, restocks, discount events.</p>
             <a
               className="footer-cta"
-              href={TELEGRAM_URL}
+              href={TELEGRAM_CHANNEL_URL}
               target="_blank"
               rel="noopener noreferrer"
             >

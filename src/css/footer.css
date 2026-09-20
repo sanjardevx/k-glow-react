@@ -103,19 +103,21 @@
   color: var(--kg-on-dark);
 }
 
-.footer-col a.placeholder {
-  cursor: default;
-}
-
 .footer-col a:focus-visible {
   outline-color: var(--kg-on-dark);
 }
 
-/* Warm call-to-action link in the last column. */
+/* Warm accent on the links that leave the site for Telegram — the contact in
+   "Find us" and the channel call-to-action. Shared so the two can't drift
+   apart; the call-to-action adds weight and spacing on top of it. */
+.footer-col a.footer-accent,
+.footer-col a.footer-cta {
+  color: var(--kg-accent);
+}
+
 .footer-col a.footer-cta {
   margin-top: 6px;
   font-weight: 600;
-  color: var(--kg-accent);
 }
 
 .footer-col a.footer-cta:hover {
