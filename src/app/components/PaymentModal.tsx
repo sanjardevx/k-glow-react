@@ -21,10 +21,11 @@ interface PaymentModalProps {
   open: boolean;
   onClose: () => void;
   items: CartItem[];
-  subtotal: number;
+  /** The bag after any sale — what the shopper types into their bank. */
+  amountDue: number;
 }
 
-export function PaymentModal({ open, onClose, items, subtotal }: PaymentModalProps) {
+export function PaymentModal({ open, onClose, items, amountDue }: PaymentModalProps) {
   const { onDeleteAll } = useBasket();
   const { authMember } = useGlobals();
   const history = useHistory();
@@ -36,25 +37,30 @@ export function PaymentModal({ open, onClose, items, subtotal }: PaymentModalPro
   );
   const [submitting, setSubmitting] = useState(false);
 
-  // Snapshot the order at open time so the Thanks step still shows correct
-  // totals after the cart is cleared on submit.
-  const snapshotRef = useRef({ items, subtotal, orderNo: "" });
+  // Fixed when the modal opens, so the reference the shopper is reading does
+  // not change under them while they pay.
+  const orderNoRef = useRef("");
   useEffect(() => {
-    if (open) {
-      snapshotRef.current = {
-        items,
-        subtotal,
-        orderNo: `KG-${Math.floor(10000 + Math.random() * 89999)}`,
-      };
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (open)
+      orderNoRef.current = `KG-${Math.floor(10000 + Math.random() * 89999)}`;
   }, [open]);
+
+  /**
+   * Copied at submit, not at open. A copy is needed only because submitting
+   * empties the bag while the Thanks step still has to show what was ordered.
+   * Freezing at open showed — and would have collected — the undiscounted
+   * total whenever the modal opened before the sale had finished loading.
+   */
+  const submittedRef = useRef<{ items: CartItem[]; amountDue: number } | null>(
+    null,
+  );
 
   // Freeze the page behind the modal so a scroll gesture that runs past the
   // modal's own scroll edge doesn't drag the cart page underneath.
   useBodyScrollLock(open);
 
   function handleClose() {
+    submittedRef.current = null;
     setStep("bank");
     setScreenshot(null);
     setTransferNote("");
@@ -78,6 +84,10 @@ export function PaymentModal({ open, onClose, items, subtotal }: PaymentModalPro
         deliveryAddress,
       });
 
+      // Copied before the bag is emptied: from here on the Thanks step is the
+      // only thing that still knows what was ordered.
+      submittedRef.current = { items, amountDue };
+
       // Only once the order is really on the server — otherwise the bag would
       // be thrown away for an order that never got created.
       onDeleteAll();
@@ -99,7 +109,12 @@ export function PaymentModal({ open, onClose, items, subtotal }: PaymentModalPro
   // just the last line of defense (e.g. a session expiring mid-checkout).
   if (!open || !authMember) return null;
 
-  const snap = snapshotRef.current;
+  // Live until the order is placed, frozen afterwards.
+  const snap = {
+    items: submittedRef.current?.items ?? items,
+    amountDue: submittedRef.current?.amountDue ?? amountDue,
+    orderNo: orderNoRef.current,
+  };
   const itemCount = snap.items.reduce((sum, i) => sum + i.quantity, 0);
   const currentStepNum = step === "bank" ? 2 : step === "confirm" ? 3 : 4;
 
@@ -126,7 +141,7 @@ export function PaymentModal({ open, onClose, items, subtotal }: PaymentModalPro
               <BankDetailsCard>
                 <Box className="bank-amount">
                   <span className="lbl">Amount to transfer</span>
-                  <span className="amt">{formatPrice(snap.subtotal)}</span>
+                  <span className="amt">{formatPrice(snap.amountDue)}</span>
                 </Box>
               </BankDetailsCard>
 
@@ -250,7 +265,7 @@ export function PaymentModal({ open, onClose, items, subtotal }: PaymentModalPro
             </Box>
             <Box className="row total">
               <span>Total</span>
-              <span>{formatPrice(snap.subtotal)}</span>
+              <span>{formatPrice(snap.amountDue)}</span>
             </Box>
           </Box>
           <Box className="next-steps">

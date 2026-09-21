@@ -15,12 +15,20 @@ export interface OrderItem {
 
 export interface Order {
   _id: string;
+  /**
+   * Optional because orders placed before the sale feature existed carry none
+   * of these — every reader has to treat a missing discount as no discount.
+   */
+  orderSubtotal?: number;
+  orderDiscountPercent?: number;
+  orderDiscount?: number;
   orderTotal: number;
   orderDelivery: number;
   orderStatus: OrderStatus;
   deliveryAddress?: string;
   paymentProof?: string[];
   transferNote?: string;
+  rejectReason?: string;
   memberId: string;
   createdAt: string;
   updatedAt: string;

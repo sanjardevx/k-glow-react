@@ -7,13 +7,18 @@ import { isFreeDelivery } from "./cartSelectors";
 import { useBasket } from "./useBasket";
 import { useGlobals } from "../../context/useGlobals";
 import { formatPrice } from "../productsPage/productsData";
+import { calculateOrderTotals } from "../../../lib/orderTotals";
 import { serverApi } from "../../../lib/config";
 import "../../../css/cart.css";
 
 export function CartPage() {
-  const { authMember } = useGlobals();
+  const { authMember, activeDiscount } = useGlobals();
   const { items, count, subtotal, onIncrease, onDecrease, onDelete } =
     useBasket();
+  const totals = calculateOrderTotals(subtotal, activeDiscount.percent);
+  // Measured on the subtotal, not on the discounted total: otherwise a
+  // 520,000 bag slips under the threshold once the sale is applied and the
+  // discount quietly costs the shopper a delivery fee.
   const freeDelivery = isFreeDelivery(subtotal);
   const [paymentOpen, setPaymentOpen] = useState(false);
 
@@ -82,6 +87,12 @@ export function CartPage() {
                 <span>Subtotal ({count} items)</span>
                 <span>{formatPrice(subtotal)}</span>
               </Box>
+              {totals.discount > 0 ? (
+                <Box className="summary-row discount">
+                  <span>Discount ({totals.discountPercent}%)</span>
+                  <span>&minus;{formatPrice(totals.discount)}</span>
+                </Box>
+              ) : null}
               <Box className="summary-row">
                 <span>Delivery</span>
                 <span>
@@ -90,7 +101,7 @@ export function CartPage() {
               </Box>
               <Box className="summary-row total">
                 <span>Total to pay now</span>
-                <span>{formatPrice(subtotal)}</span>
+                <span>{formatPrice(totals.total)}</span>
               </Box>
               <button
                 type="button"
@@ -114,7 +125,7 @@ export function CartPage() {
         open={paymentOpen}
         onClose={() => setPaymentOpen(false)}
         items={items}
-        subtotal={subtotal}
+        amountDue={totals.total}
       />
     </div>
   );

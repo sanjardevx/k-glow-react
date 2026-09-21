@@ -55,6 +55,12 @@ export function WaitingOrders() {
                     : "Free"}
                 </span>
               </Box>
+              {order.orderDiscount ? (
+                <Box className="order-total-row discount">
+                  <span>Discount ({order.orderDiscountPercent}%)</span>
+                  <span>&minus;{formatPrice(order.orderDiscount)}</span>
+                </Box>
+              ) : null}
               <Box className="order-total-row total">
                 <span>Total</span>
                 <span>{formatPrice(order.orderTotal)}</span>

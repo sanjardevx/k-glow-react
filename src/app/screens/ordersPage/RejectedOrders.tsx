@@ -54,15 +54,28 @@ export function RejectedOrders() {
                     : "Free"}
                 </span>
               </Box>
+              {order.orderDiscount ? (
+                <Box className="order-total-row discount">
+                  <span>Discount ({order.orderDiscountPercent}%)</span>
+                  <span>&minus;{formatPrice(order.orderDiscount)}</span>
+                </Box>
+              ) : null}
               <Box className="order-total-row total">
                 <span>Total</span>
                 <span>{formatPrice(order.orderTotal)}</span>
               </Box>
-              {/* The schema carries no reject reason, so the card points the
-                  shopper at the shop rather than inventing an explanation. */}
+              {/* Shown straight on the card rather than behind a tap: being
+                  told why is the whole point of opening this tab. Orders
+                  rejected before the admin could leave a note fall back to
+                  the old wording instead of an empty space. */}
               <p className="order-note reject-reason">
-                This payment couldn't be confirmed — message us and we'll sort
-                it out.
+                {order.rejectReason ? (
+                  <>
+                    <strong>Reason:</strong> {order.rejectReason}
+                  </>
+                ) : (
+                  "This payment couldn't be confirmed — message us and we'll sort it out."
+                )}
               </p>
             </Box>
           ))

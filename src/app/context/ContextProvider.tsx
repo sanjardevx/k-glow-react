@@ -1,6 +1,8 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { GlobalContext } from "./useGlobals";
 import { getAccessToken } from "../../lib/authToken";
+import DiscountService from "../services/DiscountService";
+import { NO_DISCOUNT, type ActiveDiscount } from "../../lib/types/discount";
 import type { Member } from "../../lib/types/member";
 
 /**
@@ -34,8 +36,24 @@ export function ContextProvider({ children }: { children: ReactNode }) {
     }
   });
 
+  // Starts at "no sale": claiming a discount the server has not confirmed is
+  // the wrong way round, and nothing has to render an unknown state.
+  const [activeDiscount, setActiveDiscount] =
+    useState<ActiveDiscount>(NO_DISCOUNT);
+
+  useEffect(() => {
+    let cancelled = false;
+    new DiscountService().getActiveDiscount().then((discount) => {
+      if (!cancelled) setActiveDiscount(discount);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
-    <GlobalContext.Provider value={{ authMember, setAuthMember }}>
+    <GlobalContext.Provider value={{ authMember, setAuthMember, activeDiscount }}>
       {children}
     </GlobalContext.Provider>
   );

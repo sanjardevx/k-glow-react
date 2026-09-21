@@ -145,6 +145,13 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* Money coming back, so it reads as a gain rather than another charge —
+   same treatment as the basket's discount line. */
+.order-total-row.discount {
+  color: var(--kg-accent-deep);
+  font-weight: 600;
+}
+
 /* The two total rows sit together: only the first one draws the rule. */
 .order-total-row + .order-total-row {
   margin-top: 6px;

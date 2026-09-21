@@ -475,7 +475,7 @@
   overflow: hidden;
   max-width: var(--kg-container);
   margin: 0 auto;
-  padding: 56px 40px;
+  padding: 72px 48px;
   border-radius: var(--kg-radius-lg);
   background: var(--kg-ink);
   color: var(--kg-on-dark);
@@ -527,50 +527,75 @@
   text-transform: uppercase;
 }
 
+/* Hero-sized on purpose: this is the only place on the page asking for a
+   decision rather than showing product, and at 40px it read as another
+   section heading instead of an offer. Steps down to 32px under 860px, where
+   52px would eat four lines of a phone screen. */
 .cta-banner h3 {
   position: relative;
-  margin: 0 0 12px;
+  margin: 0 0 18px;
   font-family: var(--kg-font-display);
-  font-size: var(--kg-text-4xl);
+  font-size: var(--kg-text-hero);
   font-weight: 500;
   line-height: 1.15;
   letter-spacing: var(--kg-tracking-display);
   color: var(--kg-on-dark);
 }
 
+/* Wider and larger than body copy elsewhere — a 44ch column of 16px text sat
+   as a narrow ribbon in the middle of a 1200px banner and read as fine print.
+   52ch keeps the line length comfortable at this size. */
 .cta-banner p {
   position: relative;
-  max-width: 44ch;
-  margin: 0 auto 24px;
-  font-size: var(--kg-text-lg);
-  line-height: 1.55;
+  max-width: 52ch;
+  margin: 0 auto 32px;
+  font-size: var(--kg-text-xl);
+  line-height: 1.5;
   color: var(--kg-on-dark-soft);
 }
 
 /* Sizing only — the sage fill comes from components.css. */
+/* The offer and the nudge are two beats of one thought, so the first sits
+   close to the second rather than a full paragraph apart. */
+.cta-banner p.cta-lead {
+  margin-bottom: 14px;
+}
+
 .cta-signup-btn {
   position: relative;
-  padding: 14px 32px;
-  font-size: var(--kg-text-md);
+  padding: 16px 40px;
+  font-size: var(--kg-text-lg);
   white-space: nowrap;
 }
 
+/* Below a hairline and held to a narrower column than the banner: these are
+   the reasons to trust the offer, not part of it, and they were running into
+   the fine print underneath with nothing to separate them. */
 .cta-perks {
   position: relative;
   display: flex;
   justify-content: center;
-  gap: 26px;
+  gap: 28px;
   flex-wrap: wrap;
-  margin-top: 26px;
+  max-width: 680px;
+  margin: 44px auto 0;
+  padding-top: 28px;
+  border-top: 1px solid var(--kg-on-dark-line);
   font-size: var(--kg-text-sm);
   font-weight: 500;
   color: var(--kg-on-dark-soft);
 }
 
-.cta-fineprint {
+/* Qualified with .cta-banner so it outranks the `.cta-banner p` rule above,
+   which is the more specific selector and had been quietly overriding the
+   fine print's size, colour and margins — it was rendering at full body size
+   in body colour, which is why it never actually looked like fine print. */
+.cta-banner p.cta-fineprint {
   position: relative;
-  margin: 16px 0 0;
+  max-width: 58ch;
+  margin: 24px auto 0;
   font-size: var(--kg-text-xs);
+  line-height: 1.5;
   color: var(--kg-on-dark-faint);
 }
 

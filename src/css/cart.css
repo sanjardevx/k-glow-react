@@ -189,6 +189,13 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* The one line on the card that is money coming back, so it reads as a gain
+   rather than as another charge. */
+.summary-row.discount {
+  color: var(--kg-accent-deep);
+  font-weight: 600;
+}
+
 .summary-row.total {
   margin-top: 4px;
   padding-top: 16px;

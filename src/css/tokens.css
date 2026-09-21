@@ -68,7 +68,7 @@
   --kg-text-2xl: 24px;
   --kg-text-3xl: 32px;
   --kg-text-4xl: 40px;
-  --kg-text-hero: 52px;        /* homepage hero headline only                 */
+  --kg-text-hero: 52px;        /* homepage hero + campaign banner headline    */
   --kg-bg-veil: rgba(250, 248, 244, 0.78);  /* cream wash over hero photo     */
 
   --kg-leading-tight: 1.15;
