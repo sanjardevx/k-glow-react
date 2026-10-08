@@ -13,8 +13,12 @@ export const store = configureStore({
     productsPage: productsPageReducer,
     ordersPage: ordersPageReducer,
   },
+  // Dev only: in production it printed every action and the whole state —
+  // basket, orders, the signed-in member — to any visitor's console.
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(reduxLogger),
+    import.meta.env.DEV
+      ? getDefaultMiddleware().concat(reduxLogger)
+      : getDefaultMiddleware(),
 });
 
 /**
