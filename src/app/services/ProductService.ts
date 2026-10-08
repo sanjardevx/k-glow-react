@@ -11,11 +11,17 @@ class ProductService {
 
   public async getProducts(input: ProductInquiry): Promise<Product[]> {
     try {
-      let url = `${this.path}/product/all?order=${input.order}&page=${input.page}&limit=${input.limit}`;
-      if (input.productCategory) url += `&productCategory=${input.productCategory}`;
-      if (input.search) url += `&search=${input.search}`;
-
-      const result = await axios.get(url);
+      // As params, not pasted into the URL: a search for "a&b" or "#1" used to
+      // cut the query short. axios encodes each value and drops unset ones.
+      const result = await axios.get(`${this.path}/product/all`, {
+        params: {
+          order: input.order,
+          page: input.page,
+          limit: input.limit,
+          productCategory: input.productCategory || undefined,
+          search: input.search || undefined,
+        },
+      });
       return result.data;
     } catch (err) {
       console.log("Error, getProducts:", err);
