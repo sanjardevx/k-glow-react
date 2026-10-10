@@ -1,10 +1,16 @@
 import { configureStore } from "@reduxjs/toolkit";
 import type { ThunkAction, Action } from "@reduxjs/toolkit";
-import { logger as reduxLogger } from "redux-logger";
 import cartReducer, { CART_STORAGE_KEY } from "./screens/cartPage/cartSlice";
 import homePageReducer from "./screens/homePage/slice";
 import productsPageReducer from "./screens/productsPage/slice";
 import ordersPageReducer from "./screens/ordersPage/slice";
+
+// Dev only: in production it printed every action and the whole state —
+// basket, orders, the signed-in member — to any visitor's console. Imported
+// only in development, so production doesn't download it at all.
+const devMiddleware = import.meta.env.DEV
+  ? [(await import("redux-logger")).logger]
+  : [];
 
 export const store = configureStore({
   reducer: {
@@ -13,12 +19,8 @@ export const store = configureStore({
     productsPage: productsPageReducer,
     ordersPage: ordersPageReducer,
   },
-  // Dev only: in production it printed every action and the whole state —
-  // basket, orders, the signed-in member — to any visitor's console.
   middleware: (getDefaultMiddleware) =>
-    import.meta.env.DEV
-      ? getDefaultMiddleware().concat(reduxLogger)
-      : getDefaultMiddleware(),
+    getDefaultMiddleware().concat(devMiddleware),
 });
 
 /**
