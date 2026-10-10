@@ -1,12 +1,13 @@
 import { Box, Stack } from "@mui/material";
 import TabPanel from "@mui/lab/TabPanel";
+import { ListSkeleton } from "../../components/Loaders";
 import { formatPrice } from "../productsPage/productsData";
 import { useAppSelector } from "../../hooks";
 import { retrieveRejectedOrders } from "./selector";
 import { findOrderProduct } from "./orderHelpers";
 import { serverApi } from "../../../lib/config";
 
-export function RejectedOrders() {
+export function RejectedOrders({ loading }: { loading: boolean }) {
   const orders = useAppSelector(retrieveRejectedOrders);
 
   return (
@@ -79,6 +80,8 @@ export function RejectedOrders() {
               </p>
             </Box>
           ))
+        ) : loading ? (
+          <ListSkeleton rows={3} />
         ) : (
           <Box className="orders-empty">No rejected orders.</Box>
         )}

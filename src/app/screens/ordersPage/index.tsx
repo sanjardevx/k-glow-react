@@ -37,6 +37,18 @@ export function OrdersPage() {
   /** Slice: Data => Store **/
   const { setWaitingOrders, setConfirmedOrders, setRejectedOrders } =
     actionDispatch(useAppDispatch());
+  // Each tab shows placeholders until its own request settles, instead of
+  // "no orders" before the orders have had a chance to arrive.
+  const [loading, setLoading] = useState({
+    waiting: true,
+    confirmed: true,
+    rejected: true,
+  });
+  const settled = (key: keyof typeof loading) => () =>
+    setLoading((prev) => ({ ...prev, [key]: false }));
+  // A guest never sends the requests, so there is nothing to wait for.
+  const isLoading = (key: keyof typeof loading) =>
+    Boolean(authMember) && loading[key];
 
   useEffect(() => {
     // `/order/all` is behind auth — asking as a guest just earns a 401.
@@ -50,17 +62,20 @@ export function OrdersPage() {
     orderService
       .getMyOrders({ ...page, orderStatus: OrderStatus.WAITING_CONFIRMATION })
       .then((data) => setWaitingOrders(data))
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(settled("waiting"));
 
     orderService
       .getMyOrders({ ...page, orderStatus: OrderStatus.CONFIRMED })
       .then((data) => setConfirmedOrders(data))
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(settled("confirmed"));
 
     orderService
       .getMyOrders({ ...page, orderStatus: OrderStatus.REJECTED })
       .then((data) => setRejectedOrders(data))
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(settled("rejected"));
   }, [authMember]);
 
   function handleChange(_e: SyntheticEvent, newValue: string) {
@@ -90,9 +105,9 @@ export function OrdersPage() {
                 <Tab label="Rejected" value="3" />
               </Tabs>
             </Box>
-            <WaitingOrders />
-            <ConfirmedOrders />
-            <RejectedOrders />
+            <WaitingOrders loading={isLoading("waiting")} />
+            <ConfirmedOrders loading={isLoading("confirmed")} />
+            <RejectedOrders loading={isLoading("rejected")} />
           </TabContext>
         </Stack>
 

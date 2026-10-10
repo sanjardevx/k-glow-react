@@ -1,12 +1,13 @@
 import { Box, Stack } from "@mui/material";
 import TabPanel from "@mui/lab/TabPanel";
+import { ListSkeleton } from "../../components/Loaders";
 import { formatPrice } from "../productsPage/productsData";
 import { useAppSelector } from "../../hooks";
 import { retrieveWaitingOrders } from "./selector";
 import { findOrderProduct } from "./orderHelpers";
 import { serverApi } from "../../../lib/config";
 
-export function WaitingOrders() {
+export function WaitingOrders({ loading }: { loading: boolean }) {
   const orders = useAppSelector(retrieveWaitingOrders);
 
   return (
@@ -71,6 +72,8 @@ export function WaitingOrders() {
               </p>
             </Box>
           ))
+        ) : loading ? (
+          <ListSkeleton rows={3} />
         ) : (
           <Box className="orders-empty">No orders waiting confirmation.</Box>
         )}

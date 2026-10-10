@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Hero } from "./Hero";
 import { Statistics } from "./Statistics";
 import { Bestsellers } from "./Bestsellers";
@@ -32,6 +32,15 @@ export function HomePage({ onAuthOpen }: HomePageProps) {
   const { setBestsellers, setNewArrivals, setReviews } = actionDispatch(
     useAppDispatch(),
   );
+  // Until a request settles, its section shows placeholders rather than an
+  // empty grid or a "no reviews yet" that isn't true.
+  const [loading, setLoading] = useState({
+    bestsellers: true,
+    newArrivals: true,
+    reviews: true,
+  });
+  const settled = (key: keyof typeof loading) => () =>
+    setLoading((prev) => ({ ...prev, [key]: false }));
 
   // Slice: Data => Store
   useEffect(() => {
@@ -44,28 +53,31 @@ export function HomePage({ onAuthOpen }: HomePageProps) {
     productService
       .getProducts({ page: 1, limit: 10, order: "productViews" })
       .then((data) => setBestsellers(data))
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(settled("bestsellers"));
 
     productService
       .getProducts({ page: 1, limit: 10, order: "createdAt" })
       .then((data) => setNewArrivals(data))
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(settled("newArrivals"));
 
     // 6 fetched so desktop can show 3 per row × 2 rows; mobile only shows
     // the first 4 — see .review-grid in home.css.
     reviewService
       .getReviews(6)
       .then((data) => setReviews(data))
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(settled("reviews"));
   }, []);
 
   return (
     <div className="homepage">
       <Hero />
       <Statistics />
-      <Bestsellers />
-      <NewArrivals />
-      <Reviews />
+      <Bestsellers loading={loading.bestsellers} />
+      <NewArrivals loading={loading.newArrivals} />
+      <Reviews loading={loading.reviews} />
       <Brands />
       <Events onAuthOpen={onAuthOpen} />
     </div>

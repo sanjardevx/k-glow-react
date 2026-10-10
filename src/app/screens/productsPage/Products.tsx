@@ -11,6 +11,7 @@ import ProductService from "../../services/ProductService";
 import { serverApi } from "../../../lib/config";
 import { ChevronDownIcon, SearchIcon } from "../../components/icons";
 import { onActivateKey } from "../../components/a11y";
+import { ProductCardSkeletons } from "../../components/Loaders";
 import type { AppDispatch } from "../../store";
 import type { Product, ProductInquiry } from "../../../lib/types/product";
 import {
@@ -103,13 +104,26 @@ export function Products() {
   /** Slice: Data => Store **/
   const { setProducts } = actionDispatch(dispatch);
   const { products } = useAppSelector(productsRetriever);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Only the latest search may land: typing fast can leave an older,
+    // slower reply arriving last and replacing the results the shopper wants.
+    let current = true;
+    setLoading(true);
     const productService = new ProductService();
     productService
       .getProducts(productSearch)
-      .then((data) => setProducts(data))
-      .catch((err) => console.log(err));
+      .then((data) => {
+        if (current) setProducts(data);
+      })
+      .catch((err) => console.log(err))
+      .finally(() => {
+        if (current) setLoading(false);
+      });
+    return () => {
+      current = false;
+    };
   }, [productSearch]);
 
   // Emptying the box restores the full catalog without needing a second Enter.
@@ -238,7 +252,12 @@ export function Products() {
 
       <Box className="shop-grid-wrap">
         {visibleItems.length !== 0 ? (
-          <Box className="product-grid">
+          // A new search keeps the current results up, dimmed, rather than
+          // flashing placeholders on every Enter.
+          <Box
+            className={`product-grid${loading ? " is-refreshing" : ""}`}
+            aria-busy={loading}
+          >
             {visibleItems.map((ele) => {
               const soldOut = ele.productStatus === ProductStatus.PAUSE;
               return (
@@ -299,6 +318,12 @@ export function Products() {
                 </Link>
               );
             })}
+          </Box>
+        ) : loading ? (
+          // Nothing to show yet: placeholders, not "no products" — that
+          // message would be wrong for the second it takes to load.
+          <Box className="product-grid">
+            <ProductCardSkeletons count={PAGE_SIZE} />
           </Box>
         ) : (
           <Box className="shop-empty">

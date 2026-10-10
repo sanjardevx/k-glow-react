@@ -7,8 +7,9 @@ import { useReveal } from "../../components/useReveal";
 import { onActivateKey } from "../../components/a11y";
 import { retrieveBestsellers } from "./selector";
 import { serverApi } from "../../../lib/config";
+import { ProductCardSkeletons } from "../../components/Loaders";
 
-export function Bestsellers() {
+export function Bestsellers({ loading }: { loading: boolean }) {
   const { onAdd } = useBasket();
   const bestsellers = useAppSelector(retrieveBestsellers);
   const revealRef = useReveal<HTMLElement>();
@@ -31,6 +32,9 @@ export function Bestsellers() {
           </Link>
         </Box>
         <Box className="product-grid product-grid-6">
+          {loading && bestsellers.length === 0 ? (
+            <ProductCardSkeletons count={10} />
+          ) : null}
           {bestsellers.map((ele) => {
             const soldOut = ele.productStatus === "PAUSE";
             return (

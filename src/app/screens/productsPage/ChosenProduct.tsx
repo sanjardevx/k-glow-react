@@ -18,6 +18,7 @@ import {
   TruckIcon,
 } from "../../components/icons";
 import { onActivateKey } from "../../components/a11y";
+import { ProductDetailSkeleton } from "../../components/Loaders";
 import type { AppDispatch } from "../../store";
 import type { Product } from "../../../lib/types/product";
 import type { Review } from "../../../lib/types/review";
@@ -54,29 +55,48 @@ export function ChosenProduct() {
   const { setChosenProduct, setProducts } = actionDispatch(dispatch);
   const { chosenProduct } = useAppSelector(chosenProductRetriever);
   const catalog = useAppSelector(retrieveProducts);
+  const [failedId, setFailedId] = useState<string | null>(null);
 
   useEffect(() => {
+    // Replies for a product the shopper has already left must not land: the
+    // previous product's reviews would show under this one.
+    let current = true;
     const productService = new ProductService();
     const reviewService = new ReviewService();
     setActiveImage(0);
+    setFailedId(null);
+    setProductReviews([]);
 
     productService
       .getProduct(productId)
-      .then((data) => setChosenProduct(data))
-      .catch((err) => console.log(err));
+      .then((data) => {
+        if (current) setChosenProduct(data);
+      })
+      .catch((err) => {
+        console.log(err);
+        if (current) setFailedId(productId);
+      });
 
     // The catalog backs both the "You may also like" row and the BEST badge,
     // and it has to be fetched here too — landing straight on this URL means
     // the Shop page never ran.
     productService
       .getProducts({ page: 1, limit: CATALOG_LIMIT, order: "createdAt" })
-      .then((data) => setProducts(data))
+      .then((data) => {
+        if (current) setProducts(data);
+      })
       .catch((err) => console.log(err));
 
     reviewService
       .getProductReviews(productId)
-      .then((data) => setProductReviews(data))
+      .then((data) => {
+        if (current) setProductReviews(data);
+      })
       .catch((err) => console.log(err));
+
+    return () => {
+      current = false;
+    };
   }, [productId]);
 
   const bestsellers = useMemo(() => {
@@ -98,7 +118,19 @@ export function ChosenProduct() {
     return [...sameCategory, ...otherCategory].slice(0, RELATED_COUNT);
   }, [catalog, chosenProduct]);
 
-  if (!chosenProduct) return null;
+  // The store still holds the last product opened; until this one arrives,
+  // a placeholder — not the previous product under the new URL.
+  if (chosenProduct?._id !== productId) {
+    if (failedId !== productId) return <ProductDetailSkeleton />;
+    return (
+      <div className="chosen-product-page">
+        <Box className="shop-empty">
+          This product isn't available any more.{" "}
+          <Link to="/products">Back to the shop</Link>
+        </Box>
+      </div>
+    );
+  }
 
   const product = chosenProduct;
   const soldOut = isSoldOut(product);

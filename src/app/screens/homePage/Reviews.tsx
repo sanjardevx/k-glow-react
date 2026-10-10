@@ -2,8 +2,9 @@ import { Box } from "@mui/material";
 import { useAppSelector } from "../../hooks";
 import { useReveal } from "../../components/useReveal";
 import { retrieveReviews } from "./selector";
+import { ReviewGridSkeleton } from "../../components/Loaders";
 
-export function Reviews() {
+export function Reviews({ loading }: { loading: boolean }) {
   const reviews = useAppSelector(retrieveReviews);
   const revealRef = useReveal<HTMLElement>();
 
@@ -45,6 +46,8 @@ export function Reviews() {
             );
           })}
         </Box>
+      ) : loading ? (
+        <ReviewGridSkeleton count={6} />
       ) : (
         <Box className="review-empty">No reviews yet — check back soon.</Box>
       )}

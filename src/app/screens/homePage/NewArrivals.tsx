@@ -7,8 +7,9 @@ import { useReveal } from "../../components/useReveal";
 import { onActivateKey } from "../../components/a11y";
 import { retrieveNewArrivals } from "./selector";
 import { serverApi } from "../../../lib/config";
+import { ProductCardSkeletons } from "../../components/Loaders";
 
-export function NewArrivals() {
+export function NewArrivals({ loading }: { loading: boolean }) {
   const { onAdd } = useBasket();
   const newArrivals = useAppSelector(retrieveNewArrivals);
   const revealRef = useReveal<HTMLElement>();
@@ -28,6 +29,9 @@ export function NewArrivals() {
           </Link>
         </Box>
         <Box className="product-grid product-grid-6">
+          {loading && newArrivals.length === 0 ? (
+            <ProductCardSkeletons count={10} />
+          ) : null}
           {newArrivals.map((ele) => {
             const soldOut = ele.productStatus === "PAUSE";
             return (

@@ -9,6 +9,7 @@ import { serverApi } from "../../../lib/config";
 import { TutorialPlatform } from "../../../lib/enums/tutorial.enum";
 import type { Tutorial } from "../../../lib/types/tutorial";
 import { withYouTubeApi } from "./youtubeApi";
+import { LoadingNote } from "../../components/Loaders";
 import "../../../css/tutorials.css";
 
 const TUTORIAL_LIMIT = 24;
@@ -76,7 +77,9 @@ export function TutorialsPage() {
       ) : null}
 
       {loading ? (
-        <Box className="tutorials-note">Loading tutorials…</Box>
+        <Box className="tutorials-note">
+          <LoadingNote>Loading tutorials…</LoadingNote>
+        </Box>
       ) : failed ? (
         <Box className="tutorials-note">
           We couldn't load the tutorials just now — please try again in a

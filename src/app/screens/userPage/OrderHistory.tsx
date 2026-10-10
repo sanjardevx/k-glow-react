@@ -13,6 +13,7 @@ import { useGlobals } from "../../context/useGlobals";
 import { OrderStatus } from "../../../lib/enums/order.enum";
 import { serverApi } from "../../../lib/config";
 import type { Order } from "../../../lib/types/order";
+import { ListSkeleton } from "../../components/Loaders";
 
 const RECENT_COUNT = 5;
 const FETCH_LIMIT = 20;
@@ -42,6 +43,8 @@ export function OrderHistory() {
     if (panel) setOpenHeight(panel.scrollHeight);
   }, [openId, orders]);
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     if (!authMember) return;
 
@@ -63,7 +66,8 @@ export function OrderHistory() {
         );
         setOrders(all);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(() => setLoading(false));
   }, [authMember]);
 
   const recent = orders.slice(0, RECENT_COUNT);
@@ -77,7 +81,9 @@ export function OrderHistory() {
       <h4>Order history</h4>
       <p className="sub">Tap an order to see what's inside.</p>
 
-      {recent.length === 0 ? (
+      {recent.length === 0 && loading && authMember ? (
+        <ListSkeleton rows={3} />
+      ) : recent.length === 0 ? (
         <p className="order-history-empty">
           You haven't placed an order yet.
         </p>
