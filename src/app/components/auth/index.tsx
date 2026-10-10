@@ -5,6 +5,7 @@ import { Messages } from "../../../lib/config";
 import { useGlobals } from "../../context/useGlobals";
 import { useBodyScrollLock } from "../useBodyScrollLock";
 import { onActivateKey } from "../a11y";
+import { BusyLabel } from "../Loaders";
 import {
   sweetErrorHandling,
   sweetTopSmallSuccessAlert,
@@ -220,7 +221,13 @@ export function AuthenticationModal(props: AuthenticationModalProps) {
           {!isSignup ? <span className="forgot-link">Forgot password?</span> : null}
 
           <button type="submit" className="modal-btn" disabled={submitting}>
-            {submitting ? "Please wait…" : isSignup ? "Sign up" : "Log in"}
+            {submitting ? (
+              <BusyLabel>Please wait…</BusyLabel>
+            ) : isSignup ? (
+              "Sign up"
+            ) : (
+              "Log in"
+            )}
           </button>
         </form>
 

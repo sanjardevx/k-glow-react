@@ -10,6 +10,7 @@ import { CheckIcon, UploadIcon } from "./icons";
 import { useBodyScrollLock } from "./useBodyScrollLock";
 import { onActivateKey } from "./a11y";
 import { BankDetailsCard } from "./BankDetailsCard";
+import { BusyLabel } from "./Loaders";
 import OrderService from "../services/OrderService";
 import { sweetErrorHandling } from "../../lib/sweetAlert";
 import "../../css/orders.css";
@@ -226,7 +227,11 @@ export function PaymentModal({ open, onClose, items, amountDue }: PaymentModalPr
                 disabled={!screenshot || submitting}
                 onClick={handleSubmitProof}
               >
-                Submit for confirmation
+                {submitting ? (
+                  <BusyLabel>Sending your order…</BusyLabel>
+                ) : (
+                  "Submit for confirmation"
+                )}
               </button>
               <button
                 type="button"

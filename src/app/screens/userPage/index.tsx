@@ -11,6 +11,7 @@ import { PencilIcon, PhoneIcon, PinIcon } from "../../components/icons";
 import type { MemberUpdateInput } from "../../../lib/types/member";
 import { MemberType } from "../../../lib/enums/member.enum";
 import { OrderHistory } from "./OrderHistory";
+import { BusyLabel } from "../../components/Loaders";
 import "../../../css/myPage.css";
 import "../../../css/orders.css";
 
@@ -69,7 +70,12 @@ export function UserPage() {
     setIsEditing((prev) => !prev);
   }
 
+  // Uploading a new photo can take a few seconds on mobile; without this the
+  // button looked dead, and a second tap sent the same save twice.
+  const [saving, setSaving] = useState(false);
+
   async function handleSave() {
+    if (saving) return;
     try {
       if (!authMember) throw new Error(Messages.error2);
       if (!nick || !phone) throw new Error(Messages.error3);
@@ -82,6 +88,7 @@ export function UserPage() {
         memberImage: imageFile ?? undefined,
       };
 
+      setSaving(true);
       const memberService = new MemberService();
       const result = await memberService.updateMember(input);
       setAuthMember(result);
@@ -93,6 +100,8 @@ export function UserPage() {
     } catch (err) {
       console.log("Error, handleSave:", err);
       sweetErrorHandling(err).then();
+    } finally {
+      setSaving(false);
     }
   }
 
@@ -184,8 +193,9 @@ export function UserPage() {
                     type="button"
                     className="profile-save"
                     onClick={handleSave}
+                    disabled={saving}
                   >
-                    Save changes
+                    {saving ? <BusyLabel>Saving…</BusyLabel> : "Save changes"}
                   </button>
                 </Box>
               </Box>
