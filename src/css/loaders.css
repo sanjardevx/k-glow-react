@@ -1,0 +1,156 @@
+/**
+ * Loading states: the page loader, the spinner that sits inside buttons, and
+ * skeleton stand-ins shaped like the content they are waiting for. Colours
+ * come from tokens.css only.
+ */
+
+.kg-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Drawn in the text colour, so it matches whatever button it sits in. */
+.kg-spinner {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  vertical-align: -0.15em;
+  animation: kg-spin 0.7s linear infinite;
+}
+
+.kg-busy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+@keyframes kg-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Holds the page's height while its code downloads, so the footer doesn't
+   jump up into the gap. Fades in only after a moment: on a fast connection
+   the page arrives first and nothing flashes at all. */
+.kg-page-loader {
+  display: grid;
+  place-items: center;
+  min-height: 60vh;
+  color: var(--kg-primary);
+  font-size: var(--kg-text-3xl);
+  opacity: 0;
+  animation: kg-fade-in var(--kg-duration) var(--kg-ease) 0.2s forwards;
+}
+
+@keyframes kg-fade-in {
+  to {
+    opacity: 1;
+  }
+}
+
+/* The quiet panel tutorials already used for "Loading…", with a spinner. */
+.kg-loading-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--kg-ink-soft);
+}
+
+/* ---- Skeletons ---------------------------------------------------------- */
+.kg-skel {
+  background: linear-gradient(
+    90deg,
+    var(--kg-sand) 0%,
+    var(--kg-sand-2) 50%,
+    var(--kg-sand) 100%
+  );
+  background-size: 200% 100%;
+  border-radius: var(--kg-radius-sm);
+  animation: kg-shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes kg-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+
+.kg-skel-fill {
+  position: absolute;
+  inset: 0;
+  border-radius: 0;
+}
+
+.kg-skel-line {
+  height: 12px;
+  margin-bottom: 10px;
+}
+
+.kg-skel-line.is-title {
+  height: 28px;
+  margin-bottom: 16px;
+}
+
+.kg-skel-w30 { width: 30%; }
+.kg-skel-w45 { width: 45%; }
+.kg-skel-w60 { width: 60%; }
+.kg-skel-w85 { width: 85%; }
+
+.kg-skel-row {
+  height: 76px;
+  margin-bottom: 12px;
+  border-radius: var(--kg-radius-md);
+}
+
+/* A product card's own frame and photo box, so the grid keeps its shape
+   when the real cards replace these. Not a link, so no hover lift. */
+.kg-skeleton-card {
+  pointer-events: none;
+}
+
+.kg-skeleton-card .p-body {
+  padding-top: 12px;
+}
+
+/* Results being replaced by a new search: still readable, clearly pending. */
+.is-refreshing {
+  opacity: 0.55;
+  transition: opacity var(--kg-duration) var(--kg-ease);
+}
+
+.kg-skeleton-review {
+  min-height: 160px;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kg-spinner {
+    animation-duration: 1.6s;
+  }
+
+  .kg-skel {
+    animation: none;
+  }
+
+  /* Keeps the delay, drops the fade. */
+  .kg-page-loader {
+    animation-duration: 0s;
+  }
+}

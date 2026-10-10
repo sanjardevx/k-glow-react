@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Route, Switch, useHistory, useLocation } from "react-router-dom";
 import { useGlobals } from "./context/useGlobals";
 import { useAppDispatch } from "./hooks";
@@ -6,13 +6,7 @@ import { clearCart } from "./screens/cartPage/cartSlice";
 import MemberService from "./services/MemberService";
 import { clearAccessToken } from "../lib/authToken";
 import { HomePage } from "./screens/homePage";
-import { ProductsPage } from "./screens/productsPage";
-import { CartPage } from "./screens/cartPage";
-import { OrdersPage } from "./screens/ordersPage";
-import { UserPage } from "./screens/userPage";
-import { HelpPage } from "./screens/helpPage";
-import { TutorialsPage } from "./screens/tutorialsPage";
-import { AiBeautyPage } from "./screens/aiBeautyPage";
+import { PageLoader } from "./components/Loaders";
 import { Footer } from "./components/footer";
 import { HomeNavbar } from "./components/headers/HomeNavbar";
 import { OtherNavbar } from "./components/headers/OtherNavbar";
@@ -20,6 +14,33 @@ import { AuthenticationModal, type AuthMode } from "./components/auth";
 import { TelegramButton } from "./components/TelegramButton";
 import { AnnouncementBar } from "./components/AnnouncementBar";
 import "../css/app.css";
+
+/**
+ * Every page but Home downloads only when first opened, so a visitor landing
+ * on Home doesn't pay for the cart, the account pages and the rest up front.
+ * Home stays in the main bundle: it is where almost everyone arrives.
+ */
+const ProductsPage = lazy(() =>
+  import("./screens/productsPage").then((m) => ({ default: m.ProductsPage })),
+);
+const CartPage = lazy(() =>
+  import("./screens/cartPage").then((m) => ({ default: m.CartPage })),
+);
+const OrdersPage = lazy(() =>
+  import("./screens/ordersPage").then((m) => ({ default: m.OrdersPage })),
+);
+const UserPage = lazy(() =>
+  import("./screens/userPage").then((m) => ({ default: m.UserPage })),
+);
+const HelpPage = lazy(() =>
+  import("./screens/helpPage").then((m) => ({ default: m.HelpPage })),
+);
+const TutorialsPage = lazy(() =>
+  import("./screens/tutorialsPage").then((m) => ({ default: m.TutorialsPage })),
+);
+const AiBeautyPage = lazy(() =>
+  import("./screens/aiBeautyPage").then((m) => ({ default: m.AiBeautyPage })),
+);
 
 function App() {
   const location = useLocation();
@@ -97,20 +118,22 @@ function App() {
         <OtherNavbar onAuthOpen={handleAuthOpen} />
       )}
       <main className="app-main">
-        <Switch>
-          <Route path="/products" component={ProductsPage} />
-          <Route path="/cart" component={CartPage} />
-          <Route path="/orders" component={OrdersPage} />
-          <Route path="/member-page" component={UserPage} />
-          <Route path="/live-tutorials" component={TutorialsPage} />
-          <Route path="/ai-beauty" component={AiBeautyPage} />
-          <Route path="/help" component={HelpPage} />
-          <Route
-            exact
-            path="/"
-            render={() => <HomePage onAuthOpen={handleAuthOpen} />}
-          />
-        </Switch>
+        <Suspense fallback={<PageLoader />}>
+          <Switch>
+            <Route path="/products" component={ProductsPage} />
+            <Route path="/cart" component={CartPage} />
+            <Route path="/orders" component={OrdersPage} />
+            <Route path="/member-page" component={UserPage} />
+            <Route path="/live-tutorials" component={TutorialsPage} />
+            <Route path="/ai-beauty" component={AiBeautyPage} />
+            <Route path="/help" component={HelpPage} />
+            <Route
+              exact
+              path="/"
+              render={() => <HomePage onAuthOpen={handleAuthOpen} />}
+            />
+          </Switch>
+        </Suspense>
       </main>
       <Footer />
       <TelegramButton />
