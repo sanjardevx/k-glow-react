@@ -55,11 +55,8 @@
   animation: kg-fade-in var(--kg-duration) var(--kg-ease) 0.2s forwards;
 }
 
-@keyframes kg-fade-in {
-  to {
-    opacity: 1;
-  }
-}
+/* kg-fade-in itself lives in components.css — redefining it here would land
+   later in the cascade and replace the global one for every element using it. */
 
 /* The quiet panel tutorials already used for "Loading…", with a spinner. */
 .kg-loading-note {
@@ -106,6 +103,18 @@
 .kg-skel-line.is-title {
   height: 28px;
   margin-bottom: 16px;
+}
+
+/* The second of a pair standing in for one wrapped line of text. */
+.kg-skel-line.is-tight {
+  margin-bottom: 5px;
+}
+
+/* The card's Add to Cart button, so the body ends at the same height the real
+   one does and the grid doesn't resettle when products land. */
+.kg-skel-pill {
+  height: 44px;
+  border-radius: var(--kg-radius-pill);
 }
 
 .kg-skel-w30 { width: 30%; }

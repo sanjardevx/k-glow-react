@@ -54,8 +54,10 @@ export function ProductCardSkeletons({ count }: { count: number }) {
           </div>
           <div className="p-body">
             <div className="kg-skel kg-skel-line kg-skel-w45" />
-            <div className="kg-skel kg-skel-line kg-skel-w85" />
+            <div className="kg-skel kg-skel-line is-tight kg-skel-w85" />
+            <div className="kg-skel kg-skel-line kg-skel-w60" />
             <div className="kg-skel kg-skel-line kg-skel-w30" />
+            <div className="kg-skel kg-skel-pill" />
           </div>
         </div>
       ))}

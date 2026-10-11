@@ -124,15 +124,21 @@
   color: var(--kg-accent-deep);
 }
 
+/* Two lines, then clipped. Korean product names carry the brand, the line and
+   the volume, so one line cut off at the ellipsis hid the part that tells two
+   products apart. Both lines are reserved whether or not the name needs them,
+   which keeps the price and the Add button on one baseline across a row. */
 .p-name {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  min-height: 2.6em;
   overflow: hidden;
   font-family: var(--kg-font-display);
   font-size: var(--kg-text-lg);
   font-weight: 500;
   line-height: 1.3;
   color: var(--kg-ink);
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .p-price-row {
