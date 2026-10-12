@@ -14,6 +14,11 @@ export function Bestsellers({ loading }: { loading: boolean }) {
   const bestsellers = useAppSelector(retrieveBestsellers);
   const revealRef = useReveal<HTMLElement>();
 
+  // Nothing settled and nothing arrived: the shop is unreachable or the list
+  // is genuinely empty. Either way a heading over a void is worse than no
+  // section at all, so the homepage closes the gap.
+  if (!loading && bestsellers.length === 0) return null;
+
   return (
     <section className="section reveal" ref={revealRef}>
       <Box className="section-inner">

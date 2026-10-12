@@ -288,7 +288,11 @@
 
 .input[aria-invalid="true"],
 .field.is-invalid input,
-.field.is-invalid textarea {
+.field.is-invalid textarea,
+.modal-field input[aria-invalid="true"],
+.profile-field input[aria-invalid="true"],
+.help-field input[aria-invalid="true"],
+.help-field textarea[aria-invalid="true"] {
   border-color: var(--kg-danger);
 }
 
@@ -625,6 +629,35 @@
   color: var(--kg-ink-soft);
   font-size: var(--kg-text-md);
   text-align: center;
+}
+
+/* The sentence inside the panel. Its own element so the panel can also hold
+   a button without the two running together. */
+.empty-state p,
+.shop-empty p,
+.cart-empty p,
+.orders-empty p,
+.review-empty p,
+.order-history-empty p {
+  margin: 0;
+}
+
+/* The same panel when the request failed rather than came back empty. A
+   solid border in the danger colour, so "there is nothing here" and "we
+   couldn't ask" don't look identical — and a way to ask again. */
+.empty-state.is-error,
+.shop-empty.is-error,
+.cart-empty.is-error,
+.orders-empty.is-error,
+.review-empty.is-error,
+.order-history-empty.is-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  border-style: solid;
+  border-color: var(--kg-danger);
+  color: var(--kg-ink);
 }
 
 /* =========================================================================

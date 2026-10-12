@@ -8,6 +8,11 @@ export function Reviews({ loading }: { loading: boolean }) {
   const reviews = useAppSelector(retrieveReviews);
   const revealRef = useReveal<HTMLElement>();
 
+  // Nothing settled and nothing arrived: the shop is unreachable or the list
+  // is genuinely empty. Either way a heading over a void is worse than no
+  // section at all, so the homepage closes the gap.
+  if (!loading && reviews.length === 0) return null;
+
   return (
     <section className="section reviews reveal" ref={revealRef}>
       <Box className="reviews-head">

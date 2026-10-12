@@ -105,6 +105,10 @@ export function Products() {
   const { setProducts } = actionDispatch(dispatch);
   const { products } = useAppSelector(productsRetriever);
   const [loading, setLoading] = useState(true);
+  // A failed request has to be told apart from an empty catalog: both end with
+  // no products, but "check back soon" is a lie when the shop never answered.
+  const [failed, setFailed] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     // Only the latest search may land: typing fast can leave an older,
@@ -115,16 +119,21 @@ export function Products() {
     productService
       .getProducts(productSearch)
       .then((data) => {
-        if (current) setProducts(data);
+        if (!current) return;
+        setProducts(data);
+        setFailed(false);
       })
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        console.log(err);
+        if (current) setFailed(true);
+      })
       .finally(() => {
         if (current) setLoading(false);
       });
     return () => {
       current = false;
     };
-  }, [productSearch]);
+  }, [productSearch, retryCount]);
 
   // Emptying the box restores the full catalog without needing a second Enter.
   useEffect(() => {
@@ -186,8 +195,13 @@ export function Products() {
         <Box className="shop-heading">
           <span className="eyebrow">Our catalog</span>
           <h1 className="shop-title">Shop</h1>
+          {/* Held back until there is a real number to quote: during the
+              first load and after a failed request, "0 products" reads as a
+              fact about the catalog rather than about the connection. */}
           <Box className="shop-count">
-            {sorted.length} {sorted.length === 1 ? "product" : "products"}
+            {loading || failed
+              ? "\u00a0"
+              : `${sorted.length} ${sorted.length === 1 ? "product" : "products"}`}
           </Box>
         </Box>
 
@@ -325,11 +339,24 @@ export function Products() {
           <Box className="product-grid">
             <ProductCardSkeletons count={PAGE_SIZE} />
           </Box>
+        ) : failed ? (
+          <Box className="shop-empty is-error" role="alert">
+            <p>We couldn't reach the shop just now.</p>
+            <button
+              type="button"
+              className="btn-outline"
+              onClick={() => setRetryCount((n) => n + 1)}
+            >
+              Try again
+            </button>
+          </Box>
         ) : (
           <Box className="shop-empty">
-            {productSearch.search
-              ? `No products match "${productSearch.search}".`
-              : "No products in this category yet — check back soon."}
+            <p>
+              {productSearch.search
+                ? `No products match "${productSearch.search}".`
+                : "No products in this category yet — check back soon."}
+            </p>
           </Box>
         )}
 
