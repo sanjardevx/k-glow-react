@@ -119,6 +119,64 @@
   filter: saturate(0.92);
 }
 
+/* -------------------------------------------------------------------------
+   Hero entrance
+
+   The hero is seen once a visit, so it can afford an entrance the rest of
+   the site should not. Four elements arrive in the order they are read —
+   headline, photo, sentence, buttons — 70ms apart, which is enough to read
+   as a sequence and short enough that the whole thing is over in under half
+   a second.
+
+   Written as a transition out of @starting-style rather than as a keyframe
+   animation, because the resting state has to be the visible one. A keyframe
+   with fill-mode backwards pins the element to its hidden first frame until
+   the timeline advances, so anywhere the timeline does not advance — a tab
+   that loads in the background, a browser that skips the animation — the
+   hero is simply blank. Here the hidden state exists for one frame and only
+   where @starting-style is supported; everywhere else the hero just appears,
+   which is the right thing to fall back to.
+
+   Only transform and opacity move, and nothing starts from scale(0) — the
+   photo comes in at 0.985, already itself, just not quite settled.
+   ------------------------------------------------------------------------- */
+.hero h2,
+.hero .copy p,
+.hero .cta-row,
+.hero-photo {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.45s cubic-bezier(0.23, 1, 0.32, 1),
+    transform 0.45s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.hero-photo {
+  transition-delay: 0.07s;
+}
+
+.hero .copy p {
+  transition-delay: 0.14s;
+}
+
+.hero .cta-row {
+  transition-delay: 0.21s;
+}
+
+@starting-style {
+  .hero h2,
+  .hero .copy p,
+  .hero .cta-row {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  .hero-photo {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+  }
+}
+
 /* =========================================================================
    Stats band
    ========================================================================= */
@@ -616,8 +674,11 @@
     gap: 28px;
   }
 
+  /* The photo has "Glow With Confidence." set into it. Stacked above the
+     copy it landed directly on top of the real headline, so a phone opened
+     on two competing headlines. Below the copy it reads as part of the
+     picture. (The lasting fix is a banner without type baked in.) */
   .hero-photo {
-    order: -1;
     max-width: 100%;
     aspect-ratio: 4 / 3;
   }
@@ -701,6 +762,17 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* The order is still worth keeping — it is how the hero is meant to be
+     read — so the elements still arrive in turn, just by fading rather than
+     by moving. */
+  .hero h2,
+  .hero .copy p,
+  .hero .cta-row,
+  .hero-photo {
+    transition-property: opacity;
+    transition-duration: 0.25s;
+  }
+
   .stat-tile {
     transition: none;
   }

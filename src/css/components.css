@@ -50,7 +50,50 @@
     background-color var(--kg-duration) var(--kg-ease),
     border-color var(--kg-duration) var(--kg-ease),
     color var(--kg-duration) var(--kg-ease),
-    box-shadow var(--kg-duration) var(--kg-ease);
+    box-shadow var(--kg-duration) var(--kg-ease),
+    transform 0.12s var(--kg-ease);
+}
+
+/* Presses answer immediately. The amount is small on purpose: enough to feel
+   the button take the press, not enough to notice as an animation. */
+.btn-ink:active,
+.btn-outline:active,
+.btn-ghost:active,
+.nav-auth-btn:active,
+.basket-empty-cta:active,
+.modal-btn:active,
+.pdp-addbag:active,
+.pay-btn:active,
+.profile-save:active,
+.help-contact-submit:active,
+.cta-signup-btn:active,
+.load-more-btn:active,
+.confirm-cta:active,
+.profile-edit-toggle:active,
+.p-quickadd:active,
+.modal-back:active {
+  transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-ink:active,
+  .btn-outline:active,
+  .btn-ghost:active,
+  .nav-auth-btn:active,
+  .basket-empty-cta:active,
+  .modal-btn:active,
+  .pdp-addbag:active,
+  .pay-btn:active,
+  .profile-save:active,
+  .help-contact-submit:active,
+  .cta-signup-btn:active,
+  .load-more-btn:active,
+  .confirm-cta:active,
+  .profile-edit-toggle:active,
+  .p-quickadd:active,
+  .modal-back:active {
+    transform: none;
+  }
 }
 
 /* Filled sage: the one call-to-action colour. */
