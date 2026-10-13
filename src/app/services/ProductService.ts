@@ -29,6 +29,19 @@ class ProductService {
     }
   }
 
+  public async getCatalogStats(): Promise<{
+    productCount: number;
+    brandCount: number;
+  }> {
+    try {
+      const result = await axios.get(`${this.path}/product/stats`);
+      return result.data;
+    } catch (err) {
+      console.log("Error, getCatalogStats:", err);
+      throw err;
+    }
+  }
+
   public async getProduct(productId: string): Promise<Product> {
     try {
       const url = `${this.path}/product/${productId}`;

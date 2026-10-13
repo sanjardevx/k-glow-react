@@ -1,11 +1,30 @@
 import { useEffect, useRef, useState } from "react";
 import { Box } from "@mui/material";
+import ProductService from "../../services/ProductService";
 
-const stats = [
-  { value: 15, suffix: "+", label: "Brands carried" },
-  { value: 250, suffix: "+", label: "Products" },
+interface Stat {
+  value: number;
+  suffix: string;
+  label: string;
+}
+
+/**
+ * Brands and products are counted from the catalog (GET /product/stats), so
+ * the homepage can't promise "250+ products" over a shop that lists 50. The
+ * other two aren't in the database and are the shop's own figures — keep them
+ * honest by hand.
+ */
+const fixedStats: Stat[] = [
   { value: 1000, suffix: "+", label: "Happy customers" },
   { value: 3, suffix: "", label: "Years in business" },
+];
+
+/** Drawn while the counts load, so the section has its full height from the
+ *  first paint instead of jumping open when they arrive. */
+const loadingStats: Stat[] = [
+  { value: 0, suffix: "", label: "Brands carried" },
+  { value: 0, suffix: "", label: "Products" },
+  ...fixedStats,
 ];
 
 function easeInOutCubic(t: number) {
@@ -14,40 +33,37 @@ function easeInOutCubic(t: number) {
 
 export function Statistics() {
   const sectionRef = useRef<HTMLElement | null>(null);
-  const startedRef = useRef(false);
-  const [started, setStarted] = useState(false);
-  const [counts, setCounts] = useState(() => stats.map(() => 0));
+  const [stats, setStats] = useState<Stat[] | null>(null);
+  const [inView, setInView] = useState(false);
+  const [counts, setCounts] = useState<number[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    new ProductService()
+      .getCatalogStats()
+      .then(({ brandCount, productCount }) => [
+        { value: brandCount, suffix: "", label: "Brands carried" },
+        { value: productCount, suffix: "", label: "Products" },
+        ...fixedStats,
+      ])
+      // Without the live counts, show only what's known rather than guess.
+      .catch(() => fixedStats)
+      .then((list) => {
+        if (!cancelled) setStats(list);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
-
-    const prefersReduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-    if (prefersReduced) {
-      setCounts(stats.map((s) => s.value));
-      setStarted(true);
-      return;
-    }
-
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (!entry.isIntersecting || startedRef.current) return;
-        startedRef.current = true;
-        setStarted(true);
+        if (!entry.isIntersecting) return;
+        setInView(true);
         observer.disconnect();
-
-        const duration = 1600;
-        const startTime = performance.now();
-
-        function tick(now: number) {
-          const progress = Math.min((now - startTime) / duration, 1);
-          const eased = easeInOutCubic(progress);
-          setCounts(stats.map((s) => Math.round(s.value * eased)));
-          if (progress < 1) requestAnimationFrame(tick);
-        }
-        requestAnimationFrame(tick);
       },
       { threshold: 0.3 },
     );
@@ -55,17 +71,43 @@ export function Statistics() {
     return () => observer.disconnect();
   }, []);
 
+  // Counts up once both are true: the section is on screen and the figures
+  // have arrived — whichever comes second starts it.
+  useEffect(() => {
+    if (!stats || !inView) return;
+
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    if (prefersReduced) {
+      setCounts(stats.map((s) => s.value));
+      return;
+    }
+
+    const duration = 1600;
+    const startTime = performance.now();
+    let frame = requestAnimationFrame(function tick(now: number) {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const eased = easeInOutCubic(progress);
+      setCounts(stats.map((s) => Math.round(s.value * eased)));
+      if (progress < 1) frame = requestAnimationFrame(tick);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [stats, inView]);
+
+  const started = Boolean(stats && inView);
+
   return (
     <section className="stats" ref={sectionRef}>
       <Box className="stats-grid">
-        {stats.map((s, i) => (
+        {(stats ?? loadingStats).map((s, i) => (
           <Box
             className={`stat-tile${started ? " in-view" : ""}`}
             key={s.label}
             style={{ transitionDelay: `${i * 50}ms` }}
           >
             <Box className="stat-num">
-              {counts[i]}
+              {counts[i] ?? 0}
               {s.suffix}
             </Box>
             <Box className="stat-label">{s.label}</Box>
