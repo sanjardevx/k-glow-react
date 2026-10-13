@@ -580,6 +580,21 @@
     padding: 6px 2px;
   }
 
+  /* On a phone the filled pill was the loudest thing in the header — louder
+     than the bag, on every page, for a shopper who may be here to browse.
+     Soft fill and tighter padding keep it findable without shouting. */
+  .nav-auth-btn {
+    padding: 8px 14px;
+    background: var(--kg-primary-soft);
+    color: var(--kg-primary);
+    box-shadow: none;
+  }
+
+  .nav-auth-btn:hover {
+    background: var(--kg-primary);
+    color: var(--kg-on-primary);
+  }
+
   .nav-account-name {
     display: none;
   }
