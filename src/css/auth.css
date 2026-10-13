@@ -3,8 +3,8 @@
  *
  * The shell — overlay, card, head, close, subtext, fields, primary button —
  * comes from the shared primitives in components.css. Only the pieces unique
- * to this modal live here: the password show/hide toggle, the forgot-password
- * link and the line that switches between logging in and signing up.
+ * to this modal live here: the password show/hide toggle, the inline error
+ * and the line that switches between logging in and signing up.
  *
  * Tokens only.
  */
@@ -24,10 +24,6 @@
 .auth-modal .modal-card {
   max-width: 400px;
   margin: auto;
-}
-
-.auth-modal .modal-subtext {
-  margin: -8px 0 20px;
 }
 
 /* Password field: the toggle sits inside the input's right edge. */
@@ -64,21 +60,43 @@
   color: var(--kg-primary-hover);
 }
 
-.forgot-link {
-  display: block;
-  margin: -8px 0 20px;
-  color: var(--kg-ink-soft);
-  font-size: var(--kg-text-sm);
-  font-weight: 500;
-  text-align: right;
-  cursor: pointer;
-  transition: color var(--kg-duration) var(--kg-ease);
+/* Google draws its own button inside this slot; the fixed height keeps the
+   form from jumping down when the script arrives a moment later. */
+.google-slot {
+  display: flex;
+  justify-content: center;
+  min-height: 44px;
+  margin-bottom: 4px;
 }
 
-.forgot-link:hover {
-  color: var(--kg-ink);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 14px 0 16px;
+  color: var(--kg-ink-faint);
+  font-size: var(--kg-text-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--kg-tracking-caps);
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--kg-border);
+}
+
+.auth-error {
+  margin: -6px 0 16px;
+  padding: 10px 12px;
+  border-radius: var(--kg-radius-sm);
+  background: var(--kg-danger-soft);
+  color: var(--kg-danger);
+  font-size: var(--kg-text-sm);
+  font-weight: 500;
+  line-height: 1.4;
 }
 
 .modal-switch {

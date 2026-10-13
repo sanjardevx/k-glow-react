@@ -34,6 +34,30 @@ class MemberService {
     }
   }
 
+  /** Signs in with the ID token from Google's button — creating the member
+   *  on their first visit. */
+  public async googleAuth(
+    credential: string,
+  ): Promise<{ member: Member; isNew: boolean }> {
+    try {
+      const url = this.path + "/member/google";
+      const result = await axios.post(
+        url,
+        { credential },
+        { withCredentials: true },
+      );
+
+      const member: Member = result.data.member;
+      setAccessToken(result.data.accessToken);
+      localStorage.setItem("memberData", JSON.stringify(member));
+
+      return { member, isNew: result.data.isNew };
+    } catch (err) {
+      console.log("Error, googleAuth:", err);
+      throw err;
+    }
+  }
+
   public async login(input: LoginInput): Promise<Member> {
     try {
       const url = this.path + "/member/login";

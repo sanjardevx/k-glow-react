@@ -1,5 +1,9 @@
 export const serverApi: string = import.meta.env.VITE_SERVER_API;
 
+/** The OAuth client id from Google Cloud. Unset, the Google button hides. */
+export const GOOGLE_CLIENT_ID: string | undefined =
+  import.meta.env.VITE_GOOGLE_CLIENT_ID || undefined;
+
 /**
  * Copy for the announcement bar above the navbar. The delivery figure must
  * match FREE_DELIVERY_THRESHOLD in screens/cartPage/cartSelectors.ts — the
@@ -29,5 +33,4 @@ export const Messages = {
   error3: "Please fill in all the inputs!",
   error4: "Message is empty!",
   error5: "Only images with jpeg, jpg or png format are allowed!",
-  error6: "The two passwords don't match!",
 };

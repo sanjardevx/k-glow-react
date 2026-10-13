@@ -1,0 +1,99 @@
+/**
+ * Toasts (see lib/toast.ts).
+ *
+ * Top right on desktop, top centre on phones, above every modal. Only
+ * opacity and transform move. Tokens only.
+ */
+.kg-toast-stack {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.kg-toast {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 360px;
+  padding: 12px 16px 12px 12px;
+  border: 1px solid var(--kg-border);
+  border-radius: var(--kg-radius-md);
+  background: var(--kg-card);
+  box-shadow: var(--kg-shadow-md);
+  color: var(--kg-ink);
+  font-family: var(--kg-font-body);
+  font-size: var(--kg-text-md);
+  font-weight: 500;
+  line-height: 1.4;
+  cursor: pointer;
+  pointer-events: auto;
+  transition:
+    opacity 0.22s var(--kg-ease),
+    transform 0.22s var(--kg-ease);
+}
+
+@starting-style {
+  .kg-toast {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+.kg-toast.is-leaving {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+.kg-toast-icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.kg-toast-icon svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.kg-toast--success .kg-toast-icon {
+  background: var(--kg-success-soft);
+  color: var(--kg-success);
+}
+
+.kg-toast--error .kg-toast-icon {
+  background: var(--kg-danger-soft);
+  color: var(--kg-danger);
+}
+
+@media (max-width: 600px) {
+  .kg-toast-stack {
+    top: 12px;
+    right: var(--kg-gutter-mobile);
+    left: var(--kg-gutter-mobile);
+    align-items: center;
+  }
+
+  .kg-toast {
+    max-width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kg-toast {
+    transition: none;
+  }
+}
