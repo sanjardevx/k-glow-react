@@ -14,6 +14,9 @@ import theme from "./app/MaterialTheme";
 import { Router } from "./app/Router";
 import { ContextProvider } from "./app/context/ContextProvider";
 import { getAccessToken } from "./lib/authToken";
+import { installImageFallback } from "./lib/imageFallback";
+
+installImageFallback();
 
 // Harmless against a normal backend — only matters when VITE_SERVER_API
 // points at an ngrok tunnel, whose free tier otherwise serves an
