@@ -3,10 +3,7 @@ import { Box } from "@mui/material";
 import { useGlobals } from "../../context/useGlobals";
 import MemberService from "../../services/MemberService";
 import { Messages, serverApi } from "../../../lib/config";
-import {
-  sweetErrorHandling,
-  sweetTopSmallSuccessAlert,
-} from "../../../lib/sweetAlert";
+import { showError, showSuccess } from "../../../lib/toast";
 import { PencilIcon, PhoneIcon, PinIcon } from "../../components/icons";
 import type { MemberUpdateInput } from "../../../lib/types/member";
 import { MemberType } from "../../../lib/enums/member.enum";
@@ -47,7 +44,7 @@ export function UserPage() {
 
     const validTypes = ["image/jpg", "image/jpeg", "image/png"];
     if (!validTypes.includes(file.type)) {
-      sweetErrorHandling(Messages.error5).then();
+      showError(Messages.error5);
       return;
     }
 
@@ -96,10 +93,10 @@ export function UserPage() {
       setProfile({ nick, phone, address, desc });
       setImageFile(null);
       setIsEditing(false);
-      await sweetTopSmallSuccessAlert("Saved successfully!", 700);
+      showSuccess("Saved successfully!", 700);
     } catch (err) {
       console.log("Error, handleSave:", err);
-      sweetErrorHandling(err).then();
+      showError(err);
     } finally {
       setSaving(false);
     }

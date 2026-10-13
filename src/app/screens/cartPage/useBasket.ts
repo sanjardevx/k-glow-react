@@ -9,7 +9,7 @@ import {
 } from "./cartSlice";
 import { useGlobals } from "../../context/useGlobals";
 import { Messages } from "../../../lib/config";
-import { sweetFailureProvider } from "../../../lib/sweetAlert";
+import { showError } from "../../../lib/toast";
 import type { Product } from "../../../lib/types/product";
 import type { CartItem } from "../../../lib/types/cart";
 
@@ -38,7 +38,7 @@ export function useBasket() {
      */
     onAdd: (product: Product, quantity = 1): boolean => {
       if (!authMember) {
-        sweetFailureProvider(Messages.error2, true);
+        showError(Messages.error2);
         return false;
       }
       dispatch(addItem(toCartItem(product, quantity)));

@@ -12,7 +12,7 @@ import { onActivateKey } from "./a11y";
 import { BankDetailsCard } from "./BankDetailsCard";
 import { BusyLabel } from "./Loaders";
 import OrderService from "../services/OrderService";
-import { sweetErrorHandling } from "../../lib/sweetAlert";
+import { showError } from "../../lib/toast";
 import "../../css/orders.css";
 import "../../css/payment-modal.css";
 
@@ -95,7 +95,7 @@ export function PaymentModal({ open, onClose, items, amountDue }: PaymentModalPr
       setStep("thanks");
     } catch (err) {
       console.log("Error, handleSubmitProof:", err);
-      sweetErrorHandling(err).then();
+      showError(err);
     } finally {
       setSubmitting(false);
     }

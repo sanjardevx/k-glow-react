@@ -6,10 +6,7 @@ import { useGlobals } from "../../context/useGlobals";
 import { useAppDispatch } from "../../hooks";
 import { clearCart } from "../../screens/cartPage/cartSlice";
 import MemberService from "../../services/MemberService";
-import {
-  sweetErrorHandling,
-  sweetTopSmallSuccessAlert,
-} from "../../../lib/sweetAlert";
+import { showError, showSuccess } from "../../../lib/toast";
 
 export function AccountMenu() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -42,10 +39,10 @@ export function AccountMenu() {
         history.location.pathname === "/cart"
       )
         history.push("/");
-      await sweetTopSmallSuccessAlert("You're signed out.");
+      showSuccess("You're signed out.");
     } catch (err) {
       console.log("Error, handleLogout:", err);
-      sweetErrorHandling(err).then();
+      showError(err);
     }
   };
 
