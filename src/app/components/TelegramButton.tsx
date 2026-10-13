@@ -7,16 +7,49 @@
  * follows the tokens. Rendered once in App.tsx, outside the route Switch, so
  * it survives navigation instead of remounting (and restarting its spin
  * animation) on every page change.
+ *
+ * On a phone it sits over the content, so it tucks away while the shopper
+ * scrolls down (reading, browsing a grid — where it covered Add to Cart) and
+ * comes back the moment they scroll up or reach the end of the page.
  */
+import { useEffect, useState } from "react";
 import { TELEGRAM_URL } from "../../lib/config";
 
+/** How far down before tucking starts — never on the first screen. */
+const TUCK_AFTER = 240;
+
 export function TelegramButton() {
+  const [tucked, setTucked] = useState(false);
+
+  useEffect(() => {
+    let lastY = window.scrollY;
+    let frame = 0;
+    function onScroll() {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        const y = window.scrollY;
+        const atEnd =
+          window.innerHeight + y >= document.documentElement.scrollHeight - 8;
+        // A few pixels of jitter either way is not a change of direction.
+        if (Math.abs(y - lastY) < 6) return;
+        setTucked(y > lastY && y > TUCK_AFTER && !atEnd);
+        lastY = y;
+      });
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(frame);
+    };
+  }, []);
+
   return (
     <a
       href={TELEGRAM_URL}
       target="_blank"
       rel="noopener noreferrer"
-      className="telegram-fab"
+      className={`telegram-fab${tucked ? " is-tucked" : ""}`}
       aria-label="Chat with us on Telegram"
     >
       <span className="telegram-fab-spin">
