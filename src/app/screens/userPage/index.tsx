@@ -2,7 +2,8 @@ import { type ChangeEvent, useState } from "react";
 import { Box } from "@mui/material";
 import { useGlobals } from "../../context/useGlobals";
 import MemberService from "../../services/MemberService";
-import { Messages, serverApi } from "../../../lib/config";
+import { serverApi } from "../../../lib/config";
+import { useI18n } from "../../../lib/i18n";
 import { showError, showSuccess } from "../../../lib/toast";
 import { PencilIcon, PhoneIcon, PinIcon } from "../../components/icons";
 import type { MemberUpdateInput } from "../../../lib/types/member";
@@ -14,6 +15,7 @@ import "../../../css/orders.css";
 
 export function UserPage() {
   const { authMember, setAuthMember } = useGlobals();
+  const { t } = useI18n();
 
   // Name and phone come from the account; address and description are only
   // ever set here, so they start empty rather than pretending to hold data.
@@ -44,7 +46,7 @@ export function UserPage() {
 
     const validTypes = ["image/jpg", "image/jpeg", "image/png"];
     if (!validTypes.includes(file.type)) {
-      showError(Messages.error5);
+      showError(t("error.imageType"));
       return;
     }
 
@@ -74,8 +76,8 @@ export function UserPage() {
   async function handleSave() {
     if (saving) return;
     try {
-      if (!authMember) throw new Error(Messages.error2);
-      if (!nick || !phone) throw new Error(Messages.error3);
+      if (!authMember) throw new Error(t("error.loginFirst"));
+      if (!nick || !phone) throw new Error(t("error.fillAll"));
 
       const input: MemberUpdateInput = {
         memberNick: nick,
@@ -93,7 +95,7 @@ export function UserPage() {
       setProfile({ nick, phone, address, desc });
       setImageFile(null);
       setIsEditing(false);
-      showSuccess("Saved successfully!", 700);
+      showSuccess(t("me.saved"), 700);
     } catch (err) {
       console.log("Error, handleSave:", err);
       showError(err);
@@ -105,12 +107,12 @@ export function UserPage() {
   return (
     <div className="mypage-page">
       <Box className="mypage-body">
-        <h2 className="mypage-title">My Page</h2>
+        <h2 className="mypage-title">{t("me.title")}</h2>
         <Box className="mypage-layout">
           <Box className="mypage-stagger-1">
             {isEditing ? (
               <Box className="settings-card">
-                <h4>Edit your details</h4>
+                <h4>{t("me.edit")}</h4>
                 <Box className="avatar-upload-row">
                   <Box className="avatar-edit-wrap">
                     <Box className="avatar-edit">
@@ -132,7 +134,7 @@ export function UserPage() {
                         </svg>
                       )}
                     </Box>
-                    <label className="avatar-edit-badge" title="Change photo">
+                    <label className="avatar-edit-badge" title={t("me.changePhoto")}>
                       <PencilIcon />
                       <input
                         type="file"
@@ -143,13 +145,13 @@ export function UserPage() {
                     </label>
                   </Box>
                   <Box className="avatar-upload-copy">
-                    <strong>Profile photo</strong>
-                    Optional — you can add one later.
+                    <strong>{t("me.photo")}</strong>
+                    {t("me.photoOptional")}
                   </Box>
                 </Box>
 
                 <Box className="profile-field">
-                  <label>Nickname</label>
+                  <label>{t("me.nickname")}</label>
                   <input
                     value={nick}
                     onChange={(e) => setNick(e.target.value)}
@@ -157,14 +159,14 @@ export function UserPage() {
                 </Box>
                 <Box className="profile-row">
                   <Box className="profile-field">
-                    <label>Phone</label>
+                    <label>{t("me.phone")}</label>
                     <input
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                     />
                   </Box>
                   <Box className="profile-field">
-                    <label>Address</label>
+                    <label>{t("me.address")}</label>
                     <input
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
@@ -172,7 +174,7 @@ export function UserPage() {
                   </Box>
                 </Box>
                 <Box className="profile-field">
-                  <label>Description</label>
+                  <label>{t("me.desc")}</label>
                   <textarea
                     value={desc}
                     onChange={(e) => setDesc(e.target.value)}
@@ -184,7 +186,7 @@ export function UserPage() {
                     className="profile-edit-toggle ghost"
                     onClick={handleEditToggle}
                   >
-                    Cancel
+                    {t("common.cancel")}
                   </button>
                   <button
                     type="button"
@@ -192,7 +194,7 @@ export function UserPage() {
                     onClick={handleSave}
                     disabled={saving}
                   >
-                    {saving ? <BusyLabel>Saving…</BusyLabel> : "Save changes"}
+                    {saving ? <BusyLabel>{t("me.saving")}</BusyLabel> : t("me.save")}
                   </button>
                 </Box>
               </Box>
@@ -219,8 +221,8 @@ export function UserPage() {
                   <Box className="profile-name">{profile.nick}</Box>
                   <Box className="profile-type">
                     {authMember?.memberType === MemberType.ADVISOR
-                      ? "Advisor"
-                      : "Member"}
+                      ? t("member.advisor")
+                      : t("member.member")}
                   </Box>
                   {profile.phone ? (
                     <Box className="profile-address">
@@ -249,7 +251,7 @@ export function UserPage() {
                   className="profile-edit-toggle"
                   onClick={handleEditToggle}
                 >
-                  Edit Profile
+                  {t("me.editProfile")}
                 </button>
               </>
             )}

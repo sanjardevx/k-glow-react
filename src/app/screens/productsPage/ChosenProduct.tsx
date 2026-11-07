@@ -23,6 +23,8 @@ import type { AppDispatch } from "../../store";
 import type { Product } from "../../../lib/types/product";
 import type { Review } from "../../../lib/types/review";
 import { ProductStatus } from "../../../lib/enums/product.enum";
+import { useI18n } from "../../../lib/i18n";
+import { rich } from "../../../lib/i18n/rich";
 
 /** REDUX SLICE & SELECTOR **/
 const actionDispatch = (dispatch: AppDispatch) => ({
@@ -45,6 +47,7 @@ function isSoldOut(product: Product): boolean {
 export function ChosenProduct() {
   const dispatch = useAppDispatch();
   const { onAdd } = useBasket();
+  const { t, plural } = useI18n();
   const { productId } = useParams<{ productId: string }>();
   const [qty, setQty] = useState(1);
   const [justAdded, setJustAdded] = useState(false);
@@ -125,8 +128,8 @@ export function ChosenProduct() {
     return (
       <div className="chosen-product-page">
         <Box className="shop-empty">
-          This product isn't available any more.{" "}
-          <Link to="/products">Back to the shop</Link>
+          {t("pdp.unavailable")}{" "}
+          <Link to="/products">{t("pdp.backToShop")}</Link>
         </Box>
       </div>
     );
@@ -137,10 +140,10 @@ export function ChosenProduct() {
 
   return (
     <div className="chosen-product-page">
-      <Box component="nav" className="breadcrumb" aria-label="Breadcrumb">
-        <Link to="/">Home</Link>
+      <Box component="nav" className="breadcrumb" aria-label={t("pdp.breadcrumb")}>
+        <Link to="/">{t("nav.home")}</Link>
         <span className="sep">/</span>
-        <Link to="/products">Shop</Link>
+        <Link to="/products">{t("nav.shop")}</Link>
         <span className="sep">/</span>
         <span className="current">{product.productName}</span>
       </Box>
@@ -149,9 +152,9 @@ export function ChosenProduct() {
         <Box className="pdp-gallery">
           <Box className="pdp-photo">
             {soldOut ? (
-              <span className="p-badge soldout">SOLD OUT</span>
+              <span className="p-badge soldout">{t("card.soldOutBadge")}</span>
             ) : bestsellers.has(product._id) ? (
-              <span className="p-badge best">BEST</span>
+              <span className="p-badge best">{t("card.best")}</span>
             ) : product.productDiscount ? (
               <span className="p-badge sale">−{product.productDiscount}%</span>
             ) : null}
@@ -162,7 +165,7 @@ export function ChosenProduct() {
                 key={image}
                 className={index === activeImage ? "active" : undefined}
                 src={`${serverApi}/${image}`}
-                alt={`${product.productName} — view ${index + 1}`}
+                alt={t("pdp.view", { name: product.productName, n: index + 1 })}
                 aria-hidden={index !== activeImage}
               />
             ))}
@@ -175,7 +178,7 @@ export function ChosenProduct() {
                   type="button"
                   key={image}
                   className={`pdp-thumb${index === activeImage ? " active" : ""}`}
-                  aria-label={`Show view ${index + 1}`}
+                  aria-label={t("pdp.showView", { n: index + 1 })}
                   aria-current={index === activeImage}
                   onClick={() => setActiveImage(index)}
                 >
@@ -193,11 +196,14 @@ export function ChosenProduct() {
           <Box className="pdp-rating">
             <span className="pdp-views">
               <EyeIcon />
-              {product.productViews} views
+              {product.productViews}{" "}
+              {plural("pdp.viewNoun", product.productViews)}
             </span>
             <a href="#pdp-reviews">
-              See {productReviews.length}{" "}
-              {productReviews.length === 1 ? "review" : "reviews"}
+              {t("pdp.seeReviews", {
+                count: productReviews.length,
+                noun: plural("pdp.reviewNoun", productReviews.length),
+              })}
             </a>
           </Box>
           <Box className="pdp-price-row">
@@ -208,7 +214,9 @@ export function ChosenProduct() {
               </span>
             ) : null}
             {product.productDiscount ? (
-              <span className="pdp-save">Save {product.productDiscount}%</span>
+              <span className="pdp-save">
+                {t("pdp.save", { percent: product.productDiscount })}
+              </span>
             ) : null}
           </Box>
           <p className="pdp-desc">{product.productDesc}</p>
@@ -217,7 +225,7 @@ export function ChosenProduct() {
               <button
                 type="button"
                 disabled={soldOut}
-                aria-label="Decrease quantity"
+                aria-label={t("pdp.decrease")}
                 onClick={() => setQty((q) => Math.max(1, q - 1))}
               >
                 −
@@ -226,7 +234,7 @@ export function ChosenProduct() {
               <button
                 type="button"
                 disabled={soldOut}
-                aria-label="Increase quantity"
+                aria-label={t("pdp.increase")}
                 onClick={() => setQty((q) => q + 1)}
               >
                 +
@@ -250,49 +258,51 @@ export function ChosenProduct() {
                 setTimeout(() => setJustAdded(false), 1200);
               })}
             >
-              {soldOut ? "Sold Out" : justAdded ? "Added ✓" : "Add to Bag"}
+              {soldOut
+                ? t("card.soldOut")
+                : justAdded
+                  ? t("pdp.added")
+                  : t("pdp.addToBag")}
             </span>
           </Box>
           {soldOut ? (
-            <p className="pdp-soldout-note">
-              This product is temporarily out of stock — check back soon.
-            </p>
+            <p className="pdp-soldout-note">{t("pdp.soldOutNote")}</p>
           ) : null}
           <Box className="pdp-trust">
             <Box className="pdp-trust-item">
               <span className="ic">
                 <TruckIcon />
               </span>
-              Shipped from Korea
+              {t("trust.shipped")}
             </Box>
             <Box className="pdp-trust-item">
               <span className="ic">
                 <ShieldIcon />
               </span>
-              100% authentic
+              {t("trust.authentic")}
             </Box>
             <Box className="pdp-trust-item">
               <span className="ic">
                 <BoxIcon />
               </span>
-              Usually in stock
+              {t("trust.inStock")}
             </Box>
             <Box className="pdp-trust-item">
               <span className="ic">
                 <BoltIcon />
               </span>
-              Same-day dispatch via BTS post
+              {t("trust.dispatch")}
             </Box>
           </Box>
           {product.productHowToUse ? (
             <Box className="pdp-detail">
-              <span className="pdp-detail-label">How to use</span>
+              <span className="pdp-detail-label">{t("pdp.howToUse")}</span>
               <p>{product.productHowToUse}</p>
             </Box>
           ) : null}
           {product.productSuitableFor ? (
             <Box className="pdp-detail">
-              <span className="pdp-detail-label">Suitable for</span>
+              <span className="pdp-detail-label">{t("pdp.suitableFor")}</span>
               <p>{product.productSuitableFor}</p>
             </Box>
           ) : null}
@@ -303,13 +313,11 @@ export function ChosenProduct() {
         <Box className="section-inner">
           <Box className="section-head">
             <Box className="section-heading">
-              <span className="eyebrow">Pairs well with</span>
-              <Box className="section-title">
-                You may also <em>like</em>
-              </Box>
+              <span className="eyebrow">{t("pdp.pairsEyebrow")}</span>
+              <Box className="section-title">{rich(t("pdp.alsoLike"))}</Box>
             </Box>
             <Link to="/products" className="section-link">
-              View all →
+              {t("common.viewAll")}
             </Link>
           </Box>
           <Box className="product-grid">
@@ -324,9 +332,9 @@ export function ChosenProduct() {
                   <Box className={`p-card${eleSoldOut ? " soldout" : ""}`}>
                     <Box className="p-photo">
                       {eleSoldOut ? (
-                        <span className="p-badge soldout">SOLD OUT</span>
+                        <span className="p-badge soldout">{t("card.soldOutBadge")}</span>
                       ) : bestsellers.has(ele._id) ? (
-                        <span className="p-badge best">BEST</span>
+                        <span className="p-badge best">{t("card.best")}</span>
                       ) : ele.productDiscount ? (
                         <span className="p-badge sale">
                           −{ele.productDiscount}%
@@ -366,7 +374,7 @@ export function ChosenProduct() {
                           if (!eleSoldOut) onAdd(ele);
                         })}
                       >
-                        {eleSoldOut ? "Sold Out" : "Add to Cart"}
+                        {eleSoldOut ? t("card.soldOut") : t("card.addToCart")}
                       </Box>
                     </Box>
                   </Box>
@@ -381,10 +389,8 @@ export function ChosenProduct() {
         <Box className="section-inner">
           <Box className="section-head">
             <Box className="section-heading">
-              <span className="eyebrow">Customer love</span>
-              <Box className="section-title">
-                Reviews for this <em>product</em>
-              </Box>
+              <span className="eyebrow">{t("reviews.eyebrow")}</span>
+              <Box className="section-title">{rich(t("pdp.reviewsTitle"))}</Box>
             </Box>
           </Box>
           {productReviews.length !== 0 ? (
@@ -406,15 +412,13 @@ export function ChosenProduct() {
                   </Box>
                   <Box className="verified">
                     <span className="verified-dot">✓</span>
-                    Verified purchase
+                    {t("pdp.verified")}
                   </Box>
                 </Box>
               ))}
             </Box>
           ) : (
-            <Box className="review-empty">
-              No reviews for this product yet — yours could be the first.
-            </Box>
+            <Box className="review-empty">{t("pdp.noReviews")}</Box>
           )}
         </Box>
       </section>

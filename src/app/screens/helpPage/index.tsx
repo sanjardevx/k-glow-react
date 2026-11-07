@@ -6,45 +6,18 @@ import TabContext from "@mui/lab/TabContext";
 import TabPanel from "@mui/lab/TabPanel";
 import { ChevronDownIcon } from "../../components/icons";
 import { TELEGRAM_URL } from "../../../lib/config";
+import { t, useI18n, type TKey } from "../../../lib/i18n";
 import "../../../css/help.css";
 
-const terms = [
-  "Browsing is open to everyone, but you'll need to log in (or sign up) to add items to your bag and check out.",
-  "Once you've submitted your transfer screenshot, the order can't be cancelled — please double-check your bag before paying.",
-  "Most products ship directly from Korea, so delivery can take longer than a local order — we'll always give you a realistic estimate.",
-  "Please keep messages to our team respectful — we're a small team doing our best to help you glow.",
-];
+const terms: TKey[] = ["terms.1", "terms.2", "terms.3", "terms.4"];
 
-const faq = [
-  {
-    question: "How do I place an order?",
-    answer:
-      "— Add items to your bag, log in (or sign up), tap Pay, then send us your transfer screenshot — we'll confirm your order shortly after.",
-  },
-  {
-    question: "How long does delivery take?",
-    answer:
-      "— Most items ship from Korea, so please allow extra time — we'll share a realistic estimate once your order is confirmed.",
-  },
-  {
-    question: "Is my personal information safe?",
-    answer:
-      "— Yes. We only use your details to process and deliver your order — nothing else.",
-  },
-  {
-    question: "Can I cancel my order?",
-    answer:
-      "— Before you submit your payment screenshot, yes. After that, orders can't be cancelled since we've already started processing them.",
-  },
-  {
-    question: "What if my payment isn't confirmed?",
-    answer:
-      "— Double-check the transfer note and screenshot you sent. If something looks off, contact us and we'll sort it out together.",
-  },
-  {
-    question: "Who do I contact for help?",
-    answer: "— Use the Contact tab below, or message us directly on Telegram.",
-  },
+const faq: { question: TKey; answer: TKey }[] = [
+  { question: "faq.q1", answer: "faq.a1" },
+  { question: "faq.q2", answer: "faq.a2" },
+  { question: "faq.q3", answer: "faq.a3" },
+  { question: "faq.q4", answer: "faq.a4" },
+  { question: "faq.q5", answer: "faq.a5" },
+  { question: "faq.q6", answer: "faq.a6" },
 ];
 
 /**
@@ -64,20 +37,19 @@ const emptyContact: Contact = { name: "", reply: "", message: "" };
 
 function validateContact(values: Contact): ContactErrors {
   const errors: ContactErrors = {};
-  if (!values.name.trim()) errors.name = "Please tell us your name.";
-  if (!values.reply.trim())
-    errors.reply = "Add an email or Telegram so we can reply.";
+  if (!values.name.trim()) errors.name = t("contact.errName");
+  if (!values.reply.trim()) errors.reply = t("contact.errReply");
   if (values.message.trim().length < 10)
-    errors.message = "Please write a little more so we can help.";
+    errors.message = t("contact.errMessage");
   return errors;
 }
 
 function composeMessage(values: Contact): string {
   return [
-    "Message from the K-Glow website",
+    t("contact.msgHeader"),
     "",
-    `Name: ${values.name.trim()}`,
-    `Reply to: ${values.reply.trim()}`,
+    `${t("contact.msgName")}: ${values.name.trim()}`,
+    `${t("contact.msgReply")}: ${values.reply.trim()}`,
     "",
     values.message.trim(),
   ].join("\n");
@@ -96,6 +68,9 @@ async function copyToClipboard(text: string): Promise<boolean> {
 }
 
 export function HelpPage() {
+  // Subscribes the page to language changes; the module-level t() used by
+  // the helpers above reads the same current language.
+  useI18n();
   const [tab, setTab] = useState("1");
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   // Height is measured from the open answer's real content (same technique
@@ -152,7 +127,7 @@ export function HelpPage() {
   return (
     <div className="help-page">
       <Container className="help-container">
-        <h2 className="help-title">Help</h2>
+        <h2 className="help-title">{t("help.title")}</h2>
         <TabContext value={tab}>
           <Box className="help-tabs-frame">
             {/* Scrollable so a very narrow phone (320px) swipes instead of
@@ -164,9 +139,9 @@ export function HelpPage() {
               variant="scrollable"
               scrollButtons={false}
             >
-              <Tab label="Terms" value="1" />
-              <Tab label="FAQ" value="2" />
-              <Tab label="Contact" value="3" />
+              <Tab label={t("help.terms")} value="1" />
+              <Tab label={t("help.faq")} value="2" />
+              <Tab label={t("help.contact")} value="3" />
             </Tabs>
           </Box>
 
@@ -174,7 +149,7 @@ export function HelpPage() {
             <Box className="help-card">
               <Stack className="terms-list">
                 {terms.map((line, index) => (
-                  <p key={index}>{line}</p>
+                  <p key={index}>{t(line)}</p>
                 ))}
               </Stack>
             </Box>
@@ -193,7 +168,7 @@ export function HelpPage() {
                       className="help-acc-head"
                       onClick={() => toggleFaq(index)}
                     >
-                      <span>{item.question}</span>
+                      <span>{t(item.question)}</span>
                       <span className="help-acc-chevron">
                         <ChevronDownIcon />
                       </span>
@@ -208,7 +183,7 @@ export function HelpPage() {
                           panelRefs.current[index] = el;
                         }}
                       >
-                        {item.answer}
+                        {t(item.answer)}
                       </p>
                     </Box>
                   </Box>
@@ -219,24 +194,19 @@ export function HelpPage() {
 
           <TabPanel value="3" className="help-tabpanel">
             <Box className="help-card help-contact-card">
-              <span className="help-contact-title">Contact us!</span>
-              <p className="help-contact-sub">
-                Write your message here and we'll hand it to our Telegram chat,
-                where a person reads and answers it.
-              </p>
+              <span className="help-contact-title">{t("contact.title")}</span>
+              <p className="help-contact-sub">{t("contact.sub")}</p>
               {draft ? (
                 <Box className="help-draft" role="status">
                   <p className="help-draft-lead">
-                    {draft.copied
-                      ? "Your message is copied. Open the chat and paste it in — that's it."
-                      : "Your message is ready. Copy it below, then paste it into the chat."}
+                    {draft.copied ? t("contact.copied") : t("contact.ready")}
                   </p>
                   <textarea
                     className="help-draft-text"
                     value={draft.text}
                     readOnly
                     rows={7}
-                    aria-label="Your message"
+                    aria-label={t("contact.yourMessage")}
                   />
                   <Box className="help-draft-actions">
                     <a
@@ -245,7 +215,7 @@ export function HelpPage() {
                       target="_blank"
                       rel="noreferrer"
                     >
-                      Open Telegram
+                      {t("contact.open")}
                     </a>
                     <button
                       type="button"
@@ -255,27 +225,27 @@ export function HelpPage() {
                         setDraft({ ...draft, copied });
                       }}
                     >
-                      Copy again
+                      {t("contact.copyAgain")}
                     </button>
                     <button
                       type="button"
                       className="btn-ghost"
                       onClick={writeAnother}
                     >
-                      Write another
+                      {t("contact.another")}
                     </button>
                   </Box>
                 </Box>
               ) : (
                 <form className="help-contact-form" onSubmit={handleContactSubmit}>
                   <Box className="help-field">
-                    <label htmlFor="help-name">Your name</label>
+                    <label htmlFor="help-name">{t("contact.name")}</label>
                     <input
                       id="help-name"
                       type="text"
                       name="name"
                       autoComplete="name"
-                      placeholder="Type your name here"
+                      placeholder={t("contact.namePlaceholder")}
                       value={contact.name}
                       onChange={(e) => updateField("name", e.target.value)}
                       aria-invalid={errors.name ? true : undefined}
@@ -288,12 +258,12 @@ export function HelpPage() {
                     ) : null}
                   </Box>
                   <Box className="help-field">
-                    <label htmlFor="help-reply">Your email or Telegram</label>
+                    <label htmlFor="help-reply">{t("contact.reply")}</label>
                     <input
                       id="help-reply"
                       type="text"
                       name="reply"
-                      placeholder="you@example.com or @your_telegram"
+                      placeholder={t("contact.replyPlaceholder")}
                       value={contact.reply}
                       onChange={(e) => updateField("reply", e.target.value)}
                       aria-invalid={errors.reply ? true : undefined}
@@ -307,16 +277,16 @@ export function HelpPage() {
                       </p>
                     ) : (
                       <p className="field-hint" id="help-reply-hint">
-                        So we know where to answer you.
+                        {t("contact.replyHint")}
                       </p>
                     )}
                   </Box>
                   <Box className="help-field">
-                    <label htmlFor="help-message">Message</label>
+                    <label htmlFor="help-message">{t("contact.message")}</label>
                     <textarea
                       id="help-message"
                       name="message"
-                      placeholder="Your message"
+                      placeholder={t("contact.messagePlaceholder")}
                       value={contact.message}
                       onChange={(e) => updateField("message", e.target.value)}
                       aria-invalid={errors.message ? true : undefined}
@@ -331,7 +301,7 @@ export function HelpPage() {
                     ) : null}
                   </Box>
                   <button type="submit" className="help-contact-submit">
-                    Send
+                    {t("contact.send")}
                   </button>
                 </form>
               )}

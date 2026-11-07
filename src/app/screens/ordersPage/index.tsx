@@ -19,6 +19,7 @@ import { OrderStatus } from "../../../lib/enums/order.enum";
 import { MemberType } from "../../../lib/enums/member.enum";
 import type { AppDispatch } from "../../store";
 import type { Order } from "../../../lib/types/order";
+import { useI18n } from "../../../lib/i18n";
 import "../../../css/orders.css";
 
 /** REDUX SLICE & SELECTOR **/
@@ -33,6 +34,7 @@ const PAGE_SIZE = 20;
 export function OrdersPage() {
   const [value, setValue] = useState("1");
   const { authMember } = useGlobals();
+  const { t } = useI18n();
 
   /** Slice: Data => Store **/
   const { setWaitingOrders, setConfirmedOrders, setRejectedOrders } =
@@ -85,7 +87,7 @@ export function OrdersPage() {
   return (
     <div className="orders-page">
       <Box className="orders-layout">
-        <h1 className="orders-title">My Orders</h1>
+        <h1 className="orders-title">{t("orders.title")}</h1>
         <Stack className="orders-left">
           <TabContext value={value}>
             <Box className="orders-tabs-frame">
@@ -100,9 +102,9 @@ export function OrdersPage() {
                 variant="scrollable"
                 scrollButtons={false}
               >
-                <Tab label="Waiting Confirmation" value="1" />
-                <Tab label="Confirmed" value="2" />
-                <Tab label="Rejected" value="3" />
+                <Tab label={t("status.waiting")} value="1" />
+                <Tab label={t("status.confirmed")} value="2" />
+                <Tab label={t("status.rejected")} value="3" />
               </Tabs>
             </Box>
             <WaitingOrders loading={isLoading("waiting")} />
@@ -123,20 +125,17 @@ export function OrdersPage() {
                 </Box>
                 <Box className="orders-member-sub">
                   {authMember?.memberType === MemberType.ADVISOR
-                    ? "Advisor"
-                    : "Member"}
+                    ? t("member.advisor")
+                    : t("member.member")}
                 </Box>
               </Box>
             </Box>
           </Box>
 
           <Box className="orders-info-card">
-            <Box className="orders-info-title">Bank details</Box>
+            <Box className="orders-info-title">{t("orders.bankTitle")}</Box>
             <BankDetailsCard />
-            <p className="orders-info-note">
-              Transfer here and submit the screenshot when you check out —
-              this is just for reference.
-            </p>
+            <p className="orders-info-note">{t("orders.bankNote")}</p>
           </Box>
         </Stack>
       </Box>

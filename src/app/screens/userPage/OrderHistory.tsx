@@ -12,6 +12,7 @@ import OrderService from "../../services/OrderService";
 import { useGlobals } from "../../context/useGlobals";
 import { OrderStatus } from "../../../lib/enums/order.enum";
 import { serverApi } from "../../../lib/config";
+import { dateLocale, useI18n } from "../../../lib/i18n";
 import type { Order } from "../../../lib/types/order";
 import { ListSkeleton } from "../../components/Loaders";
 
@@ -30,6 +31,7 @@ const FETCH_LIMIT = 20;
  */
 export function OrderHistory() {
   const { authMember } = useGlobals();
+  const { t } = useI18n();
   const [orders, setOrders] = useState<Order[]>([]);
   const [openId, setOpenId] = useState<string | null>(null);
   // The open panel's height is measured from its content, so any number of
@@ -78,15 +80,13 @@ export function OrderHistory() {
 
   return (
     <Box className="settings-card orders-summary">
-      <h4>Order history</h4>
-      <p className="sub">Tap an order to see what's inside.</p>
+      <h4>{t("history.title")}</h4>
+      <p className="sub">{t("history.sub")}</p>
 
       {recent.length === 0 && loading && authMember ? (
         <ListSkeleton rows={3} />
       ) : recent.length === 0 ? (
-        <p className="order-history-empty">
-          You haven't placed an order yet.
-        </p>
+        <p className="order-history-empty">{t("history.empty")}</p>
       ) : (
         recent.map((order) => {
           const open = openId === order._id;
@@ -104,7 +104,7 @@ export function OrderHistory() {
                     {orderStatusLabel(order.orderStatus)}
                   </span>
                   <span className="order-date">
-                    {new Date(order.createdAt).toLocaleDateString()}
+                    {new Date(order.createdAt).toLocaleDateString(dateLocale())}
                   </span>
                 </Box>
                 <Box className="acc-head-right">
@@ -136,7 +136,7 @@ export function OrderHistory() {
                           />
                           <Box className="order-line-info">
                             <span className="order-line-name">
-                              {product?.productName ?? "Product unavailable"}
+                              {product?.productName ?? t("orders.unavailable")}
                             </span>
                             <span className="order-line-qty">
                               × {item.itemQuantity}
@@ -151,12 +151,16 @@ export function OrderHistory() {
                   </Box>
                   {order.orderDiscount ? (
                     <Box className="order-total-row discount">
-                      <span>Discount ({order.orderDiscountPercent}%)</span>
+                      <span>
+                        {t("cart.discount", {
+                          percent: order.orderDiscountPercent ?? 0,
+                        })}
+                      </span>
                       <span>&minus;{formatPrice(order.orderDiscount)}</span>
                     </Box>
                   ) : null}
                   <Box className="order-total-row total">
-                    <span>Total</span>
+                    <span>{t("common.total")}</span>
                     <span>{formatPrice(order.orderTotal)}</span>
                   </Box>
                 </Box>
@@ -167,7 +171,7 @@ export function OrderHistory() {
       )}
 
       <Link to="/orders" className="see-all-link">
-        View all orders →
+        {t("history.viewAll")}
       </Link>
     </Box>
   );

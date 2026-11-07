@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import { TELEGRAM_CHANNEL_URL, TELEGRAM_URL } from "../../../lib/config";
 import { BoltIcon, BoxIcon, ShieldIcon, TruckIcon } from "../icons";
+import { useI18n } from "../../../lib/i18n";
 import "../../../css/footer.css";
 
 export function Footer() {
+  const { t } = useI18n();
   return (
     <footer className="footer">
       <div className="footer-inner">
@@ -15,40 +17,37 @@ export function Footer() {
             <p className="footer-brand">
               K-glow <em>secrets</em>
             </p>
-            <p className="footer-about">
-              Authentic Korean skincare and makeup, sourced directly from Seoul
-              and delivered across Uzbekistan.
-            </p>
+            <p className="footer-about">{t("footer.about")}</p>
           </div>
           <ul className="footer-trust footer-col-trust">
             <li>
               <TruckIcon />
-              Shipped from Korea
+              {t("trust.shipped")}
             </li>
             <li>
               <ShieldIcon />
-              100% authentic
+              {t("trust.authentic")}
             </li>
             <li>
               <BoxIcon />
-              Usually in stock
+              {t("trust.inStock")}
             </li>
             <li>
               <BoltIcon />
-              Same-day dispatch via BTS post
+              {t("trust.dispatch")}
             </li>
           </ul>
           <div className="footer-col footer-col-shop">
-            <h5>Shop</h5>
-            <Link to="/">Home</Link>
-            <Link to="/products">Shop</Link>
-            <Link to="/live-tutorials">Live Tutorials</Link>
-            <Link to="/ai-beauty">AI Beauty</Link>
-            <Link to="/help">Help</Link>
+            <h5>{t("footer.shop")}</h5>
+            <Link to="/">{t("nav.home")}</Link>
+            <Link to="/products">{t("nav.shop")}</Link>
+            <Link to="/live-tutorials">{t("nav.tutorials")}</Link>
+            <Link to="/ai-beauty">{t("nav.aiBeauty")}</Link>
+            <Link to="/help">{t("nav.help")}</Link>
           </div>
           <div className="footer-col footer-col-findus">
-            <h5>Find us</h5>
-            <p>Namangan, Uzbekistan</p>
+            <h5>{t("footer.findUs")}</h5>
+            <p>{t("footer.city")}</p>
             {/* Telegram rather than a phone number and a mailbox: it is where
                 the shop actually replies, and it is one tap on the phone most
                 of this traffic arrives on. Carries the same accent colour as
@@ -60,19 +59,19 @@ export function Footer() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Message us on Telegram
+              {t("footer.messageUs")}
             </a>
           </div>
           <div className="footer-col footer-col-loop">
-            <h5>Stay in the loop</h5>
-            <p>New arrivals, restocks, discount events.</p>
+            <h5>{t("footer.loop")}</h5>
+            <p>{t("footer.loopText")}</p>
             <a
               className="footer-cta"
               href={TELEGRAM_CHANNEL_URL}
               target="_blank"
               rel="noopener noreferrer"
             >
-              Join our Telegram →
+              {t("footer.join")}
             </a>
           </div>
         </div>

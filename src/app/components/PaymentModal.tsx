@@ -13,6 +13,7 @@ import { BankDetailsCard } from "./BankDetailsCard";
 import { BusyLabel } from "./Loaders";
 import OrderService from "../services/OrderService";
 import { showError } from "../../lib/toast";
+import { useI18n } from "../../lib/i18n";
 import "../../css/orders.css";
 import "../../css/payment-modal.css";
 
@@ -30,6 +31,7 @@ export function PaymentModal({ open, onClose, items, amountDue }: PaymentModalPr
   const { onDeleteAll } = useBasket();
   const { authMember } = useGlobals();
   const history = useHistory();
+  const { t } = useI18n();
   const [step, setStep] = useState<Step>("bank");
   const [screenshot, setScreenshot] = useState<File | null>(null);
   const [transferNote, setTransferNote] = useState("");
@@ -128,12 +130,13 @@ export function PaymentModal({ open, onClose, items, amountDue }: PaymentModalPr
           {step === "bank" ? (
             <>
               <Box className="modal-head">
-                <h4>Complete your payment</h4>
+                <h4>{t("pay.title")}</h4>
                 <span
                   className="modal-close"
                   onClick={handleClose}
                   role="button"
                   tabIndex={0}
+                  aria-label={t("common.close")}
                   onKeyDown={onActivateKey(handleClose)}
                 >
                   ×
@@ -141,37 +144,35 @@ export function PaymentModal({ open, onClose, items, amountDue }: PaymentModalPr
               </Box>
               <BankDetailsCard>
                 <Box className="bank-amount">
-                  <span className="lbl">Amount to transfer</span>
+                  <span className="lbl">{t("pay.amount")}</span>
                   <span className="amt">{formatPrice(snap.amountDue)}</span>
                 </Box>
               </BankDetailsCard>
 
               <Box className="next-steps">
                 <Box className="step">
-                  <span className="n">1</span>Transfer the amount above to the
-                  card shown.
+                  <span className="n">1</span>
+                  {t("pay.step1")}
                 </Box>
                 <Box className="step">
-                  <span className="n">2</span>Save a screenshot or receipt of
-                  the transfer — you'll upload it on the next step.
+                  <span className="n">2</span>
+                  {t("pay.step2")}
                 </Box>
                 <Box className="step">
-                  <span className="n">3</span>Enter your delivery address
-                  below, then continue.
+                  <span className="n">3</span>
+                  {t("pay.step3")}
                 </Box>
               </Box>
 
               <Box className="modal-field">
-                <label>Delivery address</label>
+                <label>{t("pay.address")}</label>
                 <input
                   value={deliveryAddress}
                   onChange={(e) => setDeliveryAddress(e.target.value)}
-                  placeholder="e.g. Tashkent, Chilonzor tumani, 12-uy"
+                  placeholder={t("pay.addressPlaceholder")}
                 />
               </Box>
-              <p className="modal-subtext tight">
-                We'll ship your order via BTS post to this address.
-              </p>
+              <p className="modal-subtext tight">{t("pay.shipNote")}</p>
 
               <button
                 type="button"
@@ -179,21 +180,22 @@ export function PaymentModal({ open, onClose, items, amountDue }: PaymentModalPr
                 disabled={!deliveryAddress.trim()}
                 onClick={() => setStep("confirm")}
               >
-                I've sent the payment →
+                {t("pay.sent")}
               </button>
               <button type="button" className="modal-back" onClick={handleClose}>
-                ← Back to bag
+                {t("pay.backToBag")}
               </button>
             </>
           ) : (
             <>
               <Box className="modal-head">
-                <h4>Confirm your payment</h4>
+                <h4>{t("pay.confirmTitle")}</h4>
                 <span
                   className="modal-close"
                   onClick={handleClose}
                   role="button"
                   tabIndex={0}
+                  aria-label={t("common.close")}
                   onKeyDown={onActivateKey(handleClose)}
                 >
                   ×
@@ -204,8 +206,8 @@ export function PaymentModal({ open, onClose, items, amountDue }: PaymentModalPr
                   <UploadIcon />
                 </span>
                 {screenshot
-                  ? `Selected: ${screenshot.name}`
-                  : "Upload your transfer screenshot"}
+                  ? t("pay.selected", { name: screenshot.name })
+                  : t("pay.upload")}
                 <input
                   type="file"
                   accept="image/*"
@@ -214,11 +216,11 @@ export function PaymentModal({ open, onClose, items, amountDue }: PaymentModalPr
                 />
               </label>
               <Box className="modal-field">
-                <label>Transfer note / reference</label>
+                <label>{t("pay.note")}</label>
                 <input
                   value={transferNote}
                   onChange={(e) => setTransferNote(e.target.value)}
-                  placeholder="e.g. transaction ID from your bank app"
+                  placeholder={t("pay.notePlaceholder")}
                 />
               </Box>
               <button
@@ -228,9 +230,9 @@ export function PaymentModal({ open, onClose, items, amountDue }: PaymentModalPr
                 onClick={handleSubmitProof}
               >
                 {submitting ? (
-                  <BusyLabel>Sending your order…</BusyLabel>
+                  <BusyLabel>{t("pay.sending")}</BusyLabel>
                 ) : (
-                  "Submit for confirmation"
+                  t("pay.submit")
                 )}
               </button>
               <button
@@ -238,12 +240,9 @@ export function PaymentModal({ open, onClose, items, amountDue }: PaymentModalPr
                 className="modal-back"
                 onClick={() => setStep("bank")}
               >
-                ← Previous step
+                {t("pay.prev")}
               </button>
-              <p className="modal-subtext centered">
-                We'll verify your payment and confirm your order within a few
-                hours.
-              </p>
+              <p className="modal-subtext centered">{t("pay.verifyNote")}</p>
             </>
           )}
         </Box>
@@ -253,38 +252,35 @@ export function PaymentModal({ open, onClose, items, amountDue }: PaymentModalPr
           <Box className="confirm-check">
             <CheckIcon />
           </Box>
-          <h3>Thanks! We're confirming your payment.</h3>
-          <p>
-            We've received your screenshot and transfer note — we'll verify
-            it and confirm your order soon.
-          </p>
-          <span className="status-pill wait">Waiting Confirmation</span>
+          <h3>{t("thanks.title")}</h3>
+          <p>{t("thanks.text")}</p>
+          <span className="status-pill wait">{t("status.waiting")}</span>
           <Box className="confirm-summary">
             <Box className="row">
-              <span>Order</span>
+              <span>{t("thanks.order")}</span>
               <span>#{snap.orderNo}</span>
             </Box>
             <Box className="row">
-              <span>Items</span>
+              <span>{t("thanks.items")}</span>
               <span>{itemCount}</span>
             </Box>
             <Box className="row total">
-              <span>Total</span>
+              <span>{t("common.total")}</span>
               <span>{formatPrice(snap.amountDue)}</span>
             </Box>
           </Box>
           <Box className="next-steps">
             <Box className="step">
-              <span className="n">1</span>We check your payment screenshot
-              against the amount.
+              <span className="n">1</span>
+              {t("thanks.step1")}
             </Box>
             <Box className="step">
-              <span className="n">2</span>We confirm your order and prepare
-              it for shipping from Korea.
+              <span className="n">2</span>
+              {t("thanks.step2")}
             </Box>
             <Box className="step">
-              <span className="n">3</span>We contact you directly about
-              delivery.
+              <span className="n">3</span>
+              {t("thanks.step3")}
             </Box>
           </Box>
           <button
@@ -292,7 +288,7 @@ export function PaymentModal({ open, onClose, items, amountDue }: PaymentModalPr
             className="confirm-cta"
             onClick={handleContinueShopping}
           >
-            Continue shopping
+            {t("thanks.continue")}
           </button>
         </Box>
       )}

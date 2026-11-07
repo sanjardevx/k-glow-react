@@ -6,7 +6,7 @@
  * that. Plain DOM rather than a React provider, so it can be called from
  * hooks and services as well as components, exactly as the old helpers were.
  */
-import { Messages } from "./config";
+import { t, translateServerMessage } from "./i18n";
 import "../css/toast.css";
 
 type Tone = "success" | "error";
@@ -67,7 +67,8 @@ function show(tone: Tone, message: string, duration: number) {
 export function errorMessage(err: unknown): string {
   if (typeof err === "string") return err;
   const e = err as { response?: { data?: { message?: string } }; message?: string };
-  return e?.response?.data?.message ?? e?.message ?? Messages.error1;
+  const message = e?.response?.data?.message ?? e?.message;
+  return message ? translateServerMessage(message) : t("error.generic");
 }
 
 export function showError(err: unknown, duration: number = 4000) {

@@ -8,7 +8,7 @@ import {
   toCartItem,
 } from "./cartSlice";
 import { useGlobals } from "../../context/useGlobals";
-import { Messages } from "../../../lib/config";
+import { t } from "../../../lib/i18n";
 import { showError } from "../../../lib/toast";
 import type { Product } from "../../../lib/types/product";
 import type { CartItem } from "../../../lib/types/cart";
@@ -38,7 +38,7 @@ export function useBasket() {
      */
     onAdd: (product: Product, quantity = 1): boolean => {
       if (!authMember) {
-        showError(Messages.error2);
+        showError(t("error.loginFirst"));
         return false;
       }
       dispatch(addItem(toCartItem(product, quantity)));

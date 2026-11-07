@@ -2,6 +2,7 @@ import { useState, type ReactNode } from "react";
 import { Box } from "@mui/material";
 import { BANK_DETAILS } from "../../lib/bankDetails";
 import { CheckIcon, CopyIcon } from "./icons";
+import { useI18n } from "../../lib/i18n";
 
 interface BankDetailsCardProps {
   /** Modal-only extras, e.g. the "Amount to transfer" line. */
@@ -17,6 +18,7 @@ interface BankDetailsCardProps {
  */
 export function BankDetailsCard({ children }: BankDetailsCardProps) {
   const [copied, setCopied] = useState(false);
+  const { t } = useI18n();
 
   async function handleCopyCard() {
     const digits = BANK_DETAILS.cardNumber.replace(/\s/g, "");
@@ -50,25 +52,25 @@ export function BankDetailsCard({ children }: BankDetailsCardProps) {
   return (
     <Box className="bank-card">
       <Box className="bank-row">
-        <span>Card</span>
+        <span>{t("bank.card")}</span>
         <strong>{BANK_DETAILS.card}</strong>
       </Box>
       <Box className="bank-row">
-        <span>Card holder</span>
+        <span>{t("bank.holder")}</span>
         <strong>{BANK_DETAILS.cardHolder}</strong>
       </Box>
       <Box className="bank-row bank-row-card">
-        <span>Card number</span>
+        <span>{t("bank.number")}</span>
         <button
           type="button"
           className="bank-copy"
           onClick={handleCopyCard}
-          aria-label={`Copy card number ${BANK_DETAILS.cardNumber}`}
+          aria-label={t("bank.copyAria", { number: BANK_DETAILS.cardNumber })}
         >
           <span className="bank-copy-num">{BANK_DETAILS.cardNumber}</span>
           <span className={`bank-copy-flag${copied ? " copied" : ""}`}>
             {copied ? <CheckIcon /> : <CopyIcon />}
-            {copied ? "Copied" : "Copy"}
+            {copied ? t("bank.copied") : t("bank.copy")}
           </span>
         </button>
       </Box>

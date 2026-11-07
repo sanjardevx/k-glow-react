@@ -1,3 +1,4 @@
+import { t } from "../../lib/i18n";
 import "../../css/loaders.css";
 
 /** A small ring in the current text colour — sized to sit inside a button. */
@@ -23,7 +24,7 @@ export function PageLoader() {
   return (
     <div className="kg-page-loader" role="status">
       <Spinner />
-      <span className="kg-visually-hidden">Loading…</span>
+      <span className="kg-visually-hidden">{t("load.generic")}</span>
     </div>
   );
 }
@@ -62,7 +63,7 @@ export function ProductCardSkeletons({ count }: { count: number }) {
         </div>
       ))}
       <span className="kg-visually-hidden" role="status">
-        Loading products…
+        {t("load.products")}
       </span>
     </>
   );
@@ -81,7 +82,7 @@ export function ReviewGridSkeleton({ count }: { count: number }) {
         </div>
       ))}
       <span className="kg-visually-hidden" role="status">
-        Loading reviews…
+        {t("load.reviews")}
       </span>
     </div>
   );
@@ -91,7 +92,7 @@ export function ReviewGridSkeleton({ count }: { count: number }) {
 export function ProductDetailSkeleton() {
   return (
     <div className="chosen-product-page" role="status">
-      <span className="kg-visually-hidden">Loading product…</span>
+      <span className="kg-visually-hidden">{t("load.product")}</span>
       <div className="pdp" aria-hidden="true">
         <div className="pdp-gallery">
           <div className="pdp-photo">
@@ -116,7 +117,7 @@ export function ProductDetailSkeleton() {
 export function ListSkeleton({ rows }: { rows: number }) {
   return (
     <div role="status">
-      <span className="kg-visually-hidden">Loading…</span>
+      <span className="kg-visually-hidden">{t("load.generic")}</span>
       {Array.from({ length: rows }, (_, i) => (
         <div className="kg-skel kg-skel-row" key={i} aria-hidden="true" />
       ))}

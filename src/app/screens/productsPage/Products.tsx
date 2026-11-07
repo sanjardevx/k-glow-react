@@ -13,6 +13,7 @@ import { ChevronDownIcon, SearchIcon } from "../../components/icons";
 import { onActivateKey } from "../../components/a11y";
 import { ProductCardSkeletons } from "../../components/Loaders";
 import type { AppDispatch } from "../../store";
+import { useI18n, type TKey } from "../../../lib/i18n";
 import type { Product, ProductInquiry } from "../../../lib/types/product";
 import {
   ProductCategory,
@@ -45,11 +46,20 @@ const chips = [
 ] as const;
 type Chip = (typeof chips)[number];
 
+const chipLabels: Record<Chip, TKey> = {
+  All: "chip.all",
+  Bestseller: "chip.bestseller",
+  Sale: "chip.sale",
+  Skincare: "chip.skincare",
+  Makeup: "chip.makeup",
+  Sets: "chip.sets",
+};
+
 const sortOptions = [
-  { value: "featured", label: "Featured" },
-  { value: "price-asc", label: "Price: Low to High" },
-  { value: "price-desc", label: "Price: High to Low" },
-  { value: "top-rated", label: "Top Rated" },
+  { value: "featured", label: "sort.featured" },
+  { value: "price-asc", label: "sort.priceAsc" },
+  { value: "price-desc", label: "sort.priceDesc" },
+  { value: "top-rated", label: "sort.topRated" },
 ] as const;
 type SortValue = (typeof sortOptions)[number]["value"];
 
@@ -86,6 +96,7 @@ export function Products() {
   const dispatch = useAppDispatch();
   const { onAdd } = useBasket();
   const location = useLocation();
+  const { t, plural } = useI18n();
   const [activeChip, setActiveChip] = useState<Chip>(() =>
     chipFromQuery(location.search),
   );
@@ -193,15 +204,15 @@ export function Products() {
     <div className="shop-page">
       <Box className="shop-head">
         <Box className="shop-heading">
-          <span className="eyebrow">Our catalog</span>
-          <h1 className="shop-title">Shop</h1>
+          <span className="eyebrow">{t("shop.eyebrow")}</span>
+          <h1 className="shop-title">{t("shop.title")}</h1>
           {/* Held back until there is a real number to quote: during the
               first load and after a failed request, "0 products" reads as a
               fact about the catalog rather than about the connection. */}
           <Box className="shop-count">
             {loading || failed
               ? "\u00a0"
-              : `${sorted.length} ${sorted.length === 1 ? "product" : "products"}`}
+              : `${sorted.length} ${plural("shop.productNoun", sorted.length)}`}
           </Box>
         </Box>
 
@@ -218,29 +229,29 @@ export function Products() {
             <SearchIcon className="shop-search-glyph" />
             <input
               type="search"
-              placeholder="Search products…"
-              aria-label="Search products"
+              placeholder={t("shop.searchPlaceholder")}
+              aria-label={t("shop.searchAria")}
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
             />
             <button type="submit" className="shop-search-submit">
-              Search
+              {t("shop.search")}
             </button>
           </Box>
 
           <label className="shop-sort">
-            <span className="shop-sort-label">Sort</span>
+            <span className="shop-sort-label">{t("shop.sort")}</span>
             <select
               value={sort}
               onChange={(e) => {
                 setSort(e.target.value as SortValue);
                 setVisibleCount(PAGE_SIZE);
               }}
-              aria-label="Sort products"
+              aria-label={t("shop.sortAria")}
             >
               {sortOptions.map((option) => (
                 <option key={option.value} value={option.value}>
-                  {option.label}
+                  {t(option.label)}
                 </option>
               ))}
             </select>
@@ -249,7 +260,7 @@ export function Products() {
         </Box>
       </Box>
 
-      <Box className="chip-row" role="tablist" aria-label="Product categories">
+      <Box className="chip-row" role="tablist" aria-label={t("shop.categoriesAria")}>
         {chips.map((chip) => (
           <button
             type="button"
@@ -259,7 +270,7 @@ export function Products() {
             className={`chip${activeChip === chip ? " active" : ""}`}
             onClick={() => selectChip(chip)}
           >
-            {chip}
+            {t(chipLabels[chip])}
           </button>
         ))}
       </Box>
@@ -283,9 +294,9 @@ export function Products() {
                   <Box className={`p-card${soldOut ? " soldout" : ""}`}>
                     <Box className="p-photo">
                       {soldOut ? (
-                        <span className="p-badge soldout">SOLD OUT</span>
+                        <span className="p-badge soldout">{t("card.soldOutBadge")}</span>
                       ) : bestsellers.has(ele._id) ? (
-                        <span className="p-badge best">BEST</span>
+                        <span className="p-badge best">{t("card.best")}</span>
                       ) : ele.productDiscount ? (
                         <span className="p-badge sale">
                           −{ele.productDiscount}%
@@ -325,7 +336,7 @@ export function Products() {
                           if (!soldOut) onAdd(ele);
                         })}
                       >
-                        {soldOut ? "Sold Out" : "Add to Cart"}
+                        {soldOut ? t("card.soldOut") : t("card.addToCart")}
                       </Box>
                     </Box>
                   </Box>
@@ -341,21 +352,21 @@ export function Products() {
           </Box>
         ) : failed ? (
           <Box className="shop-empty is-error" role="alert">
-            <p>We couldn't reach the shop just now.</p>
+            <p>{t("shop.failed")}</p>
             <button
               type="button"
               className="btn-outline"
               onClick={() => setRetryCount((n) => n + 1)}
             >
-              Try again
+              {t("common.tryAgain")}
             </button>
           </Box>
         ) : (
           <Box className="shop-empty">
             <p>
               {productSearch.search
-                ? `No products match "${productSearch.search}".`
-                : "No products in this category yet — check back soon."}
+                ? t("shop.noMatch", { query: productSearch.search })
+                : t("shop.emptyCategory")}
             </p>
           </Box>
         )}
@@ -367,7 +378,7 @@ export function Products() {
               className="load-more-btn"
               onClick={() => setVisibleCount((v) => v + PAGE_SIZE)}
             >
-              Load more products
+              {t("shop.loadMore")}
             </button>
           </Box>
         ) : null}

@@ -1,13 +1,13 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Box } from "@mui/material";
 import MemberService from "../../services/MemberService";
-import { Messages } from "../../../lib/config";
 import { useGlobals } from "../../context/useGlobals";
 import { useBodyScrollLock } from "../useBodyScrollLock";
 import { onActivateKey } from "../a11y";
 import { BusyLabel } from "../Loaders";
 import { GoogleButton } from "./GoogleButton";
 import { errorMessage, showSuccess } from "../../../lib/toast";
+import { useI18n } from "../../../lib/i18n";
 import "../../../css/auth.css";
 
 export type AuthMode = "login" | "signup";
@@ -28,6 +28,7 @@ export function AuthenticationModal(props: AuthenticationModalProps) {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const { setAuthMember } = useGlobals();
+  const { t } = useI18n();
 
   useBodyScrollLock(open);
 
@@ -54,23 +55,23 @@ export function AuthenticationModal(props: AuthenticationModalProps) {
     // all three rather than sending a blank. There is no second password
     // box: the SHOW toggle lets the shopper check what they typed instead.
     if (!memberNick.trim() || !memberPhone.trim() || !memberPassword)
-      throw new Error(Messages.error3);
+      throw new Error(t("error.fillAll"));
 
     const signupInput = { memberNick: memberNick.trim(), memberPhone, memberPassword };
     const authMember = await new MemberService().signup(signupInput);
     setAuthMember(authMember);
     onClose();
-    showSuccess(`Welcome, ${signupInput.memberNick}!`);
+    showSuccess(t("auth.welcomeName", { name: signupInput.memberNick }));
   }
 
   async function handleLoginRequest() {
-    if (!memberNick.trim() || !memberPassword) throw new Error(Messages.error3);
+    if (!memberNick.trim() || !memberPassword) throw new Error(t("error.fillAll"));
 
     const loginInput = { memberNick: memberNick.trim(), memberPassword };
     const authMember = await new MemberService().login(loginInput);
     setAuthMember(authMember);
     onClose();
-    showSuccess(`Welcome back, ${loginInput.memberNick}!`);
+    showSuccess(t("auth.welcomeBack", { name: loginInput.memberNick }));
   }
 
   async function handleGoogleCredential(credential: string) {
@@ -81,7 +82,9 @@ export function AuthenticationModal(props: AuthenticationModalProps) {
       setAuthMember(member);
       onClose();
       showSuccess(
-        isNew ? `Welcome, ${member.memberNick}!` : `Welcome back, ${member.memberNick}!`,
+        t(isNew ? "auth.welcomeName" : "auth.welcomeBack", {
+          name: member.memberNick,
+        }),
       );
     } catch (err) {
       setError(errorMessage(err));
@@ -114,13 +117,13 @@ export function AuthenticationModal(props: AuthenticationModalProps) {
     <Box className="modal-overlay auth-modal" onClick={onClose}>
       <Box className="modal-card" onClick={(e) => e.stopPropagation()}>
         <Box className="modal-head">
-          <h4>{isSignup ? "Create account" : "Welcome back"}</h4>
+          <h4>{isSignup ? t("auth.create") : t("auth.welcome")}</h4>
           <span
             className="modal-close"
             onClick={onClose}
             role="button"
             tabIndex={0}
-            aria-label="Close"
+            aria-label={t("common.close")}
             onKeyDown={onActivateKey(onClose)}
           >
             ×
@@ -133,12 +136,12 @@ export function AuthenticationModal(props: AuthenticationModalProps) {
           <Box className="modal-field">
             {/* Login matches on the nickname only — the server never looks a
                 member up by phone, so don't offer it as an option here. */}
-            <label htmlFor="auth-nick">Name</label>
+            <label htmlFor="auth-nick">{t("auth.name")}</label>
             <input
               id="auth-nick"
               type="text"
               autoComplete={isSignup ? "nickname" : "username"}
-              placeholder="Your name"
+              placeholder={t("auth.namePlaceholder")}
               value={memberNick}
               onChange={(e) => setMemberNick(e.target.value)}
               autoFocus
@@ -147,7 +150,7 @@ export function AuthenticationModal(props: AuthenticationModalProps) {
 
           {isSignup ? (
             <Box className="modal-field">
-              <label htmlFor="auth-phone">Phone</label>
+              <label htmlFor="auth-phone">{t("auth.phone")}</label>
               <input
                 id="auth-phone"
                 type="tel"
@@ -161,13 +164,13 @@ export function AuthenticationModal(props: AuthenticationModalProps) {
           ) : null}
 
           <Box className="modal-field">
-            <label htmlFor="auth-password">Password</label>
+            <label htmlFor="auth-password">{t("auth.password")}</label>
             <Box className="pw-wrap">
               <input
                 id="auth-password"
                 type={showPassword ? "text" : "password"}
                 autoComplete={isSignup ? "new-password" : "current-password"}
-                placeholder={isSignup ? "Create a password" : "Your password"}
+                placeholder={isSignup ? t("auth.createPassword") : t("auth.yourPassword")}
                 value={memberPassword}
                 onChange={(e) => setMemberPassword(e.target.value)}
               />
@@ -175,11 +178,11 @@ export function AuthenticationModal(props: AuthenticationModalProps) {
                 className="pw-toggle"
                 role="button"
                 tabIndex={0}
-                aria-label={showPassword ? "Hide password" : "Show password"}
+                aria-label={showPassword ? t("auth.hideAria") : t("auth.showAria")}
                 onClick={() => setShowPassword((v) => !v)}
                 onKeyDown={onActivateKey(() => setShowPassword((v) => !v))}
               >
-                {showPassword ? "HIDE" : "SHOW"}
+                {showPassword ? t("auth.hide") : t("auth.show")}
               </span>
             </Box>
           </Box>
@@ -192,17 +195,17 @@ export function AuthenticationModal(props: AuthenticationModalProps) {
 
           <button type="submit" className="modal-btn" disabled={submitting}>
             {submitting ? (
-              <BusyLabel>Please wait…</BusyLabel>
+              <BusyLabel>{t("auth.wait")}</BusyLabel>
             ) : isSignup ? (
-              "Sign up"
+              t("auth.signup")
             ) : (
-              "Log in"
+              t("auth.login")
             )}
           </button>
         </form>
 
         <p className="modal-switch">
-          {isSignup ? "Already have an account? " : "New to K-Glow Secrets? "}
+          {isSignup ? t("auth.haveAccount") : t("auth.newHere")}{" "}
           <a
             onClick={() => onSwitchMode(isSignup ? "login" : "signup")}
             role="button"
@@ -211,7 +214,7 @@ export function AuthenticationModal(props: AuthenticationModalProps) {
               onSwitchMode(isSignup ? "login" : "signup"),
             )}
           >
-            {isSignup ? "Log in" : "Create one"}
+            {isSignup ? t("auth.login") : t("auth.createOne")}
           </a>
         </p>
       </Box>

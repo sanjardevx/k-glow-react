@@ -1,8 +1,9 @@
 import { Fragment } from "react";
 import { Box } from "@mui/material";
+import { useI18n, type TKey } from "../../lib/i18n";
 import "../../css/stepper.css";
 
-const STEPS = ["Your Bag", "Complete Payment", "Confirm Payment", "Thanks"];
+const STEPS: TKey[] = ["step.bag", "step.payment", "step.confirm", "step.thanks"];
 
 interface CheckoutStepperProps {
   currentStep: 1 | 2 | 3 | 4;
@@ -10,6 +11,7 @@ interface CheckoutStepperProps {
 }
 
 export function CheckoutStepper({ currentStep, compact }: CheckoutStepperProps) {
+  const { t } = useI18n();
   return (
     <Box className={`stepper-wrap${compact ? " in-modal" : ""}`}>
       <Box className="stepper">
@@ -22,7 +24,7 @@ export function CheckoutStepper({ currentStep, compact }: CheckoutStepperProps) 
             <Fragment key={label}>
               <Box className={`step-node${stateClass}`}>
                 <Box className="step-circle">{isDone ? "✓" : stepNum}</Box>
-                <Box className="step-label">{label}</Box>
+                <Box className="step-label">{t(label)}</Box>
               </Box>
               {i < STEPS.length - 1 ? (
                 <Box

@@ -8,11 +8,14 @@ import { onActivateKey } from "../../components/a11y";
 import { retrieveNewArrivals } from "./selector";
 import { serverApi } from "../../../lib/config";
 import { ProductCardSkeletons } from "../../components/Loaders";
+import { useI18n } from "../../../lib/i18n";
+import { rich } from "../../../lib/i18n/rich";
 
 export function NewArrivals({ loading }: { loading: boolean }) {
   const { onAdd } = useBasket();
   const newArrivals = useAppSelector(retrieveNewArrivals);
   const revealRef = useReveal<HTMLElement>();
+  const { t } = useI18n();
 
   // Nothing settled and nothing arrived: the shop is unreachable or the list
   // is genuinely empty. Either way a heading over a void is worse than no
@@ -24,13 +27,11 @@ export function NewArrivals({ loading }: { loading: boolean }) {
       <Box className="section-inner">
         <Box className="section-head">
           <Box className="section-heading">
-            <span className="eyebrow">Just landed</span>
-            <Box className="section-title">
-              New <em>arrivals</em>
-            </Box>
+            <span className="eyebrow">{t("arrivals.eyebrow")}</span>
+            <Box className="section-title">{rich(t("arrivals.title"))}</Box>
           </Box>
           <Link to="/products" className="section-link">
-            View all →
+            {t("common.viewAll")}
           </Link>
         </Box>
         <Box className="product-grid product-grid-6">
@@ -48,9 +49,9 @@ export function NewArrivals({ loading }: { loading: boolean }) {
                 <Box className={`p-card${soldOut ? " soldout" : ""}`}>
                   <Box className="p-photo">
                     {soldOut ? (
-                      <span className="p-badge soldout">SOLD OUT</span>
+                      <span className="p-badge soldout">{t("card.soldOutBadge")}</span>
                     ) : (
-                      <span className="p-badge new">NEW</span>
+                      <span className="p-badge new">{t("card.new")}</span>
                     )}
                     <Box className="p-photo-frame">
                       <img
@@ -86,7 +87,7 @@ export function NewArrivals({ loading }: { loading: boolean }) {
                         if (!soldOut) onAdd(ele);
                       })}
                     >
-                      {soldOut ? "Sold Out" : "Add to Cart"}
+                      {soldOut ? t("card.soldOut") : t("card.addToCart")}
                     </Box>
                   </Box>
                 </Box>

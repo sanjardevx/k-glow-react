@@ -3,10 +3,13 @@ import { useAppSelector } from "../../hooks";
 import { useReveal } from "../../components/useReveal";
 import { retrieveReviews } from "./selector";
 import { ReviewGridSkeleton } from "../../components/Loaders";
+import { useI18n } from "../../../lib/i18n";
+import { rich } from "../../../lib/i18n/rich";
 
 export function Reviews({ loading }: { loading: boolean }) {
   const reviews = useAppSelector(retrieveReviews);
   const revealRef = useReveal<HTMLElement>();
+  const { t } = useI18n();
 
   // Nothing settled and nothing arrived: the shop is unreachable or the list
   // is genuinely empty. Either way a heading over a void is worse than no
@@ -16,13 +19,9 @@ export function Reviews({ loading }: { loading: boolean }) {
   return (
     <section className="section reviews reveal" ref={revealRef}>
       <Box className="reviews-head">
-        <span className="eyebrow">Customer love</span>
-        <Box className="section-title">
-          What Our <em>Beauty Queens</em> Say
-        </Box>
-        <p className="reviews-sub">
-          Real words from real customers — no scripts, no stock photos.
-        </p>
+        <span className="eyebrow">{t("reviews.eyebrow")}</span>
+        <Box className="section-title">{rich(t("reviews.title"))}</Box>
+        <p className="reviews-sub">{t("reviews.sub")}</p>
       </Box>
       {reviews.length !== 0 ? (
         <Box className="review-grid">
@@ -54,7 +53,7 @@ export function Reviews({ loading }: { loading: boolean }) {
       ) : loading ? (
         <ReviewGridSkeleton count={6} />
       ) : (
-        <Box className="review-empty">No reviews yet — check back soon.</Box>
+        <Box className="review-empty">{t("reviews.empty")}</Box>
       )}
       <Box className="reviews-foot">
         <a
@@ -63,7 +62,7 @@ export function Reviews({ loading }: { loading: boolean }) {
           rel="noopener noreferrer"
           className="section-link reviews-channel-link"
         >
-          View all reviews in our Telegram channel →
+          {t("reviews.channel")}
         </a>
       </Box>
     </section>

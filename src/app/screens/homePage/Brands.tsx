@@ -1,5 +1,7 @@
 import { Box } from "@mui/material";
 import { useReveal } from "../../components/useReveal";
+import { useI18n } from "../../../lib/i18n";
+import { rich } from "../../../lib/i18n/rich";
 
 const brands = [
   { name: "Round Lab", logo: "/img/brands/round-lab-logo.webp" },
@@ -15,15 +17,14 @@ const brands = [
 
 export function Brands() {
   const revealRef = useReveal<HTMLElement>();
+  const { t } = useI18n();
 
   return (
     <section className="section brands reveal" ref={revealRef}>
       <Box className="section-inner">
         <Box className="brands-head">
-          <span className="eyebrow">Authentic only</span>
-          <Box className="section-title">
-            Brands We <em>Carry</em>
-          </Box>
+          <span className="eyebrow">{t("brands.eyebrow")}</span>
+          <Box className="section-title">{rich(t("brands.title"))}</Box>
         </Box>
       </Box>
       <Box className="brand-marquee">

@@ -6,9 +6,11 @@ import { useAppSelector } from "../../hooks";
 import { retrieveRejectedOrders } from "./selector";
 import { findOrderProduct } from "./orderHelpers";
 import { serverApi } from "../../../lib/config";
+import { dateLocale, useI18n } from "../../../lib/i18n";
 
 export function RejectedOrders({ loading }: { loading: boolean }) {
   const orders = useAppSelector(retrieveRejectedOrders);
+  const { t } = useI18n();
 
   return (
     <TabPanel value="3">
@@ -17,9 +19,9 @@ export function RejectedOrders({ loading }: { loading: boolean }) {
           orders.map((order) => (
             <Box className="order-card" key={order._id}>
               <Box className="order-card-head">
-                <span className="status-pill rejected">Rejected</span>
+                <span className="status-pill rejected">{t("status.rejected")}</span>
                 <span className="order-date">
-                  {new Date(order.createdAt).toLocaleDateString()}
+                  {new Date(order.createdAt).toLocaleDateString(dateLocale())}
                 </span>
               </Box>
               <Box className="order-items">
@@ -34,7 +36,7 @@ export function RejectedOrders({ loading }: { loading: boolean }) {
                       />
                       <Box className="order-line-info">
                         <span className="order-line-name">
-                          {product?.productName ?? "Product unavailable"}
+                          {product?.productName ?? t("orders.unavailable")}
                         </span>
                         <span className="order-line-qty">
                           × {item.itemQuantity}
@@ -48,21 +50,23 @@ export function RejectedOrders({ loading }: { loading: boolean }) {
                 })}
               </Box>
               <Box className="order-total-row">
-                <span>Delivery</span>
+                <span>{t("cart.delivery")}</span>
                 <span>
                   {order.orderDelivery
                     ? formatPrice(order.orderDelivery)
-                    : "Free"}
+                    : t("cart.free")}
                 </span>
               </Box>
               {order.orderDiscount ? (
                 <Box className="order-total-row discount">
-                  <span>Discount ({order.orderDiscountPercent}%)</span>
+                  <span>
+                    {t("cart.discount", { percent: order.orderDiscountPercent ?? 0 })}
+                  </span>
                   <span>&minus;{formatPrice(order.orderDiscount)}</span>
                 </Box>
               ) : null}
               <Box className="order-total-row total">
-                <span>Total</span>
+                <span>{t("common.total")}</span>
                 <span>{formatPrice(order.orderTotal)}</span>
               </Box>
               {/* Shown straight on the card rather than behind a tap: being
@@ -72,10 +76,10 @@ export function RejectedOrders({ loading }: { loading: boolean }) {
               <p className="order-note reject-reason">
                 {order.rejectReason ? (
                   <>
-                    <strong>Reason:</strong> {order.rejectReason}
+                    <strong>{t("orders.reason")}</strong> {order.rejectReason}
                   </>
                 ) : (
-                  "This payment couldn't be confirmed — message us and we'll sort it out."
+                  t("orders.rejectedFallback")
                 )}
               </p>
             </Box>
@@ -83,7 +87,7 @@ export function RejectedOrders({ loading }: { loading: boolean }) {
         ) : loading ? (
           <ListSkeleton rows={3} />
         ) : (
-          <Box className="orders-empty">No rejected orders.</Box>
+          <Box className="orders-empty">{t("orders.noRejected")}</Box>
         )}
       </Stack>
     </TabPanel>

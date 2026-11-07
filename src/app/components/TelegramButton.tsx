@@ -14,12 +14,14 @@
  */
 import { useEffect, useState } from "react";
 import { TELEGRAM_URL } from "../../lib/config";
+import { useI18n } from "../../lib/i18n";
 
 /** How far down before tucking starts — never on the first screen. */
 const TUCK_AFTER = 240;
 
 export function TelegramButton() {
   const [tucked, setTucked] = useState(false);
+  const { t } = useI18n();
 
   useEffect(() => {
     let lastY = window.scrollY;
@@ -50,7 +52,7 @@ export function TelegramButton() {
       target="_blank"
       rel="noopener noreferrer"
       className={`telegram-fab${tucked ? " is-tucked" : ""}`}
-      aria-label="Chat with us on Telegram"
+      aria-label={t("telegram.aria")}
     >
       <span className="telegram-fab-spin">
         <svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -61,7 +63,7 @@ export function TelegramButton() {
           />
         </svg>
       </span>
-      <span className="telegram-fab-tooltip">Chat 1:1 with our admin</span>
+      <span className="telegram-fab-tooltip">{t("telegram.tooltip")}</span>
     </a>
   );
 }

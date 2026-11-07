@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { Box } from "@mui/material";
 import ProductService from "../../services/ProductService";
+import { useI18n, type TKey } from "../../../lib/i18n";
 
 interface Stat {
   value: number;
   suffix: string;
-  label: string;
+  label: TKey;
 }
 
 /**
@@ -15,15 +16,15 @@ interface Stat {
  * honest by hand.
  */
 const fixedStats: Stat[] = [
-  { value: 1000, suffix: "+", label: "Happy customers" },
-  { value: 3, suffix: "", label: "Years in business" },
+  { value: 1000, suffix: "+", label: "stats.customers" },
+  { value: 3, suffix: "", label: "stats.years" },
 ];
 
 /** Drawn while the counts load, so the section has its full height from the
  *  first paint instead of jumping open when they arrive. */
 const loadingStats: Stat[] = [
-  { value: 0, suffix: "", label: "Brands carried" },
-  { value: 0, suffix: "", label: "Products" },
+  { value: 0, suffix: "", label: "stats.brands" },
+  { value: 0, suffix: "", label: "stats.products" },
   ...fixedStats,
 ];
 
@@ -36,14 +37,15 @@ export function Statistics() {
   const [stats, setStats] = useState<Stat[] | null>(null);
   const [inView, setInView] = useState(false);
   const [counts, setCounts] = useState<number[]>([]);
+  const { t } = useI18n();
 
   useEffect(() => {
     let cancelled = false;
     new ProductService()
       .getCatalogStats()
       .then(({ brandCount, productCount }) => [
-        { value: brandCount, suffix: "", label: "Brands carried" },
-        { value: productCount, suffix: "", label: "Products" },
+        { value: brandCount, suffix: "", label: "stats.brands" as const },
+        { value: productCount, suffix: "", label: "stats.products" as const },
         ...fixedStats,
       ])
       // Without the live counts, show only what's known rather than guess.
@@ -110,7 +112,7 @@ export function Statistics() {
               {counts[i] ?? 0}
               {s.suffix}
             </Box>
-            <Box className="stat-label">{s.label}</Box>
+            <Box className="stat-label">{t(s.label)}</Box>
           </Box>
         ))}
       </Box>

@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+import { useI18n } from "../../../lib/i18n";
+import { rich } from "../../../lib/i18n/rich";
 
 /**
  * Hero. The soft, full-width backdrop is the banner photo itself, blurred and
@@ -11,26 +13,20 @@ import { Link } from "react-router-dom";
  * plain href is enough to land on the right chip.
  */
 export function Hero() {
+  const { t } = useI18n();
   return (
     <section className="hero">
       <div className="hero-bg" aria-hidden="true" />
       <div className="hero-inner">
         <div className="copy">
-          <h2>
-            Authentic K-beauty,
-            <br />
-            <em>delivered to you.</em>
-          </h2>
-          <p>
-            Sourced directly from Korea — the same skincare and makeup brands
-            trending in Seoul, now in Tashkent.
-          </p>
+          <h2>{rich(t("hero.title"))}</h2>
+          <p>{t("hero.text")}</p>
           <div className="cta-row">
             <Link to="/products?category=bestseller" className="btn-ink">
-              Shop Bestsellers
+              {t("hero.shopBest")}
             </Link>
             <Link to="/products?category=skincare" className="btn-outline">
-              Discover Skincare
+              {t("hero.discover")}
             </Link>
           </div>
         </div>

@@ -12,6 +12,7 @@
  */
 import { useEffect, useRef, useState } from "react";
 import { GOOGLE_CLIENT_ID } from "../../../lib/config";
+import { useI18n } from "../../../lib/i18n";
 
 interface GoogleIdentity {
   accounts: {
@@ -65,6 +66,7 @@ interface GoogleButtonProps {
 export function GoogleButton({ mode, onCredential }: GoogleButtonProps) {
   const slotRef = useRef<HTMLDivElement | null>(null);
   const [failed, setFailed] = useState(false);
+  const { lang, t } = useI18n();
   // The latest handler, read when Google calls back — initialize() keeps the
   // first callback it was given for the life of the page.
   const onCredentialRef = useRef(onCredential);
@@ -91,9 +93,9 @@ export function GoogleButton({ mode, onCredential }: GoogleButtonProps) {
           shape: "pill",
           text: mode === "signup" ? "signup_with" : "continue_with",
           logo_alignment: "center",
-          // The shop is in English; left alone, Google follows the browser's
-          // language and the button reads differently from the rest.
-          locale: "en",
+          // Left alone, Google follows the browser's language, which need not
+          // be the one the shopper picked here.
+          locale: lang,
           // Google draws at a fixed pixel width, between 200 and 400.
           width: Math.min(400, Math.max(200, slot.offsetWidth)),
         });
@@ -104,7 +106,7 @@ export function GoogleButton({ mode, onCredential }: GoogleButtonProps) {
     return () => {
       cancelled = true;
     };
-  }, [mode]);
+  }, [mode, lang]);
 
   if (!GOOGLE_CLIENT_ID || failed) return null;
 
@@ -112,7 +114,7 @@ export function GoogleButton({ mode, onCredential }: GoogleButtonProps) {
     <>
       <div className="google-slot" ref={slotRef} />
       <div className="auth-divider" role="separator">
-        <span>or</span>
+        <span>{t("auth.or")}</span>
       </div>
     </>
   );

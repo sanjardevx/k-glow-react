@@ -10,6 +10,8 @@ import { TutorialPlatform } from "../../../lib/enums/tutorial.enum";
 import type { Tutorial } from "../../../lib/types/tutorial";
 import { withYouTubeApi } from "./youtubeApi";
 import { LoadingNote } from "../../components/Loaders";
+import { useI18n } from "../../../lib/i18n";
+import { rich } from "../../../lib/i18n/rich";
 import "../../../css/tutorials.css";
 
 const TUTORIAL_LIMIT = 24;
@@ -36,6 +38,7 @@ export function TutorialsPage() {
   const [loading, setLoading] = useState(true);
   const [failed, setFailed] = useState(false);
   const [playingId, setPlayingId] = useState<string | null>(null);
+  const { t } = useI18n();
   // noSsr makes this evaluate synchronously on mount — without it the first
   // render always reports "not mobile" and a phone would flash the grid
   // before swapping to the feed.
@@ -65,30 +68,20 @@ export function TutorialsPage() {
     <div className="tutorials-page">
       {showHeading ? (
         <Box className="tutorials-head">
-          <span className="eyebrow">Watch and learn</span>
-          <h1 className="tutorials-title">
-            Live <em>tutorials</em>
-          </h1>
-          <p className="tutorials-sub">
-            Short routines and product how-tos — so you know exactly what to do
-            with everything in your bag.
-          </p>
+          <span className="eyebrow">{t("tut.eyebrow")}</span>
+          <h1 className="tutorials-title">{rich(t("tut.title"))}</h1>
+          <p className="tutorials-sub">{t("tut.sub")}</p>
         </Box>
       ) : null}
 
       {loading ? (
         <Box className="tutorials-note">
-          <LoadingNote>Loading tutorials…</LoadingNote>
+          <LoadingNote>{t("load.tutorials")}</LoadingNote>
         </Box>
       ) : failed ? (
-        <Box className="tutorials-note">
-          We couldn't load the tutorials just now — please try again in a
-          moment.
-        </Box>
+        <Box className="tutorials-note">{t("tut.failed")}</Box>
       ) : tutorials.length === 0 ? (
-        <Box className="tutorials-note">
-          No tutorials yet — check back soon.
-        </Box>
+        <Box className="tutorials-note">{t("tut.empty")}</Box>
       ) : isPhone ? (
         <TutorialsFeed tutorials={tutorials} />
       ) : (
@@ -234,6 +227,7 @@ function TutorialShopBar({
   tutorial: Tutorial;
   playing: boolean;
 }) {
+  const { t } = useI18n();
   const product = tutorial.productData?.[0];
   // While a player is mounted it draws its own bar (play/pause + progress)
   // along the bottom edge, so the shop bar lifts clear of it. Driven by a
@@ -269,7 +263,9 @@ function TutorialShopBar({
       className={className}
     >
       <span className="t-shop-text">
-        <span className="t-shop-name">Shop {tutorial.tutorialBrand}</span>
+        <span className="t-shop-name">
+          {t("tut.shopBrand", { brand: tutorial.tutorialBrand })}
+        </span>
       </span>
       <span className="t-shop-go" aria-hidden="true">
         ›
@@ -303,6 +299,7 @@ function TutorialEmbed({
   startMuted,
   onMutedChange,
 }: TutorialEmbedProps) {
+  const { t } = useI18n();
   const isYouTube = tutorial.tutorialPlatform === TutorialPlatform.YOUTUBE;
 
   if (isYouTube && (playing || !tutorial.tutorialThumbnail)) {
@@ -323,7 +320,7 @@ function TutorialEmbed({
         type="button"
         className="t-play"
         onClick={onPlay}
-        aria-label={`Play ${tutorial.tutorialTitle}`}
+        aria-label={t("tut.play", { title: tutorial.tutorialTitle })}
       >
         <img src={tutorial.tutorialThumbnail} alt="" className="t-thumb" />
         <span className="t-play-icon">
@@ -344,7 +341,7 @@ function TutorialEmbed({
       <span className="t-play-icon">
         <ExternalLinkIcon />
       </span>
-      <span className="t-play-out-label">Watch on Instagram</span>
+      <span className="t-play-out-label">{t("tut.instagram")}</span>
     </a>
   );
 }
@@ -384,6 +381,7 @@ function YouTubeShortPlayer({
   startMuted,
   onMutedChange,
 }: YouTubeShortPlayerProps) {
+  const { t } = useI18n();
   const mountRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<any>(null);
   const [playing, setPlaying] = useState(autoplay);
@@ -489,14 +487,14 @@ function YouTubeShortPlayer({
       <button
         type="button"
         className="t-yt-tap-toggle"
-        aria-label="Play/Pause"
+        aria-label={t("tut.playPause")}
         onClick={togglePlayPause}
       />
       <div className={`t-yt-volume-wrap${volumeOpen ? " open" : ""}`}>
         <button
           type="button"
           className="t-yt-mute"
-          aria-label="Volume"
+          aria-label={t("tut.volume")}
           onClick={handleMuteClick}
         >
           {muted ? (
@@ -517,7 +515,7 @@ function YouTubeShortPlayer({
           min={0}
           max={100}
           defaultValue={100}
-          aria-label={`Volume for ${title}`}
+          aria-label={t("tut.volumeFor", { title })}
           onChange={handleVolumeInput}
           onMouseUp={() => setVolumeOpen(false)}
           onTouchEnd={() => setVolumeOpen(false)}
@@ -527,7 +525,7 @@ function YouTubeShortPlayer({
         <button
           type="button"
           className="t-yt-playpause"
-          aria-label="Play/Pause"
+          aria-label={t("tut.playPause")}
           onClick={togglePlayPause}
         >
           {playing ? (

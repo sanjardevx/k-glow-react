@@ -3,13 +3,15 @@ import { Link } from "react-router-dom";
 import type { AuthMode } from "../../components/auth";
 import { useGlobals } from "../../context/useGlobals";
 import { useReveal } from "../../components/useReveal";
+import { dateLocale, useI18n } from "../../../lib/i18n";
 
 interface EventsProps {
   onAuthOpen: (mode: AuthMode) => void;
 }
 
 /**
- * "2026-10-31" -> { short: "31 October", full: "31 October 2026" }.
+ * "2026-10-31" -> { short: "31 October", full: "31 October 2026" }, in the
+ * current language's date format.
  *
  * Built from the parts rather than parsed: `new Date("2026-10-31")` is UTC
  * midnight and renders as the day before west of Greenwich. The shop only
@@ -20,13 +22,19 @@ function formatEndsOn(endsOn: string): { short: string; full: string } {
   if (!match) return { short: "", full: "" };
 
   const [, year, month, day] = match;
-  const short = new Date(
+  const date = new Date(
     Number(year),
     Number(month) - 1,
     Number(day),
-  ).toLocaleDateString("en-GB", { day: "numeric", month: "long" });
-
-  return { short, full: `${short} ${year}` };
+  );
+  return {
+    short: date.toLocaleDateString(dateLocale(), { day: "numeric", month: "long" }),
+    full: date.toLocaleDateString(dateLocale(), {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }),
+  };
 }
 
 /**
@@ -43,15 +51,17 @@ function formatEndsOn(endsOn: string): { short: string; full: string } {
 export function Events({ onAuthOpen }: EventsProps) {
   const revealRef = useReveal<HTMLElement>();
   const { authMember, activeDiscount } = useGlobals();
+  const { t } = useI18n();
 
   const onSale = activeDiscount.percent > 0;
   const ends = formatEndsOn(activeDiscount.endsOn);
 
+  const percent = activeDiscount.percent;
   const badge = onSale
     ? ends.short
-      ? `Ends ${ends.short}`
-      : activeDiscount.label || "Limited time"
-    : "Coming soon";
+      ? t("events.ends", { date: ends.short })
+      : activeDiscount.label || t("events.limited")
+    : t("events.soon");
 
   return (
     <section className="events reveal" ref={revealRef}>
@@ -65,22 +75,13 @@ export function Events({ onAuthOpen }: EventsProps) {
             is on offer, then the nudge to act on it. */}
         <span className="cta-badge">✨ {badge}</span>
         <Box component="h3">
-          {onSale
-            ? `Your Korean Beauty Shelf, ${activeDiscount.percent}% Off`
-            : "Big Events & Sales Coming Soon"}
+          {onSale ? t("events.saleTitle", { percent }) : t("events.soonTitle")}
         </Box>
-        <p className="cta-lead">
-          Your favorite toners, serums, cleansers &amp; full sets — authentic,
-          sealed, and sourced directly from Seoul.
-        </p>
-        <p>
-          {onSale
-            ? "That product you've been thinking about? This is your sign to finally make it yours."
-            : "Create your account now so you're ready the moment the next sale starts."}
-        </p>
+        <p className="cta-lead">{t("events.lead")}</p>
+        <p>{onSale ? t("events.saleNudge") : t("events.soonNudge")}</p>
         {authMember ? (
           <Link className="cta-signup-btn" to="/products">
-            {onSale ? `Shop ${activeDiscount.percent}% Off ✨` : "Shop Now →"}
+            {onSale ? t("events.shopSale", { percent }) : t("events.shopNow")}
           </Link>
         ) : (
           <button
@@ -88,22 +89,21 @@ export function Events({ onAuthOpen }: EventsProps) {
             className="cta-signup-btn"
             onClick={() => onAuthOpen("signup")}
           >
-            {onSale ? `Shop ${activeDiscount.percent}% Off ✨` : "Sign Up ✨"}
+            {onSale ? t("events.shopSale", { percent }) : t("events.signup")}
           </button>
         )}
         <Box className="cta-perks">
-          <span>🇰🇷 Sourced in Seoul</span>
+          <span>{t("events.perkSeoul")}</span>
           {/* Matches FREE_DELIVERY_THRESHOLD in cartPage/cartSelectors.ts and
               the announcement strip — all three quote the same figure. */}
-          <span>🚚 Free delivery over 500,000 so'm</span>
-          <span>🔒 Sealed and authentic</span>
+          <span>{t("events.perkDelivery")}</span>
+          <span>{t("events.perkSealed")}</span>
         </Box>
         <p className="cta-fineprint">
           {onSale
-            ? `${activeDiscount.percent}% is automatically applied at checkout — no promo code needed.${
-                ends.full ? ` Offer ends ${ends.full}.` : ""
-              }`
-            : "We announce every sale on our Telegram channel first."}
+            ? t("events.fineSale", { percent }) +
+              (ends.full ? " " + t("events.fineEnds", { date: ends.full }) : "")
+            : t("events.fineSoon")}
         </p>
       </Box>
     </section>
