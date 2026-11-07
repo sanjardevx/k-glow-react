@@ -138,6 +138,19 @@ export function ChosenProduct() {
   const product = chosenProduct;
   const soldOut = isSoldOut(product);
 
+  function handleAddToBag() {
+    if (soldOut) return;
+    if (!onAdd(product, qty)) return;
+    setJustAdded(true);
+    setTimeout(() => setJustAdded(false), 1200);
+  }
+
+  const addLabel = soldOut
+    ? t("card.soldOut")
+    : justAdded
+      ? t("pdp.added")
+      : t("pdp.addToBag");
+
   return (
     <div className="chosen-product-page">
       <Box component="nav" className="breadcrumb" aria-label={t("pdp.breadcrumb")}>
@@ -245,24 +258,10 @@ export function ChosenProduct() {
               role="button"
               tabIndex={soldOut ? -1 : 0}
               aria-disabled={soldOut || undefined}
-              onClick={() => {
-                if (soldOut) return;
-                if (!onAdd(product, qty)) return;
-                setJustAdded(true);
-                setTimeout(() => setJustAdded(false), 1200);
-              }}
-              onKeyDown={onActivateKey(() => {
-                if (soldOut) return;
-                if (!onAdd(product, qty)) return;
-                setJustAdded(true);
-                setTimeout(() => setJustAdded(false), 1200);
-              })}
+              onClick={handleAddToBag}
+              onKeyDown={onActivateKey(handleAddToBag)}
             >
-              {soldOut
-                ? t("card.soldOut")
-                : justAdded
-                  ? t("pdp.added")
-                  : t("pdp.addToBag")}
+              {addLabel}
             </span>
           </Box>
           {soldOut ? (
@@ -422,6 +421,27 @@ export function ChosenProduct() {
           )}
         </Box>
       </section>
+
+      {/* Phone only: price and Add to Bag pinned where the tab bar was
+          (BottomBar steps aside on this page), so the shopper can add it
+          from anywhere on the page — the reviews, the related row — without
+          scrolling back up to the button. */}
+      <div className="buybar">
+        <div className="buybar-price">
+          {product.productDiscount ? (
+            <span className="buybar-old">{formatPrice(product.productPrice)}</span>
+          ) : null}
+          <span className="buybar-amount">{formatPrice(finalPrice(product))}</span>
+        </div>
+        <button
+          type="button"
+          className="buybar-btn"
+          disabled={soldOut}
+          onClick={handleAddToBag}
+        >
+          {addLabel}
+        </button>
+      </div>
     </div>
   );
 }

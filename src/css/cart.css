@@ -191,6 +191,26 @@
 
 /* The one line on the card that is money coming back, so it reads as a gain
    rather than as another charge. */
+/* The label takes the room and may wrap; the amount stays on one line at
+   the right. Uzbek and Russian labels run long enough that both halves
+   used to wrap, splitting "120 000 so‘m" over two lines. */
+.summary-row > span:first-child {
+  flex: 1;
+  min-width: 0;
+}
+
+.summary-row > span:last-child {
+  white-space: nowrap;
+  text-align: right;
+}
+
+/* Delivery's value is a sentence when it isn't free ("Paid to courier on
+   pickup") — it wraps, or a long translation pushes the page sideways. */
+.summary-row.delivery > span:last-child {
+  max-width: 60%;
+  white-space: normal;
+}
+
 .summary-row.discount {
   color: var(--kg-accent-deep);
   font-weight: 600;

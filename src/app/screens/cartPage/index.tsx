@@ -31,7 +31,7 @@ export function CartPage() {
         <h2 className="cart-title">{t("cart.title")}</h2>
 
         {!authMember ? (
-          // Logging out clears the bag (see useLogout in AccountLink.tsx), so the
+          // Logging out clears the bag (see headers/useLogout.ts), so the
           // only way to land here signed out is a stale/expired session — the
           // bag and the Pay button must never be reachable without one.
           <Box className="cart-empty">{t("cart.loginFirst")}</Box>
@@ -102,7 +102,7 @@ export function CartPage() {
                   <span>&minus;{formatPrice(totals.discount)}</span>
                 </Box>
               ) : null}
-              <Box className="summary-row">
+              <Box className="summary-row delivery">
                 <span>{t("cart.delivery")}</span>
                 <span>
                   {freeDelivery ? t("cart.free") : t("cart.payOnPickup")}
@@ -123,6 +123,23 @@ export function CartPage() {
                 <p className="cart-note">{t("cart.note")}</p>
               ) : null}
             </Box>
+
+            {/* Phone only: the total and Pay, pinned where the tab bar was —
+                on a phone the summary card sits below every item, so this
+                keeps paying one tap away however long the bag is. */}
+            <div className="buybar">
+              <div className="buybar-price">
+                <span className="buybar-label">{t("cart.totalNow")}</span>
+                <span className="buybar-amount">{formatPrice(totals.total)}</span>
+              </div>
+              <button
+                type="button"
+                className="buybar-btn"
+                onClick={() => setPaymentOpen(true)}
+              >
+                {t("cart.pay")}
+              </button>
+            </div>
           </Box>
         )}
       </Box>
