@@ -9,6 +9,11 @@ export const ru: Dict = {
   "nav.help": "Помощь",
   "nav.login": "Войти",
   "nav.language": "Язык",
+  "tab.aria": "Основное",
+  "tab.video": "Уроки",
+  "tab.me": "Профиль",
+  "nav.search": "Поиск",
+  "me.menuAria": "Аккаунт",
   "announce.full":
     "Оригинальная K-beauty · Сеул → Ташкент · Бесплатная доставка от 500 000 сум",
   "announce.short": "Бесплатная доставка от 500 000 сум",
@@ -162,7 +167,7 @@ export const ru: Dict = {
 
   "step.bag": "Корзина",
   "step.payment": "Оплата",
-  "step.confirm": "Подтверждение",
+  "step.confirm": "Проверка",
   "step.thanks": "Готово",
   "pay.title": "Оплатите заказ",
   "pay.amount": "Сумма перевода",
@@ -227,6 +232,7 @@ export const ru: Dict = {
   "member.advisor": "Консультант",
   "member.member": "Клиент",
 
+  "me.orders": "Мои заказы",
   "me.title": "Моя страница",
   "me.edit": "Редактирование данных",
   "me.changePhoto": "Сменить фото",

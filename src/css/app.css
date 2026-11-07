@@ -6,10 +6,33 @@
 /* The shell fills the window and the routed page takes whatever height is
    left over, so on a short page — an empty bag, the Help tabs — the footer
    sits on the bottom edge instead of leaving a band beneath it. */
+/* Room the phone's floating tab bar takes at the bottom of the screen: the
+   bar, the gap under it and the iPhone home-indicator strip. 0 above 860px,
+   where there is none — so anything placed against the bottom can always
+   add it. A page with a buy bar floating above the tab bar (product, bag)
+   reserves that too. */
+:root {
+  --kg-tabbar-h: 0px;
+  --kg-bottom-space: 0px;
+}
+
+@media (max-width: 860px) {
+  :root {
+    --kg-tabbar-h: calc(74px + env(safe-area-inset-bottom));
+    --kg-bottom-space: var(--kg-tabbar-h);
+  }
+
+  .app-shell:has(.buybar) {
+    --kg-bottom-space: calc(var(--kg-tabbar-h) + 72px);
+  }
+}
+
 .app-shell {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  /* The footer's last line stays above the bottom bar instead of under it. */
+  padding-bottom: var(--kg-bottom-space);
   background: var(--kg-bg);
 }
 
@@ -54,7 +77,7 @@ body.t-feed-lock .telegram-fab {
 .telegram-fab {
   position: fixed;
   right: 24px;
-  bottom: 24px;
+  bottom: calc(24px + var(--kg-bottom-space));
   z-index: 40;
   display: flex;
   width: 58px;
@@ -176,7 +199,7 @@ body.t-feed-lock .telegram-fab {
 @media (max-width: 480px) {
   .telegram-fab {
     right: 16px;
-    bottom: 16px;
+    bottom: calc(16px + var(--kg-bottom-space));
     width: 50px;
     height: 50px;
   }

@@ -538,3 +538,71 @@
     gap: 8px;
   }
 }
+
+/* ---------- Account menu (phones only) ----------
+   Orders, Help, AI Beauty and Log out as a list under the profile — on a
+   desktop the header carries them. */
+.mypage-menu {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  .mypage-menu {
+    display: flex;
+    flex-direction: column;
+    margin-top: 16px;
+    overflow: hidden;
+    border: 1px solid var(--kg-border);
+    border-radius: var(--kg-radius-lg);
+    background: var(--kg-card);
+  }
+
+  .mypage-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-height: 52px;
+    padding: 0 16px;
+    box-sizing: border-box;
+    border: none;
+    border-bottom: 1px solid var(--kg-border);
+    background: none;
+    color: var(--kg-ink);
+    font-family: inherit;
+    font-size: var(--kg-text-sm);
+    font-weight: 500;
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .mypage-menu-item:last-child {
+    border-bottom: none;
+  }
+
+  .mypage-menu-item:active {
+    background: var(--kg-sand);
+  }
+
+  .mypage-menu-item span {
+    flex: 1;
+  }
+
+  .mypage-menu-icon {
+    width: 20px;
+    height: 20px;
+    color: var(--kg-ink-soft);
+  }
+
+  .mypage-menu-chevron {
+    width: 16px;
+    height: 16px;
+    color: var(--kg-ink-soft);
+  }
+
+  .mypage-menu-logout,
+  .mypage-menu-logout .mypage-menu-icon {
+    color: var(--kg-danger);
+  }
+}

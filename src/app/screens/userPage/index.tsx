@@ -5,7 +5,18 @@ import MemberService from "../../services/MemberService";
 import { serverApi } from "../../../lib/config";
 import { useI18n } from "../../../lib/i18n";
 import { showError, showSuccess } from "../../../lib/toast";
-import { PencilIcon, PhoneIcon, PinIcon } from "../../components/icons";
+import { Link } from "react-router-dom";
+import {
+  ChevronRightIcon,
+  HelpIcon,
+  LogoutIcon,
+  PencilIcon,
+  PhoneIcon,
+  PinIcon,
+  ReceiptIcon,
+  SparkleIcon,
+} from "../../components/icons";
+import { useLogout } from "../../components/headers/useLogout";
 import type { MemberUpdateInput } from "../../../lib/types/member";
 import { MemberType } from "../../../lib/enums/member.enum";
 import { OrderHistory } from "./OrderHistory";
@@ -253,6 +264,7 @@ export function UserPage() {
                 >
                   {t("me.editProfile")}
                 </button>
+                <AccountMenuList />
               </>
             )}
           </Box>
@@ -263,5 +275,43 @@ export function UserPage() {
         </Box>
       </Box>
     </div>
+  );
+}
+
+/**
+ * Phone only: what the header carries on a desktop — orders, help, AI Beauty
+ * and logout — as a list under the profile, the way Coupang's 마이쿠팡 page
+ * reads. The bottom tab bar's "My Page" tab is the way in.
+ */
+function AccountMenuList() {
+  const { t } = useI18n();
+  const logout = useLogout();
+
+  return (
+    <nav className="mypage-menu" aria-label={t("me.menuAria")}>
+      <Link to="/orders" className="mypage-menu-item">
+        <ReceiptIcon className="mypage-menu-icon" />
+        <span>{t("me.orders")}</span>
+        <ChevronRightIcon className="mypage-menu-chevron" />
+      </Link>
+      <Link to="/help" className="mypage-menu-item">
+        <HelpIcon className="mypage-menu-icon" />
+        <span>{t("nav.help")}</span>
+        <ChevronRightIcon className="mypage-menu-chevron" />
+      </Link>
+      <Link to="/ai-beauty" className="mypage-menu-item">
+        <SparkleIcon className="mypage-menu-icon" />
+        <span>{t("nav.aiBeauty")}</span>
+        <ChevronRightIcon className="mypage-menu-chevron" />
+      </Link>
+      <button
+        type="button"
+        className="mypage-menu-item mypage-menu-logout"
+        onClick={logout}
+      >
+        <LogoutIcon className="mypage-menu-icon" />
+        <span>{t("account.logout")}</span>
+      </button>
+    </nav>
   );
 }

@@ -85,6 +85,9 @@
 
 /* "K-glow" in ink, "secrets" italic in the warm accent — the brand mark. */
 .nav .logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-family: var(--kg-font-display);
   font-size: var(--kg-text-2xl);
   font-weight: 500;
@@ -98,6 +101,13 @@
 .nav .logo em {
   font-style: italic;
   color: var(--kg-accent);
+}
+
+/* The drawing from the shop's logo, sized to the header's line. */
+.nav .logo-mark {
+  height: 40px;
+  width: auto;
+  flex-shrink: 0;
 }
 
 .nav .links {
@@ -137,10 +147,16 @@
   color: var(--kg-ink);
 }
 
-/* My Page sits in the link row on phones only — on wider screens the
-   account link on the right already says it (see AccountLink.tsx). */
-.nav .links a.nav-link-phone {
+/* Search sits in the header on phones only (desktop has it on the Shop
+   page); the bag and account tools are desktop only — on a phone they are
+   in the bottom tab bar. `contents` keeps them laid out as direct items of
+   .right. */
+.nav .nav-tool-phone {
   display: none;
+}
+
+.nav-desk-tools {
+  display: contents;
 }
 
 .nav .links a.active::after {
@@ -189,8 +205,7 @@
   color: var(--kg-ink);
 }
 
-.nav-tool:focus-visible,
-.nav-lang:focus-within {
+.nav-tool:focus-visible {
   outline: 2px solid var(--kg-primary);
   outline-offset: 2px;
 }
@@ -247,15 +262,130 @@
   }
 }
 
-/* The real <select> stretched invisibly over the globe, so a tap opens the
-   native list. */
-.nav-lang select {
+/* ---------- Language menu (LanguageSwitcher.tsx) ----------
+   A card that grows out of the globe (origin top-right, under the button)
+   and folds back the same way. Near-solid rather than see-through: it opens
+   over the header's own glass, and glass on glass loses its text. */
+.nav-lang {
+  position: relative;
+  display: inline-flex;
+}
+
+.lang-menu {
   position: absolute;
-  inset: 0;
-  width: 100%;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 50;
+  min-width: 210px;
+  padding: 6px;
+  box-sizing: border-box;
+  border: 1px solid var(--kg-border);
+  border-radius: 18px;
+  background: rgba(254, 253, 251, 0.97); /* --kg-card */
+  box-shadow:
+    0 18px 40px -16px rgba(47, 30, 47, 0.3),
+    0 2px 8px rgba(47, 30, 47, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  transform-origin: calc(100% - 24px) 0;
   opacity: 0;
+  transform: translateY(-4px) scale(0.96);
+  visibility: hidden;
+  /* Closing is quicker than opening — the system answering, not the user
+     deciding. visibility waits for the fade so it isn't cut short. */
+  transition:
+    opacity 120ms ease,
+    transform 120ms ease,
+    visibility 0s linear 120ms;
+}
+
+.lang-menu.is-open {
+  opacity: 1;
+  transform: none;
+  visibility: visible;
+  transition:
+    opacity 180ms cubic-bezier(0.23, 1, 0.32, 1),
+    transform 180ms cubic-bezier(0.23, 1, 0.32, 1),
+    visibility 0s;
+}
+
+.lang-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px 0 8px;
+  border: none;
+  border-radius: 12px;
+  background: none;
+  color: var(--kg-ink);
+  font-family: inherit;
+  font-size: var(--kg-text-sm);
+  font-weight: 500;
+  text-align: left;
   cursor: pointer;
-  font-size: 16px; /* iOS zooms into anything smaller on focus */
+  touch-action: manipulation;
+  transition: background-color 150ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .lang-item:hover {
+    background: var(--kg-sand);
+  }
+}
+
+.lang-item:active {
+  background: var(--kg-sand);
+}
+
+.lang-item:focus {
+  outline: none;
+}
+
+.lang-item:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--kg-primary);
+}
+
+.lang-item.is-selected {
+  background: var(--kg-primary-soft);
+  color: var(--kg-primary);
+}
+
+/* The two-letter code in a small round chip, so the three rows line up. */
+.lang-code {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--kg-sand);
+  color: var(--kg-ink-soft);
+  font-size: var(--kg-text-2xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.lang-item.is-selected .lang-code {
+  background: var(--kg-primary);
+  color: var(--kg-on-primary);
+}
+
+.lang-name {
+  flex: 1;
+}
+
+.lang-check {
+  width: 18px;
+  height: 18px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lang-menu,
+  .lang-menu.is-open {
+    transform: none;
+  }
 }
 
 .cart-wrap {
@@ -505,63 +635,42 @@
    Mobile: logo and actions on the first row, links as a scrollable row
    ========================================================================= */
 @media (max-width: 860px) {
-  /* The whole `<nav>` is the sticky element, not just its first row: a
-     version that pinned only the logo/basket row got ~110px of "stuck" range
-     from `.nav-inner` (its containing block) before unpinning again, while
-     `<nav>`'s own parent is the full-height page shell. */
+  /* One slim row on a phone: logo, then search and language. The page links
+     and the bag/account tools moved to the bottom tab bar (BottomBar.tsx),
+     which a thumb reaches without stretching to the top of the screen. */
   .nav {
     padding: 0 var(--kg-gutter-mobile);
   }
 
   .nav-inner {
-    padding: 10px 0 0;
-    gap: 4px 12px;
+    padding: 6px 0;
+    gap: 12px;
+    flex-wrap: nowrap;
   }
 
   .nav .logo {
+    gap: 6px;
     font-size: var(--kg-text-xl);
   }
 
-  /* The row scrolls sideways, and the scrollbar is hidden — so without the
-     fade the last link was simply cut off at the edge with nothing to say
-     there was more. The trailing padding is wider than the fade, so once the
-     row is scrolled to the end the fade falls on empty space instead of
-     dimming the last label. */
-  .nav .links {
-    order: 3;
-    width: 100%;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    gap: 0;
-    margin: 0 calc(-1 * var(--kg-gutter-mobile));
-    padding: 2px 30px 0 4px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -webkit-mask-image: linear-gradient(
-      to right,
-      #000 calc(100% - 24px),
-      transparent
-    );
-    mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent);
+  .nav .logo-mark {
+    height: 34px;
   }
 
-  .nav .links::-webkit-scrollbar {
+  .nav .links,
+  .nav-desk-tools {
     display: none;
-  }
-
-  /* Tightened so all five fit a 375px screen without scrolling at all —
-     the fade and the scroll are there for the narrower ones. */
-  .nav .links a {
-    flex-shrink: 0;
-    padding: 10px 8px;
   }
 
   .nav .right {
     gap: 2px;
   }
 
-  /* Icons only on a phone — four labels don't fit beside the logo. My Page
-     is spelled out in the link row instead (.nav-link-phone). */
+  .nav .nav-tool-phone {
+    display: inline-flex;
+  }
+
+  /* Icons only — the globe's code label would crowd the logo. */
   .nav-tool {
     min-width: 40px;
     min-height: 40px;
@@ -576,14 +685,6 @@
     clip: rect(0 0 0 0);
     white-space: nowrap;
   }
-
-  .nav .links a.nav-link-phone {
-    display: inline-block;
-  }
-
-  .basket-frame {
-    width: min(368px, calc(100vw - 32px));
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -593,5 +694,13 @@
 
   .nav .links a::after {
     transition: none;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  .nav.is-scrolled {
+    background: var(--kg-bg);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 }

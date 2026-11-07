@@ -13,6 +13,11 @@ export const en = {
   "nav.help": "Help",
   "nav.login": "Login",
   "nav.language": "Language",
+  "tab.aria": "Main",
+  "tab.video": "Tutorials",
+  "tab.me": "My Page",
+  "nav.search": "Search",
+  "me.menuAria": "Account",
   "announce.full":
     "Authentic K-beauty · Seoul → Tashkent · Free delivery over 500,000 so'm",
   "announce.short": "Free delivery over 500,000 so'm",
@@ -243,6 +248,7 @@ export const en = {
   "member.member": "Member",
 
   // My Page
+  "me.orders": "My Orders",
   "me.title": "My Page",
   "me.edit": "Edit your details",
   "me.changePhoto": "Change photo",

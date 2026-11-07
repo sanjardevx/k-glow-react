@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Box } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 import { createSelector } from "@reduxjs/toolkit";
@@ -154,6 +154,14 @@ export function Products() {
     );
   }, [searchText]);
 
+  // The phone header's search icon lands here with ?focus=search — also when
+  // the shop is already open, so this follows the query, not the mount.
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (new URLSearchParams(location.search).get("focus") === "search")
+      searchInputRef.current?.focus();
+  }, [location.search]);
+
   /** HANDLERS **/
   function searchProductHandler() {
     setVisibleCount(PAGE_SIZE);
@@ -229,6 +237,7 @@ export function Products() {
             <SearchIcon className="shop-search-glyph" />
             <input
               type="search"
+              ref={searchInputRef}
               placeholder={t("shop.searchPlaceholder")}
               aria-label={t("shop.searchAria")}
               value={searchText}

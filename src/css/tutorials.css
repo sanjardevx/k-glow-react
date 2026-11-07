@@ -180,9 +180,10 @@
 
    --t-nav is the sticky header's measured height (set in JS below the
    breakpoint, see app.css) — the feed sits under it rather than taking the
-   whole screen, so the visitor never loses the navigation. */
+   whole screen, so the visitor never loses the navigation. The bottom tab
+   bar is taken off the same way. */
 .t-feed {
-  height: calc(100dvh - var(--t-nav, 0px));
+  height: calc(100dvh - var(--t-nav, 0px) - var(--kg-tabbar-h));
   overflow-y: auto;
   scroll-snap-type: y mandatory;
   overscroll-behavior: contain;
@@ -197,7 +198,7 @@
 
 .t-slide {
   position: relative;
-  height: calc(100dvh - var(--t-nav, 0px));
+  height: calc(100dvh - var(--t-nav, 0px) - var(--kg-tabbar-h));
   scroll-snap-align: start;
   scroll-snap-stop: always;
   display: flex;

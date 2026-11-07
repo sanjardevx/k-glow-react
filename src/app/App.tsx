@@ -13,6 +13,7 @@ import { OtherNavbar } from "./components/headers/OtherNavbar";
 import { AuthenticationModal, type AuthMode } from "./components/auth";
 import { TelegramButton } from "./components/TelegramButton";
 import { AnnouncementBar } from "./components/AnnouncementBar";
+import { BottomBar } from "./components/BottomBar";
 import "../css/app.css";
 
 /**
@@ -137,6 +138,7 @@ function App() {
       </main>
       <Footer />
       <TelegramButton />
+      <BottomBar onAuthOpen={handleAuthOpen} />
 
       <AuthenticationModal
         open={authOpen}

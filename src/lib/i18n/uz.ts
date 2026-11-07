@@ -9,6 +9,11 @@ export const uz: Dict = {
   "nav.help": "Yordam",
   "nav.login": "Kirish",
   "nav.language": "Til",
+  "tab.aria": "Asosiy",
+  "tab.video": "Darslar",
+  "tab.me": "Sahifam",
+  "nav.search": "Qidirish",
+  "me.menuAria": "Hisob",
   "announce.full":
     "Original K-beauty · Seul → Toshkent · 500 000 soʻmdan ortiq buyurtmalarga yetkazib berish bepul",
   "announce.short": "Bepul yetkazish 500 000 soʻmdan",
@@ -230,6 +235,7 @@ export const uz: Dict = {
   "member.advisor": "Maslahatchi",
   "member.member": "Mijoz",
 
+  "me.orders": "Buyurtmalarim",
   "me.title": "Mening sahifam",
   "me.edit": "Ma’lumotlarni tahrirlash",
   "me.changePhoto": "Rasmni oʻzgartirish",
