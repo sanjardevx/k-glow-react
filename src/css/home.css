@@ -669,9 +669,26 @@
     background: var(--kg-bg-veil);
   }
 
+  /* Headline and line first, then the picture, then the two buttons — the
+     buttons close the hero instead of sitting between the words and the
+     photo. `.copy` steps out of the layout (display: contents) so its
+     children can be ordered around the photo. */
   .hero-inner {
     grid-template-columns: 1fr;
-    gap: 28px;
+    gap: 0;
+  }
+
+  .hero .copy {
+    display: contents;
+  }
+
+  .hero h2 {
+    order: 1;
+  }
+
+  .hero .copy p {
+    order: 2;
+    margin-top: 14px;
   }
 
   /* The photo has "Glow With Confidence." set into it. Stacked above the
@@ -679,8 +696,15 @@
      on two competing headlines. Below the copy it reads as part of the
      picture. (The lasting fix is a banner without type baked in.) */
   .hero-photo {
+    order: 3;
     max-width: 100%;
+    margin-top: 24px;
     aspect-ratio: 4 / 3;
+  }
+
+  .hero .cta-row {
+    order: 4;
+    margin-top: 20px;
   }
 
   .hero h2 {
