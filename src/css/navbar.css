@@ -1,5 +1,5 @@
 /**
- * Announcement bar, navbar, account dropdown and basket popover.
+ * Announcement bar, navbar, account link and basket popover.
  * The login / sign-up modal used to trail this file; it now lives in
  * auth.css on top of the shared modal shell. Tokens only.
  */
@@ -36,10 +36,40 @@
 /* =========================================================================
    Navbar
    ========================================================================= */
+/* Pinned at every width, so the links, bag and account stay in reach on a
+   long page. Solid while it sits at the top; once the page scrolls under it
+   (.is-scrolled, set in NavbarContent) it turns to frosted glass — the
+   content stays faintly visible through it, and a soft shadow lifts it off
+   the page. */
 .nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
   background: var(--kg-bg);
   border-bottom: 1px solid var(--kg-border);
   padding: 0 var(--kg-gutter);
+  transition:
+    background-color 0.25s var(--kg-ease),
+    border-color 0.25s var(--kg-ease),
+    box-shadow 0.25s var(--kg-ease);
+}
+
+@supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .nav.is-scrolled {
+    background: rgba(250, 248, 244, 0.72); /* --kg-bg at 72% */
+    -webkit-backdrop-filter: saturate(180%) blur(18px);
+    backdrop-filter: saturate(180%) blur(18px);
+    border-bottom-color: rgba(230, 223, 211, 0.6); /* --kg-border */
+    box-shadow: 0 8px 24px -16px rgba(47, 30, 47, 0.22);
+  }
+}
+
+/* Without blur, see-through would only make the links hard to read — keep
+   it solid and let the shadow alone mark the scroll. */
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .nav.is-scrolled {
+    box-shadow: 0 8px 24px -16px rgba(47, 30, 47, 0.22);
+  }
 }
 
 .nav-inner {
@@ -49,7 +79,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  padding: 14px 0;
+  padding: 10px 0;
   flex-wrap: wrap;
 }
 
@@ -107,6 +137,12 @@
   color: var(--kg-ink);
 }
 
+/* My Page sits in the link row on phones only — on wider screens the
+   account link on the right already says it (see AccountLink.tsx). */
+.nav .links a.nav-link-phone {
+  display: none;
+}
+
 .nav .links a.active::after {
   transform: scaleX(1);
 }
@@ -122,55 +158,104 @@
 .nav .right {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 6px;
 }
 
-/* Plain-text Login next to the filled Sign Up, as in the reference. */
-.nav-login {
-  padding: 6px 4px;
+/* Header tools — language, bag, My Page / Login, logout. Every one is an
+   icon over a short label, the way Coupang lays out 마이쿠팡 and 장바구니:
+   one shape, one size and one colour, instead of the dropdown, bare icon,
+   name pill and filled button that used to sit side by side. */
+.nav-tool {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-width: 52px;
+  padding: 4px 6px 2px;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--kg-radius-sm);
   background: none;
   color: var(--kg-ink-soft);
   font-family: inherit;
-  font-size: var(--kg-text-sm);
-  font-weight: 500;
-  letter-spacing: 0.025em;
+  text-decoration: none;
   cursor: pointer;
   transition: color var(--kg-duration) var(--kg-ease);
 }
 
-.nav-login:hover {
+.nav-tool:hover,
+.nav-tool.active {
   color: var(--kg-ink);
 }
 
-/* Touch pointers need a 40px-plus target; a mouse keeps the tighter header.
-   Keyed on the input device, so a touch tablet gets it at any width. */
-@media (pointer: coarse) {
-  .nav-login,
-  .nav-auth-btn,
-  .nav-account {
-    min-height: 40px;
+.nav-tool:focus-visible,
+.nav-lang:focus-within {
+  outline: 2px solid var(--kg-primary);
+  outline-offset: 2px;
+}
+
+.nav-tool-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.nav-tool-label {
+  font-size: var(--kg-text-2xs);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* Logout is the one tool that ends something, so it warms to the danger
+   red on hover — and only then. */
+.nav-tool-logout:hover {
+  color: var(--kg-danger);
+}
+
+/* Small laptops and landscape tablets: logo, links and four labelled tools
+   need ~990px, so below that the tools drop their labels (as on a phone)
+   and the links tighten, keeping the header to one row. The labels stay
+   for screen readers. */
+@media (min-width: 861px) and (max-width: 1100px) {
+  .nav .links {
+    gap: 2px;
   }
 
-  .nav-login {
-    padding: 6px 10px;
+  .nav .links a {
+    padding: 6px 8px;
   }
 
-  .nav .right .MuiIconButton-root {
-    padding: 10px;
+  .nav .links a::after {
+    left: 8px;
+    right: 8px;
+  }
+
+  .nav-tool {
+    min-width: 40px;
+    padding: 8px;
+  }
+
+  .nav-tool-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
   }
 }
 
-.nav .icon {
-  width: 20px;
-  height: 20px;
-  color: var(--kg-ink);
-  transition: color var(--kg-duration) var(--kg-ease);
-}
-
-.nav .icon:hover {
-  color: var(--kg-primary);
+/* The real <select> stretched invisibly over the globe, so a tap opens the
+   native list. */
+.nav-lang select {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  opacity: 0;
+  cursor: pointer;
+  font-size: 16px; /* iOS zooms into anything smaller on focus */
 }
 
 .cart-wrap {
@@ -180,114 +265,21 @@
 
 .cart-badge {
   position: absolute;
-  top: -8px;
-  right: -10px;
+  top: -6px;
+  right: -9px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 17px;
+  min-width: 17px;
   height: 17px;
-  border-radius: 50%;
+  padding: 0 4px;
+  box-sizing: border-box;
+  border-radius: 999px;
   background: var(--kg-primary);
   color: var(--kg-on-primary);
   font-size: var(--kg-text-2xs);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
-}
-
-.nav-account {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 4px 12px 4px 4px;
-  border-radius: var(--kg-radius-pill);
-  color: var(--kg-ink);
-  text-decoration: none;
-  cursor: pointer;
-  transition: background-color var(--kg-duration) var(--kg-ease);
-}
-
-.nav-account:hover,
-.nav-account.active {
-  background: var(--kg-sand);
-}
-
-.nav-avatar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  flex-shrink: 0;
-  border-radius: 50%;
-  background: var(--kg-primary-soft);
-  color: var(--kg-primary);
-  font-size: var(--kg-text-sm);
-  font-weight: 600;
-}
-
-.nav-account-name {
-  font-size: var(--kg-text-sm);
-  font-weight: 600;
-}
-
-/* Sizing only — colours come from the button primitive in components.css. */
-.nav-auth-btn {
-  padding: 10px 22px;
-  font-size: var(--kg-text-sm);
-}
-
-/* =========================================================================
-   Account dropdown
-   ========================================================================= */
-.account-menu-frame {
-  width: 200px;
-  padding: 8px;
-}
-
-.account-menu-item {
-  display: block;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 10px 12px;
-  border: none;
-  border-radius: var(--kg-radius-sm);
-  background: none;
-  color: var(--kg-ink);
-  font-family: inherit;
-  font-size: var(--kg-text-sm);
-  font-weight: 500;
-  text-align: left;
-  text-decoration: none;
-  cursor: pointer;
-  transition: background-color var(--kg-duration) var(--kg-ease);
-}
-
-.account-menu-item:hover {
-  background: var(--kg-sand);
-}
-
-.account-menu-logout {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  color: var(--kg-danger);
-}
-
-.account-menu-logout:hover {
-  background: var(--kg-danger-soft);
-}
-
-.account-menu-logout svg {
-  width: 14px;
-  height: 14px;
-  flex-shrink: 0;
-}
-
-.account-menu-divider {
-  height: 1px;
-  margin: 4px 4px;
-  background: var(--kg-border);
 }
 
 /* =========================================================================
@@ -513,19 +505,11 @@
    Mobile: logo and actions on the first row, links as a scrollable row
    ========================================================================= */
 @media (max-width: 860px) {
-  /* Pinned so the logo, basket, account and the category links all stay
-     reachable while a long product/catalog page scrolls — adding to the bag
-     no longer strands the shopper with no way back up except scrolling all
-     the way to the top. (A version that pinned only the logo/basket row and
-     let the link row scroll away underneath was tried first, but that row's
-     own containing block — `.nav-inner`, which is only as tall as the two
-     rows put together — gave it just ~110px of "stuck" range before it
-     unpinned again; making the whole `<nav>` sticky sidesteps that because
-     `<nav>`'s own parent is the full-height page shell.) */
+  /* The whole `<nav>` is the sticky element, not just its first row: a
+     version that pinned only the logo/basket row got ~110px of "stuck" range
+     from `.nav-inner` (its containing block) before unpinning again, while
+     `<nav>`'s own parent is the full-height page shell. */
   .nav {
-    position: sticky;
-    top: 0;
-    z-index: 20;
     padding: 0 var(--kg-gutter-mobile);
   }
 
@@ -573,34 +557,28 @@
   }
 
   .nav .right {
-    gap: 8px;
+    gap: 2px;
   }
 
-  .nav-login {
-    padding: 6px 2px;
+  /* Icons only on a phone — four labels don't fit beside the logo. My Page
+     is spelled out in the link row instead (.nav-link-phone). */
+  .nav-tool {
+    min-width: 40px;
+    min-height: 40px;
+    padding: 8px;
   }
 
-  /* On a phone the filled pill was the loudest thing in the header — louder
-     than the bag, on every page, for a shopper who may be here to browse.
-     Soft fill and tighter padding keep it findable without shouting. */
-  .nav-auth-btn {
-    padding: 8px 14px;
-    background: var(--kg-primary-soft);
-    color: var(--kg-primary);
-    box-shadow: none;
+  .nav-tool-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
   }
 
-  .nav-auth-btn:hover {
-    background: var(--kg-primary);
-    color: var(--kg-on-primary);
-  }
-
-  .nav-account-name {
-    display: none;
-  }
-
-  .nav-account {
-    padding-right: 4px;
+  .nav .links a.nav-link-phone {
+    display: inline-block;
   }
 
   .basket-frame {

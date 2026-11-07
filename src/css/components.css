@@ -18,7 +18,6 @@
 .btn-ink,
 .btn-outline,
 .btn-ghost,
-.nav-auth-btn,
 .basket-empty-cta,
 .modal-btn,
 .pdp-addbag,
@@ -59,7 +58,6 @@
 .btn-ink:active,
 .btn-outline:active,
 .btn-ghost:active,
-.nav-auth-btn:active,
 .basket-empty-cta:active,
 .modal-btn:active,
 .pdp-addbag:active,
@@ -79,7 +77,6 @@
   .btn-ink:active,
   .btn-outline:active,
   .btn-ghost:active,
-  .nav-auth-btn:active,
   .basket-empty-cta:active,
   .modal-btn:active,
   .pdp-addbag:active,
@@ -98,7 +95,6 @@
 
 /* Filled sage: the one call-to-action colour. */
 .btn-primary,
-.nav-auth-btn,
 .basket-empty-cta,
 .modal-btn,
 .pdp-addbag,
@@ -112,7 +108,6 @@
 }
 
 .btn-primary:hover,
-.nav-auth-btn:hover,
 .basket-empty-cta:hover,
 .modal-btn:hover,
 .pdp-addbag:hover,
@@ -645,11 +640,10 @@
 }
 
 /* =========================================================================
-   Popover frame (basket and account menus rendered inside MUI Menu)
+   Popover frame (the basket, rendered inside MUI Menu)
    ========================================================================= */
 .popover-frame,
-.basket-frame,
-.account-menu-frame {
+.basket-frame {
   overflow: hidden;
   border-radius: var(--kg-radius-lg);
   background: var(--kg-card);
@@ -820,8 +814,7 @@
   .modal-overlay,
   .modal-card,
   .popover-frame,
-  .basket-frame,
-  .account-menu-frame {
+  .basket-frame {
     animation: none;
   }
 

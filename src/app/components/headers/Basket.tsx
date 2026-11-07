@@ -1,14 +1,16 @@
 import { useState, type MouseEvent } from "react";
 import { Box } from "@mui/material";
-import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import { useHistory } from "react-router-dom";
 import { formatPrice } from "../../screens/productsPage/productsData";
 import { useBasket } from "../../screens/cartPage/useBasket";
 import { serverApi } from "../../../lib/config";
+import { useI18n } from "../../../lib/i18n";
+import { BagIcon } from "../icons";
 
 export function Basket() {
   const history = useHistory();
+  const { t } = useI18n();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -33,8 +35,9 @@ export function Basket() {
 
   return (
     <>
-      <IconButton
-        aria-label="cart"
+      <button
+        type="button"
+        className="nav-tool"
         id="basic-button"
         aria-controls={open ? "basic-menu" : undefined}
         aria-haspopup="true"
@@ -42,23 +45,14 @@ export function Basket() {
         onClick={handleClick}
       >
         <span className="cart-wrap">
-          <svg
-            className="icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
-            <path d="M3 6h18"></path>
-            <path d="M16 10a4 4 0 0 1-8 0"></path>
-          </svg>
+          <BagIcon className="nav-tool-icon" />
           {count > 0 ? <span className="cart-badge">{count}</span> : null}
         </span>
-      </IconButton>
+        <span className="nav-tool-label">{t("basket.aria")}</span>
+      </button>
       <Menu
         anchorEl={anchorEl}
-        id="account-menu"
+        id="basic-menu"
         open={open}
         onClose={handleClose}
         slotProps={{
@@ -105,26 +99,26 @@ export function Basket() {
                   <path d="M16 10a4 4 0 0 1-8 0"></path>
                 </svg>
               </Box>
-              <p className={"basket-empty-title"}>Your bag is empty</p>
+              <p className={"basket-empty-title"}>{t("basket.emptyTitle")}</p>
               <p className={"basket-empty-text"}>
-                Add your favorite K-beauty picks to get started.
+                {t("basket.emptyText")}
               </p>
               <button
                 className={"basket-empty-cta"}
                 onClick={handleStartShopping}
               >
-                Start Shopping
+                {t("basket.startShopping")}
               </button>
             </Box>
           </Box>
         ) : (
           <Box className={"basket-frame"}>
             <Box className={"basket-header"}>
-              <span className={"basket-header-title"}>Cart Products</span>
+              <span className={"basket-header-title"}>{t("basket.title")}</span>
               <button
                 type="button"
                 className={"basket-clear-all"}
-                aria-label="Clear all products"
+                aria-label={t("basket.clearAll")}
                 onClick={onDeleteAll}
               >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -150,7 +144,7 @@ export function Basket() {
                       <button
                         type="button"
                         className={"basket-line-remove"}
-                        aria-label={`Remove ${item.productName}`}
+                        aria-label={t("basket.remove", { name: item.productName })}
                         onClick={() => onDelete(item)}
                       >
                         ×
@@ -174,11 +168,11 @@ export function Basket() {
                 </Box>
               ))}
               <Box className={"basket-subtotal-row"}>
-                <span>Subtotal</span>
+                <span>{t("basket.subtotal")}</span>
                 <span>{formatPrice(subtotal)}</span>
               </Box>
               <button className={"basket-empty-cta"} onClick={handleGoToCart}>
-                Go to Cart
+                {t("basket.goToCart")}
               </button>
             </Box>
           </Box>

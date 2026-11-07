@@ -166,7 +166,7 @@
 /* Order summary */
 .summary-card {
   position: sticky;
-  top: 24px;
+  top: 100px; /* clear of the pinned header */
   padding: 24px;
 }
 

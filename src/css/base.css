@@ -7,6 +7,9 @@ html {
   height: 100%;
   background: var(--kg-bg);
   -webkit-text-size-adjust: 100%;
+  /* In-page jumps (the product page's "See reviews") land below the pinned
+     header instead of under it. */
+  scroll-padding-top: 110px;
 }
 
 /* Belt-and-braces guard: a few pages bleed an element slightly past the
