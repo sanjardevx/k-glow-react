@@ -14,9 +14,13 @@ export function Footer() {
               column) so narrow layouts can place trust next to Shop —
               see the grid-template-areas in footer.css. */}
           <div className="footer-col footer-col-brand">
-            <p className="footer-brand">
-              K-glow <em>secrets</em>
-            </p>
+            {/* The shop's logo exactly as on Telegram and its ads, drawn in
+                cream to sit on the dark footer. */}
+            <img
+              src="/icons/logo-full-light.svg"
+              alt="K-glow secrets"
+              className="footer-logo"
+            />
             <p className="footer-about">{t("footer.about")}</p>
           </div>
           <ul className="footer-trust footer-col-trust">

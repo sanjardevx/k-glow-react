@@ -50,23 +50,14 @@
   grid-area: loop;
 }
 
-/* Brand mark: "K-glow" in cream, "secrets" italic in the warm accent.
-   Written as .footer-col .footer-brand so it outranks the generic
-   .footer-col p rule below. */
-.footer-col .footer-brand {
-  margin: 0 0 14px;
-  font-family: var(--kg-font-display);
-  font-size: var(--kg-text-2xl);
-  font-weight: 500;
-  line-height: 1.2;
-  letter-spacing: -0.025em;
-  color: var(--kg-on-dark);
+/* The shop's full logo, in cream for the dark footer. */
+.footer-logo {
+  display: block;
+  width: 150px;
+  height: auto;
+  margin: 0 0 16px;
 }
 
-.footer-col .footer-brand em {
-  font-style: italic;
-  color: var(--kg-accent);
-}
 
 .footer-col .footer-about {
   max-width: 30ch;

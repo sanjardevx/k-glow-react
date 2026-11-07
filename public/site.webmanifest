@@ -1,0 +1,13 @@
+{
+  "name": "K-Glow Secrets",
+  "short_name": "K-Glow",
+  "description": "Original Korean skincare and makeup, delivered across Uzbekistan.",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#faf8f4",
+  "theme_color": "#faf8f4",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

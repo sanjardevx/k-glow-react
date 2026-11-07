@@ -106,7 +106,7 @@ export async function GET(request: Request): Promise<Response> {
     type: "website",
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
-    image: `${origin}/img/hero-banner.webp`,
+    image: `${origin}/img/og-image.png`,
     url: origin,
   };
 
