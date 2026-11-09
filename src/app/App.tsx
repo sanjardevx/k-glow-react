@@ -126,7 +126,10 @@ function App() {
             <Route path="/orders" component={OrdersPage} />
             <Route path="/member-page" component={UserPage} />
             <Route path="/live-tutorials" component={TutorialsPage} />
-            <Route path="/ai-beauty" component={AiBeautyPage} />
+            <Route
+              path="/ai-beauty"
+              render={() => <AiBeautyPage onAuthOpen={handleAuthOpen} />}
+            />
             <Route path="/help" component={HelpPage} />
             <Route
               exact

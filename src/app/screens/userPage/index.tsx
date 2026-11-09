@@ -20,6 +20,7 @@ import { useLogout } from "../../components/headers/useLogout";
 import type { MemberUpdateInput } from "../../../lib/types/member";
 import { MemberType } from "../../../lib/enums/member.enum";
 import { OrderHistory } from "./OrderHistory";
+import { AiRoutineCard } from "./AiRoutineCard";
 import { BusyLabel } from "../../components/Loaders";
 import "../../../css/myPage.css";
 import "../../../css/orders.css";
@@ -264,6 +265,7 @@ export function UserPage() {
                 >
                   {t("me.editProfile")}
                 </button>
+                <AiRoutineCard />
                 <AccountMenuList />
               </>
             )}

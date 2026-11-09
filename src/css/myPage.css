@@ -606,3 +606,72 @@
     color: var(--kg-danger);
   }
 }
+
+/* ---------- AI Beauty routine link ---------- */
+
+.mypage-ai-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--kg-border);
+  border-radius: var(--kg-radius-lg);
+  background: var(--kg-card);
+  color: var(--kg-ink);
+  text-decoration: none;
+  transition:
+    border-color 150ms ease,
+    transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .mypage-ai-card:hover {
+    border-color: var(--kg-primary);
+  }
+}
+
+.mypage-ai-card:active {
+  transform: scale(0.98);
+}
+
+.mypage-ai-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--kg-primary-soft);
+  color: var(--kg-primary);
+}
+
+.mypage-ai-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.mypage-ai-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.mypage-ai-title {
+  font-weight: 600;
+}
+
+.mypage-ai-sub {
+  color: var(--kg-ink-soft);
+  font-size: var(--kg-text-sm);
+}
+
+.mypage-ai-chevron {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  color: var(--kg-ink-faint);
+}
