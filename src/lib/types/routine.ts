@@ -26,10 +26,40 @@ export interface RoutineStep {
   product: Product;
 }
 
+/** The quiz answers a routine was built from, kept with it. */
+export type RoutineAnswers = Pick<
+  RoutineRequest,
+  "skinType" | "concerns" | "sensitive" | "size"
+>;
+
 export interface Routine {
   summary: string;
   tips: string[];
   seeDermatologist: boolean;
   morning: RoutineStep[];
   evening: RoutineStep[];
+  answers: RoutineAnswers;
+  createdAt: string;
+  /** Answers left today, sent back with a freshly built routine. */
+  left?: number;
+}
+
+/** GET /ai/status: today's allowance and the member's saved routine. */
+export interface AiStatus {
+  limit: number;
+  left: number;
+  routine: Routine | null;
+}
+
+export interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
+  /** Product cards the assistant suggested with its answer. */
+  products?: Product[];
+}
+
+export interface ChatAnswer {
+  reply: string;
+  products: Product[];
+  left: number;
 }
