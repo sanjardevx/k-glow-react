@@ -119,6 +119,8 @@ const SERVER_MESSAGES: Record<string, TKey> = {
     "error.googleAccount",
   "Google sign-in failed, please try again.": "error.googleFailed",
   "Google sign-in isn't set up yet.": "error.googleOff",
+  "AI Beauty isn't set up yet.": "error.aiOff",
+  "We couldn't build your routine just now, please try again.": "error.aiFailed",
   "Wrong password, please try again!": "error.wrongPassword",
   "You are not authenticated, please login first!": "error.loginFirst",
   "Too many attempts, please try again later!": "error.tooMany",
