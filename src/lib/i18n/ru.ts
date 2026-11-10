@@ -305,6 +305,7 @@ export const ru: Dict = {
   "ai.orderTg": "Заказать в Telegram",
   "ai.tgIntro": "Здравствуйте! Хочу заказать свой уход из AI Beauty:",
   "ai.tgTotal": "Итого: {total}",
+  "ai.tgOne": "Здравствуйте! Хочу заказать этот товар:",
   "ai.chatAria": "Чат с AI Beauty",
   "ai.chatHello": "Привет! Расскажите о своей коже или выберите вопрос ниже.",
   "ai.chatThinking": "Думаю…",

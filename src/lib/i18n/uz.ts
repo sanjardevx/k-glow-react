@@ -308,6 +308,7 @@ export const uz: Dict = {
   "ai.orderTg": "Telegramda buyurtma berish",
   "ai.tgIntro": "Assalomu alaykum! AI Beauty tartibimni buyurtma qilmoqchiman:",
   "ai.tgTotal": "Jami: {total}",
+  "ai.tgOne": "Assalomu alaykum! Shu mahsulotni buyurtma qilmoqchiman:",
   "ai.chatAria": "AI Beauty bilan suhbat",
   "ai.chatHello": "Salom! Teringiz haqida yozing yoki pastdagi savollardan birini tanlang.",
   "ai.chatThinking": "Oʻylayapman…",

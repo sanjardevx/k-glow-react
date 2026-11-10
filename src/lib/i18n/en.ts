@@ -323,6 +323,7 @@ export const en = {
   "ai.orderTg": "Order on Telegram",
   "ai.tgIntro": "Hello! I'd like to order my AI Beauty routine:",
   "ai.tgTotal": "Total: {total}",
+  "ai.tgOne": "Hello! I'd like to order this product:",
   "ai.chatAria": "Chat with AI Beauty",
   "ai.chatHello": "Hi! Tell me about your skin, or pick a question below.",
   "ai.chatThinking": "Thinking…",
