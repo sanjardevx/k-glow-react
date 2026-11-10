@@ -19,7 +19,23 @@ export interface RoutineRequest {
   lang: "uz" | "ru" | "en";
 }
 
+/** The type of step, which picks its picture. */
+export type StepKind =
+  | "cleanser"
+  | "oil_cleanser"
+  | "toner"
+  | "essence"
+  | "serum"
+  | "eye_cream"
+  | "moisturizer"
+  | "sunscreen"
+  | "mask"
+  | "exfoliant"
+  | "spot_treatment"
+  | "other";
+
 export interface RoutineStep {
+  kind?: StepKind;
   step: string;
   why: string;
   howToUse: string;
