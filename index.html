@@ -9,7 +9,7 @@
     <!-- viewport-fit=cover lets the phone tab bar reach behind the iPhone
          home indicator; it pads itself clear with env(safe-area-inset-bottom). -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="description" content="Original Korean skincare and makeup, delivered across Uzbekistan." />
+    <meta name="description" content="K-Glow Secrets — an online shop for original Korean skincare and makeup in Namangan, delivering across Uzbekistan." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -30,7 +30,28 @@
     <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>
-    <div id="root"></div>
+    <!-- What the page says before JavaScript runs. React replaces it the
+         moment the shop loads, so shoppers barely see it; it is here for
+         readers that don't run scripts — Google's sign-in (OAuth) review,
+         search engines — which otherwise find an empty page and decide the
+         site is blank or "behind a login". Keep the name exactly
+         "K-Glow Secrets" (it must match the Google sign-in app name) and the
+         privacy and terms links. -->
+    <div id="root">
+      <main style="max-width:640px;margin:0 auto;padding:48px 20px;font-family:Inter,system-ui,sans-serif;color:#2b2522;line-height:1.6">
+        <h1 style="font-family:'Playfair Display',Georgia,serif;font-weight:500;font-size:36px;margin:0 0 8px">K-Glow Secrets</h1>
+        <p style="margin:0 0 16px;color:#6f6560">Original Korean skincare and makeup, delivered across Uzbekistan.</p>
+        <p>K-Glow Secrets is an online shop based in Namangan, Uzbekistan. We sell authentic Korean skincare and makeup (Anua, Round Lab, Torriden, Dr. Althea, Medicube and more), sourced directly from Seoul. Anyone can browse the catalog, product details, prices and tutorials without an account.</p>
+        <p>Customers create an account — or sign in with Google — only to place orders, follow their order status, keep a shopping bag and save their AI Beauty skin routine. With Google sign-in we use only your name and email address; we never sell or share your data.</p>
+        <p>
+          <a href="/products">Browse the shop</a> ·
+          <a href="/privacy">Privacy policy</a> ·
+          <a href="/help">Terms of service</a> ·
+          <a href="mailto:sanjardevx@gmail.com">sanjardevx@gmail.com</a>
+        </p>
+        <p lang="uz" style="color:#6f6560">K-Glow Secrets — Namangandagi Koreya kosmetikasi onlayn doʻkoni. Original mahsulotlar, butun Oʻzbekiston boʻylab yetkazib beramiz.</p>
+      </main>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
