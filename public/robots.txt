@@ -1,0 +1,9 @@
+# K-Glow Secrets — https://www.kglowshop.uz
+User-agent: *
+Allow: /
+# Private pages: a shopper's bag, orders and account.
+Disallow: /cart
+Disallow: /orders
+Disallow: /member-page
+
+Sitemap: https://www.kglowshop.uz/sitemap.xml
