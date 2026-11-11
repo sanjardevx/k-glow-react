@@ -15,6 +15,7 @@ import { Router } from "./app/Router";
 import { ContextProvider } from "./app/context/ContextProvider";
 import { getAccessToken } from "./lib/authToken";
 import { installImageFallback } from "./lib/imageFallback";
+import { Analytics } from "@vercel/analytics/react";
 
 installImageFallback();
 
@@ -46,6 +47,10 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Router>
             <App />
           </Router>
+          {/* Vercel Web Analytics: page views, sources and devices, with no
+              cookies (so no consent banner). Counts only on the deployed
+              site; it stays quiet in local development. */}
+          <Analytics />
         </ContextProvider>
       </ThemeProvider>
     </Provider>
