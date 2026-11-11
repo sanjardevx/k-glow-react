@@ -2,7 +2,7 @@
  * Where the signed-in visitor's JWT lives on the client.
  *
  * It used to live in a cookie the API set, but the SPA (Vercel) and the API
- * (Railway) are on different domains, so that cookie was a third-party one —
+ * (AWS) are on different domains, so that cookie was a third-party one —
  * Safari, every iOS browser and Chrome's incognito window drop it outright,
  * and the visitor was signed out seconds after signing in. Kept here instead
  * and sent as an Authorization header (see the interceptor in main.tsx),
