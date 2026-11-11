@@ -44,6 +44,7 @@ export const uz: Dict = {
   "footer.loop": "Yangiliklardan xabardor boʻling",
   "footer.loopText": "Yangi mahsulotlar, qayta kelganlar, chegirmalar.",
   "footer.join": "Telegram kanalimizga qoʻshiling →",
+  "footer.privacy": "Maxfiylik siyosati",
   "telegram.aria": "Telegramda bizga yozing",
   "telegram.tooltip": "Admin bilan shaxsiy yozishma",
 

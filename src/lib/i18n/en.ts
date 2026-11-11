@@ -50,6 +50,7 @@ export const en = {
   "footer.loop": "Stay in the loop",
   "footer.loopText": "New arrivals, restocks, discount events.",
   "footer.join": "Join our Telegram →",
+  "footer.privacy": "Privacy policy",
   "telegram.aria": "Chat with us on Telegram",
   "telegram.tooltip": "Chat 1:1 with our admin",
 

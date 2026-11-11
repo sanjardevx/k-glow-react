@@ -44,6 +44,7 @@ export const ru: Dict = {
   "footer.loop": "Будьте в курсе",
   "footer.loopText": "Новинки, поступления, скидки.",
   "footer.join": "Подписаться на Telegram →",
+  "footer.privacy": "Политика конфиденциальности",
   "telegram.aria": "Написать нам в Telegram",
   "telegram.tooltip": "Личный чат с администратором",
 

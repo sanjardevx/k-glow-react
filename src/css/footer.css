@@ -213,3 +213,13 @@
     text-align: center;
   }
 }
+
+.footer-legal {
+  color: inherit;
+  text-decoration: none;
+}
+
+.footer-legal:hover {
+  color: var(--kg-on-dark-soft);
+  text-decoration: underline;
+}

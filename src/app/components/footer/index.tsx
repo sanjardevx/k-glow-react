@@ -83,7 +83,9 @@ export function Footer() {
       <div className="footer-bottom">
         <div className="footer-bottom-inner">
           <span>© K-Glow Secrets</span>
-          <span>Instagram · Telegram</span>
+          <Link to="/privacy" className="footer-legal">
+            {t("footer.privacy")}
+          </Link>
         </div>
       </div>
     </footer>

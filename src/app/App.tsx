@@ -33,6 +33,9 @@ const OrdersPage = lazy(() =>
 const UserPage = lazy(() =>
   import("./screens/userPage").then((m) => ({ default: m.UserPage })),
 );
+const PrivacyPage = lazy(() =>
+  import("./screens/privacyPage").then((m) => ({ default: m.PrivacyPage })),
+);
 const HelpPage = lazy(() =>
   import("./screens/helpPage").then((m) => ({ default: m.HelpPage })),
 );
@@ -131,6 +134,7 @@ function App() {
               render={() => <AiBeautyPage onAuthOpen={handleAuthOpen} />}
             />
             <Route path="/help" component={HelpPage} />
+            <Route path="/privacy" component={PrivacyPage} />
             <Route
               exact
               path="/"
