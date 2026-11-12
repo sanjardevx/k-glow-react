@@ -1,0 +1,27 @@
+name: CI
+
+# Every push and pull request: install, lint and build the shop exactly as
+# Vercel will, so a broken build is caught here rather than on the live site.
+on:
+  push:
+    branches: [develop, main, master]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: yarn
+      - run: yarn install --frozen-lockfile
+      - run: yarn lint
+      # Type-checks first (tsc -b), then the Vite production build.
+      - run: yarn build
+        env:
+          VITE_SERVER_API: https://api.kglowshop.uz
