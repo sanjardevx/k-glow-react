@@ -21,7 +21,7 @@ import "../../../css/ai-beauty.css";
 
 type View = "start" | "quiz" | "chat" | "routine";
 
-const DEFAULT_LIMIT = 10;
+const DEFAULT_LIMIT = 5;
 
 interface AiBeautyPageProps {
   onAuthOpen: (mode: AuthMode) => void;

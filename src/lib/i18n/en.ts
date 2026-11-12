@@ -351,7 +351,7 @@ export const en = {
   "error.aiOff": "AI Beauty isn't set up yet.",
   "error.aiFailed": "We couldn't build your routine just now, please try again.",
   "error.aiChatFailed": "We couldn't answer just now, please try again.",
-  "error.aiLimit": "You've used today's 10 AI answers. Come back tomorrow!",
+  "error.aiLimit": "You've used today's AI answers. Come back tomorrow!",
 
   "help.title": "Help",
   "help.terms": "Terms",

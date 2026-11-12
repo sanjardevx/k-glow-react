@@ -336,7 +336,7 @@ export const uz: Dict = {
   "error.aiOff": "AI Beauty hali sozlanmagan.",
   "error.aiFailed": "Hozir tartib tuzib boʻlmadi, qayta urinib koʻring.",
   "error.aiChatFailed": "Hozir javob berib boʻlmadi, qayta urinib koʻring.",
-  "error.aiLimit": "Bugungi 10 ta AI javobingiz tugadi. Ertaga qayting!",
+  "error.aiLimit": "Bugungi AI javoblaringiz tugadi. Ertaga qayting!",
 
   "help.title": "Yordam",
   "help.terms": "Qoidalar",
