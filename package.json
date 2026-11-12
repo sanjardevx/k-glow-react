@@ -2,6 +2,10 @@
   "name": "k-glow-react",
   "private": true,
   "version": "0.0.0",
+  "description": "Customer-facing shop for K-Glow Secrets, an online shop for Korean skincare in Uzbekistan",
+  "homepage": "https://www.kglowshop.uz",
+  "author": "Sanjar Kurbonaliyev",
+  "license": "UNLICENSED",
   "type": "module",
   "scripts": {
     "build": "tsc -b && vite build",

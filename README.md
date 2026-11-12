@@ -1,174 +1,123 @@
-# K-Glow Secrets — Shop (Frontend)
+# K-Glow Secrets — Shop
 
-The customer-facing shop for **[K-Glow Secrets](https://www.kglowshop.uz)** — original Korean skincare and makeup from Seoul, delivered across Uzbekistan. Built with React and TypeScript, deployed on Vercel.
+**The customer-facing website of a live e-commerce business.** K-Glow Secrets sells original Korean skincare and makeup online and delivers across Uzbekistan. This repository is the shop that customers use: browsing, ordering, their account, and an AI skincare advisor — in three languages and designed for the phone first.
+
+**Live shop:** [www.kglowshop.uz](https://www.kglowshop.uz) · **Backend:** [kglow-backend](https://github.com/sanjardev23/kglow-backend)
+
+---
+
+## At a glance
 
 | | |
 |---|---|
-| **Live shop** | https://www.kglowshop.uz |
-| **API** (backend repo) | https://api.kglowshop.uz · [`sanjardev23/kglow-backend`](https://github.com/sanjardev23/kglow-backend) |
-| **Admin panel** | https://admin.kglowshop.uz (served by the backend) |
+| **What it is** | The storefront of a real, running online shop — not a demo |
+| **Who uses it** | Customers across Uzbekistan, mostly on their phones |
+| **My role** | Sole developer and designer — UI/UX, frontend, backend, AI integration and deployment |
+| **Built with** | React, TypeScript, Redux Toolkit, Vite, Vercel |
+| **Languages** | Uzbek, Russian, English |
 
----
+## Screenshots
 
-## What's in the shop
+**Home, shop and product page**
 
-- **Catalog** — browse, search, filter by category, sort; product pages with photo gallery, reviews and view counts.
-- **Bag and checkout** — a shopping bag, then an order with a bank-transfer receipt upload. Customers also order on Telegram.
-- **Accounts** — sign up with name and password, or **Sign in with Google**. My Page shows profile, order history and the saved skin routine.
-- **AI Beauty** — a 4-tap skin quiz that builds a morning and evening routine from products in stock, shown as an illustrated step-by-step guide; or a short chat for direct questions. Members only, 5 answers a day.
-- **Tutorials** — short video tutorials (YouTube / Instagram).
-- **Three languages** — Uzbek (Latin), Russian, English, switchable anywhere.
-- **Phone-first design** — bottom tab bar, glass header, buy bars, built for one-handed use.
-- **Link previews and SEO** — product links shared on Telegram/Instagram show the photo, name and price; a live sitemap for Google.
+<img src="docs/screenshots/home-desktop.jpg" alt="Home page" width="100%" />
+
+<p>
+  <img src="docs/screenshots/shop-desktop.jpg" alt="Shop catalog" width="49%" />
+  <img src="docs/screenshots/product-desktop.jpg" alt="Product page" width="49%" />
+</p>
+
+**AI Beauty — a personal routine as an illustrated step-by-step guide**
+
+<img src="docs/screenshots/ai-routine-desktop.jpg" alt="AI Beauty routine guide" width="100%" />
+
+**On the phone**
+
+<p>
+  <img src="docs/screenshots/home-mobile.jpg" alt="Home on mobile" width="24%" />
+  <img src="docs/screenshots/product-mobile.jpg" alt="Product on mobile" width="24%" />
+  <img src="docs/screenshots/ai-beauty-start-mobile.jpg" alt="AI Beauty start on mobile" width="24%" />
+  <img src="docs/screenshots/ai-routine-mobile.jpg" alt="AI Beauty routine on mobile" width="24%" />
+</p>
+
+## What customers can do
+
+- **Shop** — browse, search, filter and sort the catalog; product pages with photo galleries, reviews and popularity.
+- **Order** — a shopping bag and checkout with bank-transfer receipts, or order in one tap through Telegram.
+- **Have an account** — sign up or **Sign in with Google**; see order history and a saved skin routine.
+- **Get skincare advice** — **AI Beauty**: a four-tap skin quiz that builds a morning and evening routine from products in stock, shown as an illustrated guide, or a chat for direct questions.
+- **Learn** — short video tutorials.
+- **Use their language** — switch between Uzbek, Russian and English anywhere.
+
+## Engineering highlights
+
+- **Phone-first, app-like experience.** Bottom tab bar, frosted-glass header, sticky buy bars and large touch targets — built for one-handed use on a phone, then scaled up to desktop.
+- **A real design system.** All colours, type and spacing come from one set of design tokens, so every page stays consistent and the look can change in one place. Accessible by default: keyboard focus, reduced-motion support and readable contrast.
+- **Type-safe translations.** Every text lives in a dictionary per language, and TypeScript refuses to build if a language is missing a phrase.
+- **Original illustrated AI guide.** The routine is drawn with hand-built SVG illustrations — a step for each kind of product — and revealed step by step.
+- **Found by search engines and messengers.** A live sitemap and a search-engine-readable home page, plus rich link previews (photo, name and price) when a product is shared on Telegram or Instagram.
+- **Quality gates.** Lint and a full type-checked production build run on every push; the site deploys automatically when they pass.
 
 ## Tech stack
 
-| Area | Choice |
+| Area | Technology |
 |---|---|
-| UI | React 19, TypeScript, MUI 9 (layout and a few widgets) |
-| Routing | React Router 5 |
-| State | Redux Toolkit (catalog, orders, bag) + React context (signed-in member) |
-| HTTP | Axios (adds the login token to every request) |
-| Styling | Plain CSS with design tokens (`--kg-*`), one stylesheet per page |
-| Build | Vite 8 |
-| Lint | Oxlint |
-| Hosting | Vercel (static site + 2 serverless functions), Vercel Web Analytics |
+| UI | React 19, TypeScript, Material UI |
+| State | Redux Toolkit, React Context |
+| Routing | React Router |
+| Styling | CSS with design tokens, mobile-first |
+| Build & tooling | Vite, Oxlint |
+| Hosting | Vercel (static site + serverless functions), Vercel Analytics |
+| CI | GitHub Actions |
 
----
+## Architecture
 
-## Getting started
-
-### 1. Prerequisites
-
-- **Node.js 22 or newer** and **Yarn** (`npm i -g yarn`)
-- The backend running locally, or use the live API
-
-### 2. Install
-
-```bash
-git clone https://github.com/sanjardev23/k-glow-react.git
-cd k-glow-react
-yarn install
+```
+  Customer's browser
+          │
+          ▼
+  Shop (this repo, Vercel)  ──►  Backend API  ──►  MongoDB · Claude AI · Google Sign-In
+          │
+          └── serverless functions: link previews, sitemap
 ```
 
-### 3. Configure
-
-Create a `.env` file in the project root:
-
-```env
-VITE_SERVER_API=http://localhost:3004
-VITE_GOOGLE_CLIENT_ID=<Google OAuth Client ID>   # optional
-```
-
-| Variable | Required | What it is |
-|---|---|---|
-| `VITE_SERVER_API` | ✅ | The backend's address, no trailing `/`. Production: `https://api.kglowshop.uz` |
-| `VITE_GOOGLE_CLIENT_ID` | | Shows the "Continue with Google" button. Leave it out and the button simply doesn't appear |
-
-> Everything starting with `VITE_` is built into the public JavaScript, so it must never hold a secret. Both values above are public by design.
-
-### 4. Run
-
-```bash
-yarn dev
-```
-
-Opens on `http://localhost:8002`. The backend always allows that address, so no CORS setup is needed for local work.
-
-## Scripts
-
-| Command | What it does |
-|---|---|
-| `yarn dev` | Development server with instant reload |
-| `yarn build` | Type-check, then build for production into `dist/` |
-| `yarn preview` | Serve the production build locally to check it |
-| `yarn lint` | Run Oxlint |
-
----
+Each page asks a small **service** for its data, keeps it in its own **Redux slice**, and renders from there; the login token is attached to every request in one place, so pages never handle it.
 
 ## Project structure
 
 ```
 src/
-  main.tsx              entry: providers (Redux, theme, member context, router), Axios token
   app/
-    App.tsx             layout and routes
-    screens/            one folder per page
-      homePage/         hero, bestsellers, new arrivals, brands, reviews, events
-      productsPage/     catalog and product detail
-      cartPage/         bag (Redux slice) and checkout
-      ordersPage/       waiting / confirmed / rejected orders
-      userPage/         My Page
-      aiBeautyPage/     quiz, chat, routine guide and its SVG illustrations
-      tutorialsPage/    video tutorials
-      helpPage/         terms, FAQ, contact
-      privacyPage/      privacy policy (uz / ru / en)
-    components/         header, footer, bottom tab bar, auth modal, payment modal, icons
-    services/           one class per API area (ProductService, OrderService, AiService, …)
-    context/            the signed-in member
-  lib/
-    i18n/               dictionaries (uz, ru, en) and the t() helper
-    types/              TypeScript types shared across pages
-    config.ts           API address, Telegram links, Google Client ID
-  css/                  tokens.css, base.css, components.css, then one file per page
-api/                    Vercel serverless functions (see below)
-public/                 icons, logo, link-preview image, robots.txt
-docs/DESIGN_SYSTEM.md   colours, type, spacing and component rules
-vercel.json             rewrites: sitemap, link-preview bots, single-page fallback
+    screens/       one folder per page (home, shop, cart, orders, account, AI Beauty, …)
+    components/    header, footer, tab bar, modals, icons
+    services/      talk to the backend API
+    context/       the signed-in customer
+  lib/i18n/        translations: Uzbek, Russian, English
+  css/             design tokens, shared components, one stylesheet per page
+api/               serverless functions (link previews, sitemap)
+docs/              design system and screenshots
 ```
 
-**How a page gets its data:** the screen calls a **service** (`src/app/services`), which calls the API with Axios; results go into the page's Redux slice (or local state) and the components render from there. The login token is attached to every request in `main.tsx`, so services never deal with it.
+## Running locally
 
-## Languages
+Requires Node.js 22+ and Yarn, plus a running backend.
 
-All text lives in `src/lib/i18n/` — `en.ts` is the source, `uz.ts` and `ru.ts` must have the same keys (TypeScript enforces it). In a component:
-
-```tsx
-const { t } = useI18n();
-<h1>{t("ai.title")}</h1>
+```bash
+yarn install
+cp .env.example .env     # then fill in your own values
+yarn dev
 ```
 
-Uzbek is written in Latin script with the proper letters `oʻ`, `gʻ` (U+02BB) and `ʼ` (U+02BC). Error messages from the API are translated by matching them in `SERVER_MESSAGES` (`src/lib/i18n/index.ts`).
+```bash
+yarn build               # type-check and production build
+yarn lint
+```
 
-## Design system
+## License
 
-Warm cream and sand surfaces, plum ink, sage green as the one brand colour, terracotta as an accent; Playfair Display for headings, Inter for text.
+Source available for review only — **all rights reserved**. See [LICENSE](LICENSE).
 
-- **`src/css/tokens.css`** holds every colour, radius, shadow and type size as `--kg-*` variables. It is the **only** file allowed a colour literal (exception: `src/app/MaterialTheme`, because MUI needs real hex values).
-- **`base.css`** and **`components.css`** load next (shared buttons, inputs, cards, chips); page stylesheets load after them and win ties.
-- Respect `prefers-reduced-motion`, keep touch targets at least 44px, and check phone width (375px) for every change.
+## Author
 
-The full reference is in [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md).
-
-## Serverless functions (`api/`)
-
-The shop is a single-page app, so its HTML is nearly empty until JavaScript runs. Two small Vercel functions cover the readers that don't run it:
-
-| Function | Path | Purpose |
-|---|---|---|
-| `api/preview.ts` | any page, **only for link-preview bots** (Telegram, WhatsApp, Facebook, …) | Returns the product's photo, name and price as Open Graph tags, so shared links show a card |
-| `api/sitemap.ts` | `/sitemap.xml` | Lists the public pages and every product, read live from the API |
-
-`index.html` also contains a short plain-HTML description of the shop inside `#root` (React replaces it on load). Google's sign-in review and search engines read it — keep the name exactly **"K-Glow Secrets"** and the privacy / terms links.
-
-## Deployment
-
-Vercel deploys automatically:
-
-- **Push to `develop`** → production at `www.kglowshop.uz` (`kglowshop.uz` redirects there).
-- Environment variables are set in **Vercel → Settings → Environment Variables**. `VITE_*` values are baked in at build time, so **redeploy after changing one**.
-- DNS is managed at ahost: `@` (A) and `www` (CNAME) point to Vercel; `api` and `admin` point to the backend server.
-
-## Troubleshooting
-
-| Symptom | Likely cause |
-|---|---|
-| Products don't load, CORS error in the console | `VITE_SERVER_API` is wrong, or the backend's `CORS_ORIGINS` doesn't include this address |
-| No "Continue with Google" button | `VITE_GOOGLE_CLIENT_ID` missing, or the site wasn't redeployed after adding it |
-| Google says "origin not allowed" | Add the address to the OAuth client's *Authorized JavaScript origins* in Google Cloud |
-| Product photos show the placeholder bottle | The image path doesn't exist on the API (check the product in the admin panel) |
-| A change to a `VITE_` variable has no effect | Redeploy — Vite reads these at build time |
-
-## Contributing
-
-Work on `develop`. Commit messages are one line, `feat:` for something new and `fix:` for changing something that exists, e.g. `feat: integrate vercel web analytics`. Run `yarn build && yarn lint` before pushing, and check the change on a phone-sized screen.
+**Sanjar Kurbonaliyev** — full-stack developer
+[sanjardevx@gmail.com](mailto:sanjardevx@gmail.com) · [GitHub](https://github.com/sanjardev23)
