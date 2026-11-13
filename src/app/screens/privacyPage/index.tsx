@@ -14,9 +14,10 @@ export function PrivacyPage() {
   const text = PRIVACY[lang];
 
   useEffect(() => {
+    const previous = document.title;
     document.title = `${text.title} — K-Glow Secrets`;
     return () => {
-      document.title = "K-Glow Secrets";
+      document.title = previous;
     };
   }, [text.title]);
 

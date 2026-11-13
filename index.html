@@ -3,6 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" href="/icons/favicon.svg" type="image/svg+xml" />
+    <!-- Google's search results show a PNG/ICO icon of at least 48px, not the SVG. -->
+    <link rel="icon" href="/icons/icon-192.png" type="image/png" sizes="192x192" />
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#faf8f4" />
@@ -16,7 +18,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap"
     />
-    <title>K-Glow Secrets</title>
+    <title>K-Glow Secrets — original koreys kosmetikasi, Namangan</title>
     <!-- Link-preview card for the home page. Every other path is answered by
          api/preview.ts for preview bots, but "/" is served straight from this
          file before any rewrite runs, so its tags have to live here. The
@@ -28,6 +30,57 @@
     <meta property="og:description" content="Original koreys parvarish va dekorativ kosmetikasi — toʻgʻridan-toʻgʻri Seuldan, butun Oʻzbekiston boʻylab yetkazib beramiz." />
     <meta property="og:image" content="https://www.kglowshop.uz/img/og-image.png" />
     <meta name="twitter:card" content="summary_large_image" />
+    <!-- Who the shop is, for Google: the name, logo and contacts it can show
+         next to search results. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "OnlineStore",
+            "@id": "https://www.kglowshop.uz/#store",
+            "name": "K-Glow Secrets",
+            "alternateName": ["K-Glow", "kglowshop"],
+            "url": "https://www.kglowshop.uz/",
+            "logo": "https://www.kglowshop.uz/icons/icon-512.png",
+            "image": "https://www.kglowshop.uz/img/og-image.png",
+            "description": "Original Korean skincare and makeup from Seoul, delivered across Uzbekistan.",
+            "email": "sanjardevx@gmail.com",
+            "telephone": "+998938900326",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Namangan",
+              "addressCountry": "UZ"
+            },
+            "areaServed": "UZ",
+            "contactPoint": [
+              {
+                "@type": "ContactPoint",
+                "contactType": "customer service",
+                "telephone": "+998938900326",
+                "availableLanguage": ["uz", "ru", "en"]
+              },
+              {
+                "@type": "ContactPoint",
+                "contactType": "customer service",
+                "telephone": "+821043930340",
+                "availableLanguage": ["uz", "ru", "en"]
+              }
+            ],
+            "sameAs": ["https://t.me/k_glow_secret"]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://www.kglowshop.uz/#website",
+            "name": "K-Glow Secrets",
+            "alternateName": "kglowshop",
+            "url": "https://www.kglowshop.uz/",
+            "inLanguage": ["uz", "ru", "en"],
+            "publisher": { "@id": "https://www.kglowshop.uz/#store" }
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <!-- What the page says before JavaScript runs. React replaces it the
