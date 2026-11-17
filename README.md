@@ -1,8 +1,12 @@
 # K-Glow Secrets — Shop
 
+[![CI](https://github.com/sanjardevx/k-glow-react/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/sanjardevx/k-glow-react/actions/workflows/ci.yml)
+
 **The customer-facing website of a live e-commerce business.** K-Glow Secrets sells original Korean skincare and makeup online and delivers across Uzbekistan. This repository is the shop that customers use: browsing, ordering, their account, and an AI skincare advisor — in three languages and designed for the phone first.
 
 **Live shop:** [www.kglowshop.uz](https://www.kglowshop.uz) · **Backend:** [kglow-backend](https://github.com/sanjardevx/kglow-backend)
+
+> 🇰🇷 **한국어 요약** — 우즈베키스탄 전역에 한국 화장품을 판매·배송하는, 실제 운영 중인 온라인 쇼핑몰의 고객용 웹사이트입니다. 상품 탐색, 주문, 회원 계정, 그리고 피부 타입에 맞춰 아침·저녁 루틴을 추천하는 AI 뷰티 기능을 제공합니다. 기획·디자인부터 개발·배포까지 혼자 담당했으며, React · TypeScript · Redux Toolkit · Vite로 만들었습니다.
 
 ---
 
@@ -112,6 +116,12 @@ yarn dev
 yarn build               # type-check and production build
 yarn lint
 ```
+
+## What I'd do next
+
+- **Card payments** (Click, Payme) at checkout, instead of uploading a bank-transfer receipt.
+- **Order tracking** with delivery status updates for the customer.
+- **Faster product pages** that are rendered on the server, for quicker first loads and better search results.
 
 ## License
 
