@@ -9,6 +9,7 @@ import { errorMessage, showSuccess } from "../../../lib/toast";
 import { SendIcon, SparkleIcon } from "../../components/icons";
 import type { ChatMessage } from "../../../lib/types/routine";
 import type { Product } from "../../../lib/types/product";
+import { useSmoothText } from "./useSmoothText";
 
 const SUGGESTIONS: TKey[] = [
   "ai.chatSuggest1",
@@ -38,6 +39,8 @@ export function Chat({ messages, onMessages, left, limit, onLeft }: ChatProps) {
   // The answer while it is being written: the text so far, and whether the
   // assistant is looking products up.
   const [live, setLive] = useState({ text: "", looking: false });
+  // The reply arrives in uneven bursts; this shows it at an even pace.
+  const smooth = useSmoothText(live.text);
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -49,7 +52,7 @@ export function Chat({ messages, onMessages, left, limit, onLeft }: ChatProps) {
 
   // While the answer streams in, follow it as it grows — without smooth
   // scrolling, which would lag a line behind the text.
-  const liveLines = Math.floor(live.text.length / 40);
+  const liveLines = Math.floor(smooth.text.length / 40);
   useEffect(() => {
     if (busy && liveLines) endRef.current?.scrollIntoView({ block: "end" });
   }, [busy, liveLines]);
@@ -71,6 +74,9 @@ export function Chat({ messages, onMessages, left, limit, onLeft }: ChatProps) {
         else if (event.type === "reply") setLive({ text: event.text, looking: false });
         else setLive({ text: "", looking: false });
       });
+      // Let the last words finish writing before the answer settles in.
+      setLive({ text: answer.reply, looking: false });
+      await smooth.waitUntilShown(answer.reply);
       onMessages([
         ...next,
         { role: "assistant", content: answer.reply, products: answer.products },
@@ -125,7 +131,7 @@ export function Chat({ messages, onMessages, left, limit, onLeft }: ChatProps) {
           ),
         )}
 
-        {busy && live.text ? (
+        {busy && smooth.text ? (
           // The answer so far. Hidden from screen readers until it is
           // finished, so they read it once rather than word by word.
           <div className="ai-bubble is-assistant is-streaming" aria-hidden="true">
@@ -134,7 +140,7 @@ export function Chat({ messages, onMessages, left, limit, onLeft }: ChatProps) {
             </span>
             <div className="ai-bubble-body">
               <p>
-                {live.text}
+                {smooth.text}
                 <span className="ai-caret" />
               </p>
             </div>
