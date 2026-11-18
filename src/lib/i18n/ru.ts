@@ -310,6 +310,7 @@ export const ru: Dict = {
   "ai.chatAria": "Чат с AI Beauty",
   "ai.chatHello": "Привет! Расскажите о своей коже или выберите вопрос ниже.",
   "ai.chatThinking": "Думаю…",
+  "ai.chatLooking": "Смотрю, что есть в магазине…",
   "ai.chatSuggest1": "Что помогает от прыщей?",
   "ai.chatSuggest2": "Какой солнцезащитный крем подходит для жирной кожи?",
   "ai.chatSuggest3": "Кожа сухая и стянутая. Что использовать?",

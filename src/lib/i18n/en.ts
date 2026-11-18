@@ -328,6 +328,7 @@ export const en = {
   "ai.chatAria": "Chat with AI Beauty",
   "ai.chatHello": "Hi! Tell me about your skin, or pick a question below.",
   "ai.chatThinking": "Thinking…",
+  "ai.chatLooking": "Checking the shop…",
   "ai.chatSuggest1": "What helps with acne?",
   "ai.chatSuggest2": "Which sunscreen is good for oily skin?",
   "ai.chatSuggest3": "My skin feels dry and tight. What should I use?",

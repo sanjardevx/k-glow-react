@@ -79,3 +79,9 @@ export interface ChatAnswer {
   products: Product[];
   left: number;
 }
+
+/** What a streamed chat sends while the answer is being written. */
+export type ChatStreamEvent =
+  | { type: "tools"; names: string[] }
+  | { type: "reply"; text: string }
+  | { type: "reset" };

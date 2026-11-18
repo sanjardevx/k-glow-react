@@ -1,9 +1,11 @@
 import axios from "axios";
 import { serverApi } from "../../lib/config";
+import { getAccessToken } from "../../lib/authToken";
 import type {
   AiStatus,
   ChatAnswer,
   ChatMessage,
+  ChatStreamEvent,
   Routine,
   RoutineRequest,
 } from "../../lib/types/routine";
@@ -52,6 +54,76 @@ class AiService {
       console.log("Error, chat:", err);
       throw err;
     }
+  }
+
+  /**
+   * The same chat, with the reply shown as it is written. The server sends
+   * one JSON event per line; `onEvent` gets each one, and the finished
+   * answer is returned at the end. Errors are thrown in axios's shape, so
+   * the usual error handling and messages work unchanged.
+   *
+   * fetch rather than axios, because axios can't read a response while it
+   * is still arriving in the browser.
+   */
+  public async chatStream(
+    messages: ChatMessage[],
+    lang: RoutineRequest["lang"],
+    onEvent: (event: ChatStreamEvent) => void,
+  ): Promise<ChatAnswer> {
+    const token = getAccessToken();
+    const res = await fetch(`${this.path}/ai/chat/stream`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        "ngrok-skip-browser-warning": "true",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: JSON.stringify({
+        messages: messages.map(({ role, content }) => ({ role, content })),
+        lang,
+      }),
+    });
+
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw { response: { status: res.status, data } };
+    }
+
+    let answer: ChatAnswer | null = null;
+    const handle = (line: string) => {
+      if (!line.trim()) return;
+      const event = JSON.parse(line);
+      if (event.type === "done") {
+        const { type: _type, ...rest } = event;
+        answer = rest as ChatAnswer;
+      } else if (event.type === "error") {
+        throw { response: { status: 500, data: { message: event.message } } };
+      } else {
+        onEvent(event as ChatStreamEvent);
+      }
+    };
+
+    if (res.body) {
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+      for (;;) {
+        const { done, value } = await reader.read();
+        buffer += decoder.decode(value, { stream: !done });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() ?? "";
+        lines.forEach(handle);
+        if (done) break;
+      }
+      handle(buffer);
+    } else {
+      // No streaming in this browser: read it all at once.
+      (await res.text()).split("\n").forEach(handle);
+    }
+
+    if (!answer) throw new Error("The answer was cut off.");
+    return answer;
   }
 }
 

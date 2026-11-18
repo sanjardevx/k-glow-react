@@ -35,6 +35,9 @@ export function Chat({ messages, onMessages, left, limit, onLeft }: ChatProps) {
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  // The answer while it is being written: the text so far, and whether the
+  // assistant is looking products up.
+  const [live, setLive] = useState({ text: "", looking: false });
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -43,6 +46,13 @@ export function Chat({ messages, onMessages, left, limit, onLeft }: ChatProps) {
     if (messages.length || busy)
       endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages.length, busy]);
+
+  // While the answer streams in, follow it as it grows — without smooth
+  // scrolling, which would lag a line behind the text.
+  const liveLines = Math.floor(live.text.length / 40);
+  useEffect(() => {
+    if (busy && liveLines) endRef.current?.scrollIntoView({ block: "end" });
+  }, [busy, liveLines]);
 
   async function send(text: string) {
     const question = text.trim();
@@ -53,9 +63,14 @@ export function Chat({ messages, onMessages, left, limit, onLeft }: ChatProps) {
     onMessages(next);
     setDraft("");
     setError("");
+    setLive({ text: "", looking: false });
     setBusy(true);
     try {
-      const answer = await new AiService().chat(next, lang);
+      const answer = await new AiService().chatStream(next, lang, (event) => {
+        if (event.type === "tools") setLive((l) => ({ ...l, looking: true }));
+        else if (event.type === "reply") setLive({ text: event.text, looking: false });
+        else setLive({ text: "", looking: false });
+      });
       onMessages([
         ...next,
         { role: "assistant", content: answer.reply, products: answer.products },
@@ -71,6 +86,7 @@ export function Chat({ messages, onMessages, left, limit, onLeft }: ChatProps) {
       setError(errorMessage(err));
     } finally {
       setBusy(false);
+      setLive({ text: "", looking: false });
     }
   }
 
@@ -109,7 +125,21 @@ export function Chat({ messages, onMessages, left, limit, onLeft }: ChatProps) {
           ),
         )}
 
-        {busy ? (
+        {busy && live.text ? (
+          // The answer so far. Hidden from screen readers until it is
+          // finished, so they read it once rather than word by word.
+          <div className="ai-bubble is-assistant is-streaming" aria-hidden="true">
+            <span className="ai-avatar">
+              <SparkleIcon />
+            </span>
+            <div className="ai-bubble-body">
+              <p>
+                {live.text}
+                <span className="ai-caret" />
+              </p>
+            </div>
+          </div>
+        ) : busy ? (
           <div className="ai-bubble is-assistant is-thinking">
             <span className="ai-avatar" aria-hidden="true">
               <SparkleIcon />
@@ -120,7 +150,11 @@ export function Chat({ messages, onMessages, left, limit, onLeft }: ChatProps) {
                 <span />
                 <span />
               </span>
-              <span className="kg-visually-hidden">{t("ai.chatThinking")}</span>
+              {live.looking ? (
+                <span className="ai-thinking-label">{t("ai.chatLooking")}</span>
+              ) : (
+                <span className="kg-visually-hidden">{t("ai.chatThinking")}</span>
+              )}
             </p>
           </div>
         ) : null}

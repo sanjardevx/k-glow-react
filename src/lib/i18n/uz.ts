@@ -313,6 +313,7 @@ export const uz: Dict = {
   "ai.chatAria": "AI Beauty bilan suhbat",
   "ai.chatHello": "Salom! Teringiz haqida yozing yoki pastdagi savollardan birini tanlang.",
   "ai.chatThinking": "Oʻylayapman…",
+  "ai.chatLooking": "Doʻkonni koʻrib chiqyapman…",
   "ai.chatSuggest1": "Husnbuzarga nima yordam beradi?",
   "ai.chatSuggest2": "Yogʻli teri uchun qaysi quyoshdan himoya kremi yaxshi?",
   "ai.chatSuggest3": "Terim quruq va tortishib turadi. Nima ishlatay?",
